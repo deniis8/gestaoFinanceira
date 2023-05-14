@@ -1,0 +1,35 @@
+<div class="class">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<div ng-app="myApp">
+    <div ng-controller="myController">
+        <div class="container">
+            <div class="jumbotron">
+                <table class="table table-hover">
+                    <tr>
+                        <td>Data Hora</td>
+                        <td>Valor</td>
+                        <td>Descrição</td>
+                        <td>Status</td>
+                    </tr>
+                    <tr *ngFor="let lancamento of lancamentos">
+                        <td>{{lancamento.dataHora | date: "dd/MM/yyyy hh:mm"}}</td>
+                        <td>{{lancamento.valor}}</td>
+                        <td>{{lancamento.descricao}}</td>   
+                        <td>{{lancamento.status}}</td>                        
+                        <button type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ng-click="edit(row)"></button>
+                            <button type="button" class="btn btn-danger glyphicon glyphicon-trash" ng-click="delete(row)"></button>
+                    </tr>
+                            
+                     
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>

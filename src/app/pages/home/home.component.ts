@@ -1,0 +1,20 @@
+import { Component } from '@angular/core';
+import { Lancamento } from 'src/app/Lancamento';
+import { LancamentoService } from 'src/app/services/lancamento.service';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
+})
+export class HomeComponent {
+  lancamentos: Lancamento[] = [];
+
+  constructor(private lancamentoService: LancamentoService) {
+    this.getLancamentos()
+  }
+
+  getLancamentos(): void{
+    this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => (this.lancamentos = lancamentos));
+  }
+}
