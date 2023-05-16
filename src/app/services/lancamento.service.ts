@@ -21,7 +21,7 @@ export class LancamentoService {
   postLancamento(formData: FormData): Observable<FormData>{
     var dataFormat = new Date(formData.getAll("dataHora").toString()); 
     
-    var data = {
+    var data = { 
       dataHora: dataFormat,
       valor: Number(formData.getAll("valor")),
       descricao: formData.getAll("descricao").toString(),
