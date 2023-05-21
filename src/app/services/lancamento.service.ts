@@ -19,10 +19,11 @@ export class LancamentoService {
   }
 
   postLancamento(formData: FormData): Observable<FormData>{
-    var dataFormat = new Date(formData.getAll("dataHora").toString()); 
+    // O "Z" no final indica que esta data e hora está em UTC.
+    var dataLancamento = new Date(formData.getAll("dataHora").toString()+"Z");
     
     var data = { 
-      dataHora: dataFormat,
+      dataHora: dataLancamento,
       valor: Number(formData.getAll("valor")),
       descricao: formData.getAll("descricao").toString(),
       status: formData.getAll("status").toString(),
