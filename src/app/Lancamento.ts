@@ -7,4 +7,5 @@ export interface Lancamento{
     idCCusto: number;
     descriCCusto?: string;
     idUsuario: number;
+    deletado?: string;
 }

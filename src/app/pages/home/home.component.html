@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <div ng-app="myApp">
-    <div ng-controller="myController">
+    <div *ngIf="lancamentos.length > 0; else noLancamentos"  ng-controller="myController">
         <div class="container">
             <div class="jumbotron">
                 <table class="table table-hover">
@@ -14,21 +14,22 @@
                         <td>Valor</td>
                         <td>Descrição</td>
                         <td>Status</td>
-                    </tr>
+                    </tr>                    
                     <tr *ngFor="let lancamento of lancamentos">
                         <td>{{lancamento.dataHora | date: "dd/MM/yyyy hh:mm"}}</td>
                         <td>{{lancamento.valor}}</td>
                         <td>{{lancamento.descricao}}</td>   
                         <td>{{lancamento.status}}</td>                        
-                        <button type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ng-click="edit(row)"></button>
-                            <button type="button" class="btn btn-danger glyphicon glyphicon-trash" ng-click="delete(row)"></button>
-                    </tr>
-                            
-                     
+                        <button href="/lancamento/novo" type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ></button>
+                        <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="removerLancamento(lancamento.id!)"></button>
+                    </tr>                    
                 </table>
             </div>
         </div>
     </div>
+    <ng-template #noLancamentos>
+        <h1>Não exitem registros cadastrados :P</h1>
+    </ng-template>
 </div>
 
 

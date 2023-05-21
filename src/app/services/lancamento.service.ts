@@ -9,13 +9,11 @@ import { environment } from 'src/environments/environment';
 })
 export class LancamentoService {
   private baseApiUrl = environment.baseApiUrl;
-  private apiUrl = `${this.baseApiUrl}api/lancamentos`;
-  private apiUrlLancamentos = `${this.baseApiUrl}api/lancamentos/data/`;
 
   constructor(private http: HttpClient) { }
 
   getAllLancamentos(): Observable<Lancamento[]>{
-    return this.http.get<Lancamento[]>(this.apiUrlLancamentos);
+    return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/data/`);
   }
 
   postLancamento(formData: FormData): Observable<FormData>{
@@ -31,6 +29,13 @@ export class LancamentoService {
       idUsuario: Number(formData.getAll("idUsuario"))
     }; 
 
-    return this.http.post<FormData>(this.apiUrl, data);
+    return this.http.post<FormData>(`${this.baseApiUrl}api/lancamentos`, data);
+  }
+
+  excluirLancamento(id: Number){
+    var data = { 
+      deletado: '*'
+    };
+    return this.http.put(`${this.baseApiUrl}api/lancamentos/del/${id}`, data);
   }
 }
