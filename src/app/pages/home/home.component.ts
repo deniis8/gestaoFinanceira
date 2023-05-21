@@ -11,10 +11,9 @@ export class HomeComponent {
   lancamentos: Lancamento[] = [];
 
   constructor(private lancamentoService: LancamentoService) {
-    this.getLancamentos()
   }
 
-  getLancamentos(): void{
+  ngOnInit(): void {
     this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => (this.lancamentos = lancamentos));
   }
 }
