@@ -39,11 +39,16 @@
     </div>
 
     <div class="form-group">
-        <label for="idCCusto">Centro de Custo:</label>
-        <input type="text" placeholder="Coloque o centro de custo do Lançamento" formControlName="idCCusto" required>
+        <label for="status">Centro Custo:</label>
+        <select formControlName="idCCusto" required>
+            <option *ngFor="let centroCusto of centroCustos" value={{centroCusto.id}}>{{centroCusto.descriCCusto}}</option>
+        </select>
     </div>
+    
     <div *ngIf="idCCusto.invalid && formDir.submitted" class="validation-error">
         <p *ngIf="idCCusto.errors?.['required']">O centro de custo é obrigatória.</p>
     </div>
+    
+
     <input type="submit" value="{{btnText}}">    
 </form>

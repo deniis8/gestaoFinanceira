@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { CentroCusto } from 'src/app/Centro-Custo';
 import { Lancamento } from 'src/app/Lancamento';
+import { CentroCustoService } from 'src/app/services/centro-custo.service';
 
 @Component({
   selector: 'app-lancamento-form',
@@ -11,8 +13,9 @@ export class LancamentoFormComponent implements OnInit{
   @Output() onSubmit = new EventEmitter<Lancamento>();
   @Input() btnText!: string;
   lancamentoForm!: FormGroup;
+  centroCustos: CentroCusto[] = [];
 
-  constructor(){}
+  constructor(private centroCustoService: CentroCustoService ){}
 
   ngOnInit(): void {
       this.lancamentoForm = new FormGroup({
@@ -24,6 +27,8 @@ export class LancamentoFormComponent implements OnInit{
         idCCusto: new FormControl('', [Validators.required]),
         //idUsuario: new FormControl('', [Validators.required]),
       });
+
+      this.centroCustoService.getAllCentroCustos().subscribe((centroCustos) => (this.centroCustos = centroCustos));
   }
 
   get dataHora(){
