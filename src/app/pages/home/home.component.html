@@ -20,7 +20,7 @@
                         <td>{{lancamento.valor}}</td>
                         <td>{{lancamento.descricao}}</td>   
                         <td>{{lancamento.status}}</td>                        
-                        <button href="/lancamento/novo" type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ></button>
+                        <button routerLink="/lancamento/edit/{{lancamento.id}}" type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ></button>
                         <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="removerLancamento(lancamento.id!)"></button>
                     </tr>                    
                 </table>

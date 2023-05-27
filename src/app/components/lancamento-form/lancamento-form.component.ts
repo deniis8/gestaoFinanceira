@@ -12,6 +12,7 @@ import { CentroCustoService } from 'src/app/services/centro-custo.service';
 export class LancamentoFormComponent implements OnInit{
   @Output() onSubmit = new EventEmitter<Lancamento>();
   @Input() btnText!: string;
+  @Input() lancamentoData: Lancamento | null = null;
   lancamentoForm!: FormGroup;
   centroCustos: CentroCusto[] = [];
 
@@ -19,12 +20,12 @@ export class LancamentoFormComponent implements OnInit{
 
   ngOnInit(): void {
       this.lancamentoForm = new FormGroup({
-        id: new FormControl(''),
-        dataHora: new FormControl('', [Validators.required]),
-        valor: new FormControl('', [Validators.required]),
-        descricao: new FormControl('', [Validators.required]),
-        status: new FormControl('', [Validators.required]),
-        idCCusto: new FormControl('', [Validators.required]),
+        id: new FormControl(this.lancamentoData ? this.lancamentoData.id : ''),
+        dataHora: new FormControl(this.lancamentoData ? this.lancamentoData.dataHora : '', [Validators.required]),
+        valor: new FormControl(this.lancamentoData ? this.lancamentoData.valor : '', [Validators.required]),
+        descricao: new FormControl(this.lancamentoData ? this.lancamentoData.descricao : '', [Validators.required]),
+        status: new FormControl(this.lancamentoData ? this.lancamentoData.status : '', [Validators.required]),
+        idCCusto: new FormControl(this.lancamentoData ? this.lancamentoData.idCCusto : '', [Validators.required]),
         //idUsuario: new FormControl('', [Validators.required]),
       });
 

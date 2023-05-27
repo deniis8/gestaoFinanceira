@@ -11,6 +11,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { GraficosComponent } from './pages/graficos/graficos.component';
 import { NovoLancamentoComponent } from './pages/novo-lancamento/novo-lancamento.component';
 import { LancamentoFormComponent } from './components/lancamento-form/lancamento-form.component';
+import { EditLancamentoComponent } from './pages/edit-lancamento/edit-lancamento.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { LancamentoFormComponent } from './components/lancamento-form/lancamento
     HomeComponent,
     GraficosComponent,
     NovoLancamentoComponent,
-    LancamentoFormComponent
+    LancamentoFormComponent,
+    EditLancamentoComponent
   ],
   imports: [
     BrowserModule,
