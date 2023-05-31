@@ -13,7 +13,7 @@ export class EditLancamentoComponent implements OnInit{
   lancamento!: Lancamento;
   btnText: string = 'Editar';
   
-  constructor(private lancamentoService: LancamentoService, private route: ActivatedRoute) {
+  constructor(private lancamentoService: LancamentoService, private route: ActivatedRoute, private router: Router) {
         
   }
 
@@ -22,7 +22,26 @@ export class EditLancamentoComponent implements OnInit{
 
     this.lancamentoService.getLancamentoPorId(id).subscribe((item) => {
       this.lancamento = item;
-      console.log(this.lancamento)
+      console.log(this.lancamento.dataHora)
     })
+  }
+
+  async editHendler(lancamentoData: Lancamento){    
+    const id = this.lancamento.id;
+    const formData = new FormData();
+
+    formData.append('dataHora', lancamentoData.dataHora.toString());
+    formData.append('valor', lancamentoData.valor.toString());
+    formData.append('descricao', lancamentoData.descricao);
+    formData.append('status', lancamentoData.status);
+    formData.append('idCCusto', lancamentoData.idCCusto.toString());
+    formData.append('idUsuario', '1'/*lancamento.idUsuario.toString()*/);
+
+    await this.lancamentoService.putLancamento(id!, formData).subscribe((result: any) => {
+      this.router.navigate(['/']);
+    },
+      (error) => {
+        console.log("Erro");
+      })
   }
 }
