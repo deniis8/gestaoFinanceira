@@ -33,6 +33,8 @@ export class LancamentoService {
       idUsuario: Number(formData.getAll("idUsuario"))
     }; 
 
+    console.log(data);
+
     return this.http.post<FormData>(`${this.baseApiUrl}api/lancamentos`, data);
   }
 
