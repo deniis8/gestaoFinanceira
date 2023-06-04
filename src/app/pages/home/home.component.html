@@ -21,7 +21,7 @@
                         <td>{{lancamento.descricao}}</td>   
                         <td>{{lancamento.status}}</td>                        
                         <button routerLink="/lancamento/edit/{{lancamento.id}}" type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ></button>
-                        <button type="button" class="btn btn-danger glyphicon glyphicon-trash" (click)="removerLancamento(lancamento.id!)"></button>
+                        <button routerLink="/lancamento/excluir/{{lancamento.id}}" type="button" class="btn btn-danger glyphicon glyphicon-trash" ></button>
                     </tr>                    
                 </table>
             </div>
