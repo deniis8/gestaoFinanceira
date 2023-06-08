@@ -13,6 +13,7 @@ import { NovoLancamentoComponent } from './pages/novo-lancamento/novo-lancamento
 import { LancamentoFormComponent } from './components/lancamento-form/lancamento-form.component';
 import { EditLancamentoComponent } from './pages/edit-lancamento/edit-lancamento.component';
 import { ExcluirLancamentoComponent } from './pages/excluir-lancamento/excluir-lancamento.component';
+import { SaldosComponent } from './components/saldos/saldos.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ExcluirLancamentoComponent } from './pages/excluir-lancamento/excluir-l
     NovoLancamentoComponent,
     LancamentoFormComponent,
     EditLancamentoComponent,
-    ExcluirLancamentoComponent
+    ExcluirLancamentoComponent,
+    SaldosComponent
   ],
   imports: [
     BrowserModule,

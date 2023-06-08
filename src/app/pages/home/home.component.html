@@ -1,36 +1,37 @@
+<app-saldos></app-saldos>
 <div class="class">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
 <div ng-app="myApp">
     <div *ngIf="lancamentos.length > 0; else noLancamentos"  ng-controller="myController">
-        <div class="container">
-            <div class="jumbotron">
-                <table class="table table-hover">
-                    <tr>
-                        <td>Data Hora</td>
-                        <td>Valor</td>
-                        <td>Descrição</td>
-                        <td>Status</td>
-                    </tr>                    
-                    <tr *ngFor="let lancamento of lancamentos">
-                        <td>{{lancamento.dataHora | date: "dd/MM/yyyy hh:mm"}}</td>
-                        <td>{{lancamento.valor}}</td>
-                        <td>{{lancamento.descricao}}</td>   
-                        <td>{{lancamento.status}}</td>                        
-                        <button routerLink="/lancamento/edit/{{lancamento.id}}" type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ></button>
-                        <button routerLink="/lancamento/excluir/{{lancamento.id}}" type="button" class="btn btn-danger glyphicon glyphicon-trash" ></button>
-                    </tr>                    
+                <table class="table table-striped">   
+                    <thead class="thead-dark">
+                        <tr>
+                          <th scope="col">Data Hora</th>
+                          <th scope="col">Valor</th>
+                          <th scope="col">Descrição</th>
+                          <th scope="col">Status</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>   
+                      <tbody>            
+                        <tr *ngFor="let lancamento of lancamentos">
+                            <td>{{lancamento.dataHora | date: "dd/MM/yyyy hh:mm"}}</td>
+                            <td>{{lancamento.valor}}</td>
+                            <td>{{lancamento.descricao}}</td>   
+                            <td>{{lancamento.status}}</td>                        
+                            <button routerLink="/lancamento/edit/{{lancamento.id}}" type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ></button>
+                            <button routerLink="/lancamento/excluir/{{lancamento.id}}" type="button" class="btn btn-danger glyphicon glyphicon-trash" ></button>
+                        </tr>  
+                    </tbody>                   
                 </table>
-            </div>
-        </div>
     </div>
     <ng-template #noLancamentos>
         <h1>Não exitem registros cadastrados :P</h1>
     </ng-template>
 </div>
-
-
 </div>
