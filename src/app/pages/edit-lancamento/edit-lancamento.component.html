@@ -1,6 +1,6 @@
 <div *ngIf="lancamento">
     <h2>
-        Editando o Lancamento<span>{{lancamento}}</span>!
+        <span>Editar</span> Lancamento!
     </h2>
-    <app-lancamento-form [lancamentoData]="lancamento" [btnText]="btnText"></app-lancamento-form>
+    <app-lancamento-form (onSubmit)="editHendler($event)" [lancamentoData]="lancamento" [btnText]="btnText"></app-lancamento-form>
 </div>

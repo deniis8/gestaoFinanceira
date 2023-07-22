@@ -12,6 +12,8 @@ import { GraficosComponent } from './pages/graficos/graficos.component';
 import { NovoLancamentoComponent } from './pages/novo-lancamento/novo-lancamento.component';
 import { LancamentoFormComponent } from './components/lancamento-form/lancamento-form.component';
 import { EditLancamentoComponent } from './pages/edit-lancamento/edit-lancamento.component';
+import { ExcluirLancamentoComponent } from './pages/excluir-lancamento/excluir-lancamento.component';
+import { SaldosComponent } from './components/saldos/saldos.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { EditLancamentoComponent } from './pages/edit-lancamento/edit-lancamento
     GraficosComponent,
     NovoLancamentoComponent,
     LancamentoFormComponent,
-    EditLancamentoComponent
+    EditLancamentoComponent,
+    ExcluirLancamentoComponent,
+    SaldosComponent
   ],
   imports: [
     BrowserModule,

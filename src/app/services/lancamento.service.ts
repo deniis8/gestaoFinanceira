@@ -33,6 +33,8 @@ export class LancamentoService {
       idUsuario: Number(formData.getAll("idUsuario"))
     }; 
 
+    console.log(data);
+
     return this.http.post<FormData>(`${this.baseApiUrl}api/lancamentos`, data);
   }
 
@@ -41,5 +43,22 @@ export class LancamentoService {
       deletado: '*'
     };
     return this.http.put(`${this.baseApiUrl}api/lancamentos/del/${id}`, data);
+  }
+
+  putLancamento(id: Number, formData: FormData): Observable<FormData>{
+
+      // O "Z" no final indica que esta data e hora está em UTC.
+      var dataLancamento = new Date(formData.getAll("dataHora").toString()+"Z");
+    
+      var data = { 
+        dataHora: dataLancamento,
+        valor: Number(formData.getAll("valor")),
+        descricao: formData.getAll("descricao").toString(),
+        status: formData.getAll("status").toString(),
+        idCCusto: Number(formData.getAll("idCCusto")),
+        idUsuario: Number(formData.getAll("idUsuario"))
+      }; 
+
+    return this.http.put<FormData>(`${this.baseApiUrl}api/lancamentos/${id}`, data);
   }
 }
