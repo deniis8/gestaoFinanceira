@@ -1,6 +1,7 @@
 import { NgFor } from '@angular/common';
+import { TemplateBindingParseResult } from '@angular/compiler';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {Chart, registerables} from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 import { first } from 'rxjs';
 import { GastosMensais } from 'src/app/Gastos-Mensais';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
@@ -10,32 +11,38 @@ import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
   templateUrl: './graficos.component.html',
   styleUrls: ['./graficos.component.css']
 })
-export class GraficosComponent implements OnInit{
-  
+export class GraficosComponent implements OnInit {
+
   /**
    *
    */
-  gastosMensais: any [] = [];
+  //public gastosMensais: GastosMensais[] = [];
+  mes: string[] = [];
+  valor: number[] = [];
+
   constructor(private saldoService: GastosMensaisService) {
     Chart.register(...registerables);
-    
+
   }
 
-  
+
   @ViewChild("meuCanvas", { static: true }) elemento!: ElementRef;
   ngOnInit(): void {
-    
-    this.saldoService.getGastosMensais().subscribe((item) => {
-      item.forEach(element => this.gastosMensais.push(element))
-    })
-    console.log(this.gastosMensais);
-      new Chart(this.elemento.nativeElement, {
+
+    this.saldoService.getGastosMensais().subscribe(item => {
+      item.forEach(t => {
+        this.mes.push(t.ano + " - " + t.mes);
+        this.valor.push(t.valor);
+      });
+    });
+
+    new Chart(this.elemento.nativeElement, {
       type: 'bar',
       data: {
-        labels: ["Janeiro", "Fevereiro"],
+        labels: this.mes,
         datasets: [{
           label: 'Gastos Mensais',
-          data: [2800, 3000],
+          data: this.valor,
           borderWidth: 1
         }]
       },
@@ -47,7 +54,7 @@ export class GraficosComponent implements OnInit{
         }
       }
     });
-    
+
   }
 
 }
