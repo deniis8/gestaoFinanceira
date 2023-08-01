@@ -21,21 +21,16 @@ export class GraficosComponent implements OnInit {
   valor: number[] = [];
 
   constructor(private saldoService: GastosMensaisService) {
+
     Chart.register(...registerables);
+    
 
   }
-
+  
 
   @ViewChild("meuCanvas", { static: true }) elemento!: ElementRef;
-  ngOnInit(): void {
-
-    this.saldoService.getGastosMensais().subscribe(item => {
-      item.forEach(t => {
-        this.mes.push(t.ano + " - " + t.mes);
-        this.valor.push(t.valor);
-      });
-    });
-
+    ngOnInit(): void { 
+    this.buscarInformacoes();   
     new Chart(this.elemento.nativeElement, {
       type: 'bar',
       data: {
@@ -55,6 +50,15 @@ export class GraficosComponent implements OnInit {
       }
     });
 
+  }
+
+  buscarInformacoes():void{
+    this.saldoService.getGastosMensais().subscribe(item => {
+      item.forEach(t => {
+        this.mes.push(t.ano + " - " + t.mes);
+        this.valor.push(t.valor);
+      });
+    });
   }
 
 }
