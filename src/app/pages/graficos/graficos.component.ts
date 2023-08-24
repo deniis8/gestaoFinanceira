@@ -12,26 +12,21 @@ import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
   styleUrls: ['./graficos.component.css']
 })
 export class GraficosComponent implements OnInit {
-
-  /**
-   *
-   */
-  //public gastosMensais: GastosMensais[] = [];
+  
+  public gastosMensais: GastosMensais[] = [];
   mes: string[] = [];
   valor: number[] = [];
 
   constructor(private saldoService: GastosMensaisService) {
-
     Chart.register(...registerables);
-    
+  }  
 
-  }
-  
+  @ViewChild("meuCanvas", { static: true }) elemento: ElementRef | undefined;
+  ngOnInit(): void {    
 
-  @ViewChild("meuCanvas", { static: true }) elemento!: ElementRef;
-    ngOnInit(): void { 
     this.buscarInformacoes();   
-    new Chart(this.elemento.nativeElement, {
+
+    new Chart(this.elemento?.nativeElement, {
       type: 'bar',
       data: {
         labels: this.mes,
@@ -49,14 +44,14 @@ export class GraficosComponent implements OnInit {
         }
       }
     });
-
   }
 
-  buscarInformacoes():void{
+  buscarInformacoes(){
     this.saldoService.getGastosMensais().subscribe(item => {
+      this.gastosMensais = item;
       item.forEach(t => {
         this.mes.push(t.ano + " - " + t.mes);
-        this.valor.push(t.valor);
+        this.valor.push(t.valor)
       });
     });
   }
