@@ -1,8 +1,7 @@
 import { NgFor } from '@angular/common';
 import { TemplateBindingParseResult } from '@angular/compiler';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Chart, registerables } from 'chart.js';
-import { first } from 'rxjs';
+import Chart from 'chart.js/auto';
 import { GastosMensais } from 'src/app/Gastos-Mensais';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
 
@@ -14,25 +13,33 @@ import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
 export class GraficosComponent implements OnInit {
   
   public gastosMensais: GastosMensais[] = [];
-  mes: string[] = [];
-  valor: number[] = [];
+  private chartInfo: any;
+  mes: any[] = [];
+  valor: any[] = [];
+
+  public chart: any;
 
   constructor(private saldoService: GastosMensaisService) {
-    Chart.register(...registerables);
+    //Chart.register(...registerables);
   }  
 
-  @ViewChild("meuCanvas", { static: true }) elemento: ElementRef | undefined;
+  //@ViewChild("meuCanvas", { static: true }) elemento: ElementRef | undefined;
   ngOnInit(): void {    
 
     this.buscarInformacoes();   
+    
+  }
 
-    new Chart(this.elemento?.nativeElement, {
+  createChart(mes: any, valor: any){
+    console.log(this.mes);
+    console.log(this.valor);
+    this.chart = new Chart("MyChart", {
       type: 'bar',
       data: {
-        labels: this.mes,
+        labels: mes,
         datasets: [{
           label: 'Gastos Mensais',
-          data: this.valor,
+          data: valor,
           borderWidth: 1
         }]
       },
@@ -48,11 +55,14 @@ export class GraficosComponent implements OnInit {
 
   buscarInformacoes(){
     this.saldoService.getGastosMensais().subscribe(item => {
-      this.gastosMensais = item;
-      item.forEach(t => {
-        this.mes.push(t.ano + " - " + t.mes);
-        this.valor.push(t.valor)
-      });
+      this.chartInfo = item;
+      if (this.chartInfo != null) {
+        for (let i = 0; i < this.chartInfo.length; i++) {
+          this.mes.push(this.chartInfo[i].mes + " - " + this.chartInfo[i].ano);
+          this.valor.push(this.chartInfo[i].valor);
+        }
+        this.createChart(this.mes, this.valor);
+      }
     });
   }
 
