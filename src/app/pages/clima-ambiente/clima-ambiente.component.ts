@@ -16,7 +16,7 @@ export class ClimaAmbienteComponent {
   dataHora: any[] = [];
   dataHoraCabecalho: any[] = [];
   temperatura: any[] = [];
-  humidade: any[] = [];
+  umidade: any[] = [];
 
   public chart: any;
 
@@ -34,18 +34,18 @@ export class ClimaAmbienteComponent {
     
   }
 
-  createChart(dataHora: any, temperatura: any, humidade: any){
+  createChart(dataHora: any, temperatura: any, umidade: any){
     console.log(this.dataHora);
     console.log(this.temperatura);
-    console.log(this.humidade);
+    console.log(this.umidade);
     this.chart = new Chart("ChartBar", {
       type: 'bar',
       data: {
         labels: dataHora,
         datasets: [
           {
-            label: 'Humidade',
-            data: humidade,
+            label: 'Umidade',
+            data: umidade,
             borderColor: '#006400',
             backgroundColor: '#006400',
           }
@@ -66,10 +66,10 @@ export class ClimaAmbienteComponent {
     });    
   }
 
-  createChartHumidade(dataHora: any, temperatura: any, humidade: any){
+  createChartUmidade(dataHora: any, temperatura: any, umidade: any){
     console.log(this.dataHora);
     console.log(this.temperatura);
-    console.log(this.humidade);
+    console.log(this.umidade);
     this.chart = new Chart("ChartLine", {
       type: 'bar',
       data: {
@@ -106,10 +106,10 @@ export class ClimaAmbienteComponent {
           this.dataHora.push(moment(this.chartInfo[i].dataHora).format('DD/MM HH:mm'));
           this.dataHoraCabecalho.push(moment(this.chartInfo[i].dataHora).format('DD/MM/YYYY HH:mm'));
           this.temperatura.push(this.chartInfo[i].temperatura);
-          this.humidade.push(this.chartInfo[i].humidade);
+          this.umidade.push(this.chartInfo[i].humidade);
         }
-        this.createChart(this.dataHora, this.temperatura, this.humidade);
-        this.createChartHumidade(this.dataHora, this.temperatura, this.humidade);
+        this.createChart(this.dataHora, this.temperatura, this.umidade);
+        this.createChartUmidade(this.dataHora, this.temperatura, this.umidade);
       }
     });
   }
