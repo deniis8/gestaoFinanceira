@@ -72,7 +72,7 @@ export class GraficosComponent implements OnInit {
           if (event.type === 'click') {
             const mesSelecionado = chart.tooltip?.title.toString();
             console.log(mesSelecionado);
-            //this.buscarInformacoesGraficoCentroCusto()
+            ///this.buscarInformacoesGraficoCentroCusto()
           }
         }
       }]
