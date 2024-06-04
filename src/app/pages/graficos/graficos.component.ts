@@ -67,16 +67,20 @@ export class GraficosComponent implements OnInit {
       // events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
       plugins: [{
         id: 'myEventCatcher',
-        beforeEvent(chart, args, pluginOptions) {
+        beforeEvent: (chart, args, pluginOptions) => {
           const event = args.event;
           if (event.type === 'click') {
             const mesSelecionado = chart.tooltip?.title.toString();
-            console.log(mesSelecionado);
-            ///this.buscarInformacoesGraficoCentroCusto()
+            //console.log(mesSelecionado);
+            this.teste(mesSelecionado);
           }
         }
       }]
     });
+  }
+
+  teste(mesSelecionado?: string | undefined){
+    console.log(mesSelecionado)
   }
 
   buscarInformacoes(){
@@ -118,7 +122,7 @@ export class GraficosComponent implements OnInit {
     });
   }
 
-  buscarInformacoesGraficoCentroCusto(){
+  buscarInformacoesGraficoCentroCusto(mesSelecionado?: string | undefined){
     this.gastosCentroCustoService.getAllGastosCentroCustos().subscribe(item => {
       this.chartInfoCC = item;
       if (this.chartInfoCC != null) {
