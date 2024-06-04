@@ -3,7 +3,7 @@ import { Chart } from 'chart.js';
 import { ClimaAmbiente } from 'src/app/Clima-Ambiente';
 import { ClimaAmbienteService } from 'src/app/services/clima-ambiente.service';
 import { DatePipe } from '@angular/common';
-import * as moment from 'moment';
+//import * as moment from 'moment';
 
 @Component({
   selector: 'app-clima-ambiente',
@@ -103,8 +103,8 @@ export class ClimaAmbienteComponent {
       this.chartInfo = item;
       if (this.chartInfo != null) {
         for (let i = 0; i < this.chartInfo.length; i++) {
-          this.dataHora.push(moment(this.chartInfo[i].dataHora).format('DD/MM HH:mm'));
-          this.dataHoraCabecalho.push(moment(this.chartInfo[i].dataHora).format('DD/MM/YYYY HH:mm'));
+          //this.dataHora.push(moment(this.chartInfo[i].dataHora).format('DD/MM HH:mm'));
+          //this.dataHoraCabecalho.push(moment(this.chartInfo[i].dataHora).format('DD/MM/YYYY HH:mm'));
           this.temperatura.push(this.chartInfo[i].temperatura);
           this.umidade.push(this.chartInfo[i].humidade);
         }
