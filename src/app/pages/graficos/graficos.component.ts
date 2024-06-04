@@ -4,6 +4,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
 import { GastosCentroCusto } from 'src/app/Gastos-Centro-Custo';
 import { GastosMensais } from 'src/app/Gastos-Mensais';
+import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-centro-custo.service';
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo.service';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
 
@@ -18,8 +19,9 @@ export class GraficosComponent implements OnInit {
   public gastosMensais: GastosMensais[] = [];
   private chartInfo: any;
   mes: any[] = [];
-  mesSelecionado: any;
+  //mesSelecionado: any;
   valor: any[] = [];
+  mesAno?: string = "";
   public chart: any;
 
   //Gráfico Gastos por Centro de Custo
@@ -30,22 +32,27 @@ export class GraficosComponent implements OnInit {
   descricaoCC: any[] = [];
   public chartCC: any;
 
-  constructor(private saldoService: GastosMensaisService, private gastosCentroCustoService: GastosCentroCustoService) {
+  //Detalhamento GastosCentroCusto
+  detalhamentoGastosCC: any[] = [];
+  
+
+
+  constructor(private saldoService: GastosMensaisService, private gastosCentroCustoService: GastosCentroCustoService, private detalhamentoGastosCentroCusto: DetalhamentoGastosCentroCustoService) {
     //Chart.register(...registerables);
   }  
 
   //@ViewChild("meuCanvas", { static: true }) elemento: ElementRef | undefined;
-  ngOnInit(): void {    
-
+  ngOnInit(): void {  
+    
+    this.mesAno = this.trataMesAnoAtual();
+    
     this.buscarInformacoes();  
-    this.buscarInformacoesGraficoCentroCusto(); 
+    this.buscarInformacoesGraficoCentroCusto(this.mesAno);
     
   }
 
   //Grafico Gastos Mensais
   createChart(mes: any, valor: any){
-    //console.log(this.mes);
-    //console.log(this.valor);
     this.chart = new Chart("MyChart", {
       type: 'bar',
       data: {
@@ -70,17 +77,13 @@ export class GraficosComponent implements OnInit {
         beforeEvent: (chart, args, pluginOptions) => {
           const event = args.event;
           if (event.type === 'click') {
-            const mesSelecionado = chart.tooltip?.title.toString();
-            //console.log(mesSelecionado);
-            this.teste(mesSelecionado);
+            this.chartCC.destroy();
+            let _mesAno = chart.tooltip?.title.toString();            
+            this.buscarInformacoesGraficoCentroCusto(_mesAno);
           }
         }
       }]
     });
-  }
-
-  teste(mesSelecionado?: string | undefined){
-    console.log(mesSelecionado)
   }
 
   buscarInformacoes(){
@@ -98,9 +101,6 @@ export class GraficosComponent implements OnInit {
 
   //Gráfico Gastos por Centro de Custo
   criaGraficoGastosCentroCusto(descricaoCC: any, valorCC: any){
-    //console.log(this.dataCC);
-    //console.log(this.valorCC);
-    //console.log(this.descricaoCC);
     this.chartCC = new Chart("MyChartCC", {
       type: 'bar',
       data: {
@@ -118,20 +118,117 @@ export class GraficosComponent implements OnInit {
             beginAtZero: true
           }
         }
-      }
+      },
+      // events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
+      plugins: [{
+        id: 'myEventCatcher',
+        beforeEvent: (chart, args, pluginOptions) => {
+          const event = args.event;
+          if (event.type === 'click') {
+            let desCC = chart.tooltip?.title.toString();
+            console.log(desCC);
+            this.buscarDetalhamentoGastosCentroCusto(this.mesAno, desCC);
+          }
+        }
+      }]
     });
   }
 
-  buscarInformacoesGraficoCentroCusto(mesSelecionado?: string | undefined){
-    this.gastosCentroCustoService.getAllGastosCentroCustos().subscribe(item => {
+  buscarInformacoesGraficoCentroCusto(mesAno?: string){
+    this.mesAno = mesAno;
+    //this.chartCC.destroy();
+    this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
       this.chartInfoCC = item;
+      this.valorCC = [];
+      this.descricaoCC = [];
+      
       if (this.chartInfoCC != null) {
         for (let i = 0; i < this.chartInfoCC.length; i++) {
-          //sthis.dataCC.push(this.chartInfoCC[i].dataHora);
+          
           this.valorCC.push(this.chartInfoCC[i].valor);
           this.descricaoCC.push(this.chartInfoCC[i].descricao);
         }
         this.criaGraficoGastosCentroCusto(this.descricaoCC, this.valorCC);
+        this.buscarDetalhamentoGastosCentroCusto(this.mesAno, [...this.descricaoCC].pop());
+        //this.chartCC.update();
+        
+      }
+    });
+    
+  }
+
+  trataMesAnoAtual(){
+    let dataAtual = new Date().toLocaleDateString('pt-BR');
+    let mes: string = dataAtual.toString().substring(3,5);
+    let ano: string = dataAtual.toString().substring(6,10);
+
+    switch(mes) { 
+      case "01": { 
+        mes = "Janeiro"; 
+         break; 
+      } 
+      case "02": { 
+         mes = "Fevereiro"; 
+         break; 
+      } 
+      case "03": { 
+          mes = "Março";  
+        break; 
+        }
+        case "04": { 
+          mes = "Abril";  
+          break; 
+      }
+      case "05": { 
+        mes = "Maio"; 
+        break; 
+      }
+      case "06": { 
+        mes = "Junho";
+        break; 
+      }
+      case "07": { 
+        mes = "Julho"; 
+      break; 
+      }
+      case "08": { 
+        mes = "Agosto"; 
+        break; 
+      }
+      case "09": { 
+        mes = "Setembro";  
+      break; 
+      }
+      case "10": { 
+        mes = "Outubro";  
+      break; 
+      }
+      case "11": { 
+        mes = "Novembro";  
+      break; 
+      }
+      case "12": { 
+        mes = "Dezembro"; 
+      break; 
+      } 
+      
+   }
+   const mesAno: string = mes + " - " + ano;
+   return mesAno;
+    
+  }
+
+  buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string){
+    this.detalhamentoGastosCentroCusto.getAllDetalhamentoGastosCentroMesAno(mesAno, desCC).subscribe(item => {
+      const infoDetalhamento = item;
+      this.detalhamentoGastosCC = [];
+      if (infoDetalhamento != null) {
+        for (let i = 0; i < infoDetalhamento.length; i++) {          
+          //this.valorCC.push(infoDetalhamento[i].valor);
+          //this.descricaoCC.push(infoDetalhamento[i].descricao);
+          this.detalhamentoGastosCC.push(infoDetalhamento[i])
+        }
+        console.log(this.detalhamentoGastosCC);        
       }
     });
   }

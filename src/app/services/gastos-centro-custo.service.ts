@@ -13,7 +13,12 @@ export class GastosCentroCustoService {
   
   constructor(private http: HttpClient) { }
 
-  getAllGastosCentroCustos(): Observable<GastosCentroCusto[]>{
+  //Não consumo mais essa rota
+  /*getAllGastosCentroCustos(): Observable<GastosCentroCusto[]>{
     return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/data`);
+  }*/
+
+  getAllGastosCentroMesAno(mesAno?: string): Observable<GastosCentroCusto[]>{
+    return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/mesano/${mesAno}`);
   }
 }

@@ -6,3 +6,35 @@
 <div class="chart-container">
     <canvas  id="MyChartCC" >{{ chartCC }}</canvas>
 </div>
+<br>
+<br>
+<div class="class">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    
+    <div ng-app="myApp">
+        <div *ngIf="detalhamentoGastosCC.length > 0"  ng-controller="myController">
+            <table class="table table-bordered">   
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Data Hora</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Descrição Lançamento</th>
+                        <th scope="col">Descrição Centro de Custo</th>
+                    </tr>
+                    </thead>   
+                    <tbody>            
+                    <tr *ngFor="let _detalhamentoGastosCC of detalhamentoGastosCC">
+                        <td>{{_detalhamentoGastosCC.dataHora | date: "dd/MM/yyyy HH:mm"}}</td>
+                        <td>{{_detalhamentoGastosCC.valor}}</td>
+                        <td>{{_detalhamentoGastosCC.descricaoLancamento}}</td>   
+                        <td>{{_detalhamentoGastosCC.descricaoCentroCusto}}</td>   
+                    </tr>  
+                </tbody>                   
+            </table>
+        </div>
+    </div>
+    </div>

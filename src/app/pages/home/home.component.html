@@ -20,7 +20,7 @@
                       </thead>   
                       <tbody>            
                         <tr *ngFor="let lancamento of lancamentos">
-                            <td>{{lancamento.dataHora | date: "dd/MM/yyyy hh:mm"}}</td>
+                            <td>{{lancamento.dataHora | date: "dd/MM/yyyy HH:mm"}}</td>
                             <td>{{lancamento.valor}}</td>
                             <td>{{lancamento.descricao}}</td>   
                             <td>{{lancamento.status}}</td>                        
