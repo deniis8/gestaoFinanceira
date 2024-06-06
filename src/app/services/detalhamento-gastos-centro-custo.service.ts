@@ -14,7 +14,6 @@ export class DetalhamentoGastosCentroCustoService {
   constructor(private http: HttpClient) { }
 
   getAllDetalhamentoGastosCentroMesAno(mesAno?: string, descCC?: string): Observable<DetalhamentoGastosCentroCusto[]>{
-    console.log("Link: " + `${this.baseApiUrl}api/detalhamentogastoscentrocustos/descCC/${mesAno}/${descCC}`);
     return this.http.get<DetalhamentoGastosCentroCusto[]>(`${this.baseApiUrl}api/detalhamentogastoscentrocustos/descricaoCC?mesAno=${mesAno}&descCC=${descCC}`);
   }
 }

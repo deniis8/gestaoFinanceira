@@ -1,9 +1,5 @@
-import { NgFor } from '@angular/common';
-import { TemplateBindingParseResult } from '@angular/compiler';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { GastosCentroCusto } from 'src/app/Gastos-Centro-Custo';
-import { GastosMensais } from 'src/app/Gastos-Mensais';
 import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-centro-custo.service';
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo.service';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
@@ -15,51 +11,41 @@ import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
 })
 export class GraficosComponent implements OnInit {
   
-  //Grafico Gastos Mensais
-  public gastosMensais: GastosMensais[] = [];
-  private chartInfo: any;
-  mes: any[] = [];
-  //mesSelecionado: any;
-  valor: any[] = [];
-  mesAno?: string = "";
-  public chart: any;
+  //Variáveis grafico Gastos Mensais
+  private gGMLabelMes: any[] = [];
+  private gGMDataValor: any[] = [];
+  private gGMMesAnoAuxiliar?: string = "";
+  public gGMChart: any;
 
-  //Gráfico Gastos por Centro de Custo
-  public gastosCentroCusto: GastosCentroCusto[] = [];
+  //Variáveis gráfico Gastos por Centro de Custo
   private chartInfoCC: any;
-  dataCC: any[] = [];
-  valorCC: any[] = [];
-  descricaoCC: any[] = [];
-  public chartCC: any;
+  private gGCCValor: any[] = [];
+  private gGCCDescricao: any[] = [];
+  public gGCCChart: any;
 
   //Detalhamento GastosCentroCusto
   detalhamentoGastosCC: any[] = [];
-  
-
 
   constructor(private saldoService: GastosMensaisService, private gastosCentroCustoService: GastosCentroCustoService, private detalhamentoGastosCentroCusto: DetalhamentoGastosCentroCustoService) {
     //Chart.register(...registerables);
   }  
 
   //@ViewChild("meuCanvas", { static: true }) elemento: ElementRef | undefined;
-  ngOnInit(): void {  
-    
-    this.mesAno = this.trataMesAnoAtual();
-    
+  ngOnInit(): void {     
+    this.gGMMesAnoAuxiliar = this.trataMesAnoAtual();    
     this.buscarInformacoes();  
-    this.buscarInformacoesGraficoCentroCusto(this.mesAno);
-    
+    this.buscarInformacoesGraficoCentroCusto(this.gGMMesAnoAuxiliar);    
   }
 
   //Grafico Gastos Mensais
-  createChart(mes: any, valor: any){
-    this.chart = new Chart("MyChart", {
+  createChart(gGMLabelMes: any, gGMDataValor: any){
+    this.gGMChart = new Chart("gGMChart", {
       type: 'bar',
       data: {
-        labels: mes,
+        labels: gGMLabelMes,
         datasets: [{
           label: 'Gastos Mensais - 1 Ano',
-          data: valor,
+          data: gGMDataValor,
           borderWidth: 1,
           backgroundColor: '#778899'
         }]
@@ -75,9 +61,9 @@ export class GraficosComponent implements OnInit {
       plugins: [{
         id: 'myEventCatcher',
         beforeEvent: (chart, args, pluginOptions) => {
-          const event = args.event;
+          let event = args.event;
           if (event.type === 'click') {
-            this.chartCC.destroy();
+            this.gGCCChart.destroy();
             let _mesAno = chart.tooltip?.title.toString();            
             this.buscarInformacoesGraficoCentroCusto(_mesAno);
           }
@@ -88,26 +74,25 @@ export class GraficosComponent implements OnInit {
 
   buscarInformacoes(){
     this.saldoService.getGastosMensais().subscribe(item => {
-      this.chartInfo = item;
-      if (this.chartInfo != null) {
-        for (let i = 0; i < this.chartInfo.length; i++) {
-          this.mes.push(this.chartInfo[i].mes + " - " + this.chartInfo[i].ano);
-          this.valor.push(this.chartInfo[i].valor);
+      if (item != null) {
+        for (let i = 0; i < item.length; i++) {
+          this.gGMLabelMes.push(item[i].mes + " - " + item[i].ano);
+          this.gGMDataValor.push(item[i].valor);
         }
-        this.createChart(this.mes, this.valor);
+        this.createChart(this.gGMLabelMes, this.gGMDataValor);
       }
     });
   }
 
   //Gráfico Gastos por Centro de Custo
-  criaGraficoGastosCentroCusto(descricaoCC: any, valorCC: any){
-    this.chartCC = new Chart("MyChartCC", {
+  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any){
+    this.gGCCChart = new Chart("gGCCChart", {
       type: 'bar',
       data: {
-        labels: descricaoCC,
+        labels: gGCCDescricao,
         datasets: [{
-          label: 'Top 15 - Gastos Mensal por Centro de Custo',
-          data: valorCC,
+          label: 'Top 10 - Gastos Mensal por Centro de Custo',
+          data: gGCCValor,
           borderWidth: 1,
           backgroundColor: '#778899'
         }]
@@ -123,11 +108,11 @@ export class GraficosComponent implements OnInit {
       plugins: [{
         id: 'myEventCatcher',
         beforeEvent: (chart, args, pluginOptions) => {
-          const event = args.event;
+          let event = args.event;
           if (event.type === 'click') {
             let desCC = chart.tooltip?.title.toString();
-            console.log(desCC);
-            this.buscarDetalhamentoGastosCentroCusto(this.mesAno, desCC);
+            //console.log(desCC);
+            this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, desCC);
           }
         }
       }]
@@ -135,22 +120,22 @@ export class GraficosComponent implements OnInit {
   }
 
   buscarInformacoesGraficoCentroCusto(mesAno?: string){
-    this.mesAno = mesAno;
-    //this.chartCC.destroy();
+    this.gGMMesAnoAuxiliar = mesAno;
+    //this.gGCCChart.destroy();
     this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
       this.chartInfoCC = item;
-      this.valorCC = [];
-      this.descricaoCC = [];
+      this.gGCCValor = [];
+      this.gGCCDescricao = [];
       
       if (this.chartInfoCC != null) {
         for (let i = 0; i < this.chartInfoCC.length; i++) {
           
-          this.valorCC.push(this.chartInfoCC[i].valor);
-          this.descricaoCC.push(this.chartInfoCC[i].descricao);
+          this.gGCCValor.push(this.chartInfoCC[i].valor);
+          this.gGCCDescricao.push(this.chartInfoCC[i].descricao);
         }
-        this.criaGraficoGastosCentroCusto(this.descricaoCC, this.valorCC);
-        this.buscarDetalhamentoGastosCentroCusto(this.mesAno, [...this.descricaoCC].pop());
-        //this.chartCC.update();
+        this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor);
+        this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, [...this.gGCCDescricao].pop());
+        //this.gGCCChart.update();
         
       }
     });
@@ -213,22 +198,20 @@ export class GraficosComponent implements OnInit {
       } 
       
    }
-   const mesAno: string = mes + " - " + ano;
+   let mesAno: string = mes + " - " + ano;
    return mesAno;
     
   }
 
   buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string){
     this.detalhamentoGastosCentroCusto.getAllDetalhamentoGastosCentroMesAno(mesAno, desCC).subscribe(item => {
-      const infoDetalhamento = item;
+      let infoDetalhamento = item;
       this.detalhamentoGastosCC = [];
       if (infoDetalhamento != null) {
-        for (let i = 0; i < infoDetalhamento.length; i++) {          
-          //this.valorCC.push(infoDetalhamento[i].valor);
-          //this.descricaoCC.push(infoDetalhamento[i].descricao);
+        for (let i = 0; i < infoDetalhamento.length; i++) {        
           this.detalhamentoGastosCC.push(infoDetalhamento[i])
         }
-        console.log(this.detalhamentoGastosCC);        
+        //console.log(this.detalhamentoGastosCC);        
       }
     });
   }
