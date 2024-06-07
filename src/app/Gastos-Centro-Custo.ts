@@ -1,5 +1,7 @@
 export interface GastosCentroCusto{
-    valor: number;       
+    valor: number;    
+    valorMesAnterior: number; 
+    mesAnoMesAnterior: string;    
     descricao: string;
     dataHora: Date; 
     idUsuario: number;

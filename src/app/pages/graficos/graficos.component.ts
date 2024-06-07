@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import Chart from 'chart.js/auto';
+import Chart, { registerables } from 'chart.js/auto';
 import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-centro-custo.service';
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo.service';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 
 @Component({
   selector: 'app-graficos',
@@ -20,6 +22,7 @@ export class GraficosComponent implements OnInit {
   //Variáveis gráfico Gastos por Centro de Custo
   private chartInfoCC: any;
   private gGCCValor: any[] = [];
+  private gGCCValorMesAnterior: any[] = [];
   private gGCCDescricao: any[] = [];
   public gGCCChart: any;
 
@@ -39,6 +42,8 @@ export class GraficosComponent implements OnInit {
 
   //Grafico Gastos Mensais
   createChart(gGMLabelMes: any, gGMDataValor: any){
+    Chart.register(...registerables);
+    Chart.register(ChartDataLabels);
     this.gGMChart = new Chart("gGMChart", {
       type: 'bar',
       data: {
@@ -51,14 +56,46 @@ export class GraficosComponent implements OnInit {
         }]
       },
       options: {
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            color: '#555555',
+            font: {
+              weight: 'bold',
+              size: 8
+            },
+            formatter: function(value: any) {
+              return value;
+            }
+          },
+          tooltip: {
+            enabled: false // Desativa o tooltip
+          }
+        },
         scales: {
           y: {
             beginAtZero: true
           }
+        },
+        onClick: (event: any) => {
+          const points = this.gGMChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, false);
+
+          if (points.length) {
+            const firstPoint = points[0];
+            const datasetIndex = firstPoint.datasetIndex;
+            const index = firstPoint.index;
+
+            const mesAno = this.gGMChart.data.labels[index];
+            //const value = this.gGMChart.data.datasets[datasetIndex].data[index];
+
+            this.gGCCChart.destroy();
+            this.buscarInformacoesGraficoCentroCusto(mesAno);
+          }
         }
       },
       // events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
-      plugins: [{
+      /*plugins: [{
         id: 'myEventCatcher',
         beforeEvent: (chart, args, pluginOptions) => {
           let event = args.event;
@@ -68,7 +105,7 @@ export class GraficosComponent implements OnInit {
             this.buscarInformacoesGraficoCentroCusto(_mesAno);
           }
         }
-      }]
+      }]*/
     });
   }
 
@@ -85,27 +122,66 @@ export class GraficosComponent implements OnInit {
   }
 
   //Gráfico Gastos por Centro de Custo
-  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any){
+  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any, gGCCValorMesAnterior: any){
     this.gGCCChart = new Chart("gGCCChart", {
       type: 'bar',
       data: {
         labels: gGCCDescricao,
-        datasets: [{
-          label: 'Top 10 - Gastos Mensal por Centro de Custo',
+        datasets: [
+          {
+            label: 'Mês Anterior',
+            data: gGCCValorMesAnterior,
+            borderWidth: 1,
+            backgroundColor: '#B0C4DE'
+          },
+          {
+          label: 'Mês atual',
           data: gGCCValor,
           borderWidth: 1,
           backgroundColor: '#778899'
         }]
       },
       options: {
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            color: '#555555',
+            font: {
+              weight: 'bold',
+              size: 5
+            },
+            
+            formatter: function(value: any) {
+              return value;
+            }
+          },
+          tooltip: {
+            enabled: false // Desativa o tooltip
+          }
+        },
         scales: {
           y: {
             beginAtZero: true
           }
+        },
+        onClick: (event: any) => {
+          const points = this.gGCCChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, false);
+
+          if (points.length) {
+            const firstPoint = points[0];
+            const datasetIndex = firstPoint.datasetIndex;
+            const index = firstPoint.index;
+
+            const desCC = this.gGCCChart.data.labels[index];
+            const valor = this.gGCCChart.data.datasets[datasetIndex].data[index];
+            //this.gGCCChart.destroy();
+            this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, desCC);
+          }
         }
       },
       // events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
-      plugins: [{
+      /*plugins: [{
         id: 'myEventCatcher',
         beforeEvent: (chart, args, pluginOptions) => {
           let event = args.event;
@@ -115,7 +191,7 @@ export class GraficosComponent implements OnInit {
             this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, desCC);
           }
         }
-      }]
+      }]*/
     });
   }
 
@@ -125,15 +201,18 @@ export class GraficosComponent implements OnInit {
     this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
       this.chartInfoCC = item;
       this.gGCCValor = [];
+      this.gGCCValorMesAnterior = [];
       this.gGCCDescricao = [];
-      
+      //console.log(item);
       if (this.chartInfoCC != null) {
         for (let i = 0; i < this.chartInfoCC.length; i++) {
           
           this.gGCCValor.push(this.chartInfoCC[i].valor);
+          this.gGCCValorMesAnterior.push(this.chartInfoCC[i].valorMesAnterior);
           this.gGCCDescricao.push(this.chartInfoCC[i].descricao);
         }
-        this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor);
+        
+        this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor, this.gGCCValorMesAnterior);
         this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, [...this.gGCCDescricao].pop());
         //this.gGCCChart.update();
         
