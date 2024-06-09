@@ -24,6 +24,8 @@ export class GraficosComponent implements OnInit {
   private gGCCValor: any[] = [];
   private gGCCValorMesAnterior: any[] = [];
   private gGCCDescricao: any[] = [];
+  private gGCCmesAnoAtual: any[] = []; 
+  private gGCCmesAnoAnterior: any[] = []; 
   public gGCCChart: any;
 
   //Detalhamento GastosCentroCusto
@@ -90,6 +92,7 @@ export class GraficosComponent implements OnInit {
             //const value = this.gGMChart.data.datasets[datasetIndex].data[index];
 
             this.gGCCChart.destroy();
+            console.log(mesAno);
             this.buscarInformacoesGraficoCentroCusto(mesAno);
           }
         }
@@ -122,7 +125,7 @@ export class GraficosComponent implements OnInit {
   }
 
   //Gráfico Gastos por Centro de Custo
-  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any, gGCCValorMesAnterior: any){
+  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any, gGCCValorMesAnterior: any, gGCCmesAnoAtual: any, gGCCmesAnoAnterior: any){
     this.gGCCChart = new Chart("gGCCChart", {
       type: 'bar',
       data: {
@@ -149,7 +152,7 @@ export class GraficosComponent implements OnInit {
             color: '#555555',
             font: {
               weight: 'bold',
-              size: 5
+              size: 8
             },
             
             formatter: function(value: any) {
@@ -175,8 +178,21 @@ export class GraficosComponent implements OnInit {
 
             const desCC = this.gGCCChart.data.labels[index];
             const valor = this.gGCCChart.data.datasets[datasetIndex].data[index];
+
+            let mesAno = '';
+            if (datasetIndex === 0) { // Mês Anterior
+                mesAno = gGCCmesAnoAnterior[index];
+            } else if (datasetIndex === 1) { // Mês Atual
+                mesAno = gGCCmesAnoAtual[index];
+            }
+
+            console.log("mesAno: " + mesAno);
+            console.log("desCC: " + desCC);
+            console.log("valor: " + valor);
+
+
             //this.gGCCChart.destroy();
-            this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, desCC);
+            this.buscarDetalhamentoGastosCentroCusto(mesAno, desCC);
           }
         }
       },
@@ -203,6 +219,8 @@ export class GraficosComponent implements OnInit {
       this.gGCCValor = [];
       this.gGCCValorMesAnterior = [];
       this.gGCCDescricao = [];
+      this.gGCCmesAnoAtual = [];
+      this.gGCCmesAnoAnterior = [];
       //console.log(item);
       if (this.chartInfoCC != null) {
         for (let i = 0; i < this.chartInfoCC.length; i++) {
@@ -210,9 +228,12 @@ export class GraficosComponent implements OnInit {
           this.gGCCValor.push(this.chartInfoCC[i].valor);
           this.gGCCValorMesAnterior.push(this.chartInfoCC[i].valorMesAnterior);
           this.gGCCDescricao.push(this.chartInfoCC[i].descricao);
+          this.gGCCmesAnoAtual.push(this.chartInfoCC[i].mesAno);
+          this.gGCCmesAnoAnterior.push(this.chartInfoCC[i].mesAnoMesAnterior);
         }
-        
-        this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor, this.gGCCValorMesAnterior);
+        //console.log(this.gGCCmesAnoAtual);
+        //console.log(this.gGCCmesAnoAnterior);
+        this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor, this.gGCCValorMesAnterior, this.gGCCmesAnoAtual, this.gGCCmesAnoAnterior);
         this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, [...this.gGCCDescricao].pop());
         //this.gGCCChart.update();
         
