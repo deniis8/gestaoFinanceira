@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { Lancamento } from 'src/app/Lancamento';
 import { LancamentoService } from 'src/app/services/lancamento.service';
 
@@ -11,7 +10,7 @@ import { LancamentoService } from 'src/app/services/lancamento.service';
 export class HomeComponent {
   lancamentos: Lancamento[] = [];
 
-  constructor(private lancamentoService: LancamentoService, private router: Router) {
+  constructor(private lancamentoService: LancamentoService) {
   }
 
   ngOnInit(): void {

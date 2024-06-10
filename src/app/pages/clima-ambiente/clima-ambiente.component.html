@@ -1,0 +1,9 @@
+<div *ngIf="temperatura">
+    <p>Temperatura: {{temperatura.at(-1)}}</p>
+    <p>Umidade: {{umidade.at(-1)}}</p>
+    <p>Data Hora: {{dataHoraCabecalho.at(-1)}}</p>
+</div>
+<div class="chart-container">
+    <canvas  id="ChartLine" >{{ chart }}</canvas>
+    <canvas  id="ChartBar" >{{ chart }}</canvas>    
+</div>
