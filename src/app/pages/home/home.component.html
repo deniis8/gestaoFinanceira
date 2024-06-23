@@ -1,4 +1,17 @@
 <app-saldos></app-saldos>
+
+<div class="date-picker-container">
+    <div class="date-picker">
+        <label for="startDate">Data de:</label>
+        <input id="startDate" type="date" [(ngModel)]="dataDe" (ngModelChange)="filtroData()" />
+    </div>
+    <div class="date-picker">
+        <label for="endDate">Data até:</label>
+        <input id="endDate" type="date" [(ngModel)]="dataAte" (ngModelChange)="filtroData()" />
+    </div>
+</div>
+<br>
+  
 <div class="class">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
