@@ -19,8 +19,9 @@ export class LancamentoService {
   getLancamentoPorId(id: Number): Observable<Lancamento>{
     return this.http.get<Lancamento>(`${this.baseApiUrl}api/lancamentos/${id}`);
   }
-  getLancamentoDataDeAte(dataDe: string, dataAte: string): Observable<Lancamento[]>{
-    return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/dataDeAte?dataDe=${dataDe}&dataAte=${dataAte}`);
+  getLancamentoDataDeAte(dataDe: string, dataAte: string, status: string, idCentroCusto: Number): Observable<Lancamento[]>{
+    console.log(`${this.baseApiUrl}api/lancamentos/dataDeAte?dataDe=${dataDe}&dataAte=${dataAte}&status=${status}&idCentroCusto=${idCentroCusto}`);
+    return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/dataDeAte?dataDe=${dataDe}&dataAte=${dataAte}&status=${status}&idCentroCusto=${idCentroCusto}`);
   }
 
   postLancamento(formData: FormData): Observable<FormData>{
