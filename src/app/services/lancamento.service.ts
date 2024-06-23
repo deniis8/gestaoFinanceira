@@ -19,6 +19,9 @@ export class LancamentoService {
   getLancamentoPorId(id: Number): Observable<Lancamento>{
     return this.http.get<Lancamento>(`${this.baseApiUrl}api/lancamentos/${id}`);
   }
+  getLancamentoDataDeAte(dataDe: string, dataAte: string): Observable<Lancamento[]>{
+    return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/dataDeAte?dataDe=${dataDe}&dataAte=${dataAte}`);
+  }
 
   postLancamento(formData: FormData): Observable<FormData>{
     // O "Z" no final indica que esta data e hora está em UTC.
