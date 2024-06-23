@@ -1,15 +1,67 @@
 <app-saldos></app-saldos>
 
-<div class="date-picker-container">
-    <div class="date-picker">
-        <label for="startDate">Data de:</label>
-        <input id="startDate" type="date" [(ngModel)]="dataDe" (ngModelChange)="filtroData()" />
+<br>
+<div class="container">
+    <!-- Container para os campos de data -->
+    <div class="date-container">
+        <div class="date-picker">
+            <label for="startDate">Data de:</label>
+            <input id="startDate" type="date" [(ngModel)]="dataDe" (ngModelChange)="filtroData()" />
+        </div>
+        <div class="date-picker">
+            <label for="endDate">Data até:</label>
+            <input id="endDate" type="date" [(ngModel)]="dataAte" (ngModelChange)="filtroData()" />
+        </div>
     </div>
-    <div class="date-picker">
-        <label for="endDate">Data até:</label>
-        <input id="endDate" type="date" [(ngModel)]="dataAte" (ngModelChange)="filtroData()" />
+
+    <!-- Container para os checkboxes -->
+    <div class="checkbox-columns">
+        <!-- Coluna 1: A Pagar e Pago -->
+        <div class="checkbox-column">
+            <div class="checkbox-item">
+                <label>
+                    <input type="checkbox" [(ngModel)]="isAPagarChecked" (ngModelChange)="filtroData()">
+                    A Pagar
+                </label>
+            </div>
+            <div class="checkbox-item">
+                <label>
+                    <input type="checkbox" [(ngModel)]="isPagoChecked" (ngModelChange)="filtroData()">
+                    Pago
+                </label>
+            </div>
+        </div>
+
+        <!-- Coluna 2: A Receber e Recebido -->
+        <div class="checkbox-column">
+            <div class="checkbox-item">
+                <label>
+                    <input type="checkbox" [(ngModel)]="isAReceberChecked" (ngModelChange)="filtroData()">
+                    A Receber
+                </label>
+            </div>
+            <div class="checkbox-item">
+                <label>
+                    <input type="checkbox" [(ngModel)]="isRecebidoChecked" (ngModelChange)="filtroData()">
+                    Recebido
+                </label>
+            </div>
+        </div>
     </div>
+
+    <div>
+        <label for="status">Centro Custo:</label>
+        <select id="status" required (change)="filtrarCentroCusto($event)">
+            <option disabled selected hidden>Todos</option>
+            <option [value]="0">Todos</option>
+            <option *ngFor="let centroCusto of centroCustos" [value]="centroCusto.id">{{ centroCusto.descriCCusto }}</option>
+        </select>
+    </div>
+
 </div>
+
+
+
 <br>
   
 <div class="class">
