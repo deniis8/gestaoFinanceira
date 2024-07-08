@@ -5,3 +5,12 @@ p {
     font-size: 0.8em;
     color: #000000;
 }
+.chart-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Permite rolagem suave em dispositivos móveis */
+}
+.chart-container {
+    width: 900px; /* Ajuste a largura conforme necessário para o tamanho do seu gráfico */
+    /* É possível definir uma largura maior para garantir que a rolagem seja necessária */
+}

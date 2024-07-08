@@ -1,9 +1,17 @@
 <div *ngIf="temperatura">
     <p>Temperatura: {{temperatura.at(-1)}}</p>
     <p>Umidade: {{umidade.at(-1)}}</p>
-    <p>Data Hora: {{dataHoraCabecalho.at(-1)}}</p>
+    <p>Data Hora: {{dataHoraCabecalho.at(-1) | date: "dd/MM/yyyy HH:mm"}}</p>
 </div>
-<div class="chart-container">
-    <canvas  id="ChartLine" >{{ chart }}</canvas>
-    <canvas  id="ChartBar" >{{ chart }}</canvas>    
+<br>
+<br>
+<div class="chart-wrapper">
+    <div class="chart-container">
+        <canvas  id="graficoTemperatura" >{{ chartTemperatura }}</canvas>
+    </div>
+</div>
+<div class="chart-wrapper">
+    <div class="chart-container">
+        <canvas  id="graficoUmidade" >{{ chartUmidade }}</canvas>  
+    </div>
 </div>
