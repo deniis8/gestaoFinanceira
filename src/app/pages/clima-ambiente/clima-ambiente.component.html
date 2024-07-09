@@ -1,15 +1,15 @@
 <div *ngIf="temperatura">
-    <p>Temperatura: {{ temperatura.at(-1) }}
+    <p>Temperatura: {{ temperatura.at(-1) }}°C&nbsp;
         <span *ngIf="temperatura.at(-1) < 19"> ❄️</span>
         <span *ngIf="temperatura.at(-1) >= 19 && temperatura.at(-1) < 25"> 😊</span>
         <span *ngIf="temperatura.at(-1) >= 25 && temperatura.at(-1) < 35"> ☀️</span>
         <span *ngIf="temperatura.at(-1) >= 35"> 🔥</span>
     </p>
-    <p>Umidade do ar: {{ umidade.at(-1) }}
+    <p>Umidade do ar: {{ umidade.at(-1) }}%&nbsp;
         <span *ngIf="umidade.at(-1) > 80"> 😞</span>
         <span *ngIf="umidade.at(-1) <= 80"> 😊</span>
     </p>
-    <p>Umidade do Solo: {{ umidadeSolo.at(-1) }}
+    <p>Umidade do Solo: {{ umidadeSolo.at(-1) }}%&nbsp;
         <span *ngIf="umidadeSolo.at(-1) < 40"> 😞</span>
         <span *ngIf="umidadeSolo.at(-1) >= 40"> 😊</span>
     </p>
