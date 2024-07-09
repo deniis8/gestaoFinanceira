@@ -3,4 +3,5 @@ export interface ClimaAmbiente{
 	dataHora: Date;
 	temperatura: number;
 	umidade: number;
+	umidadeSolo?: number;
 }

@@ -1,17 +1,30 @@
 <div *ngIf="temperatura">
-    <p>Temperatura: {{temperatura.at(-1)}}</p>
-    <p>Umidade: {{umidade.at(-1)}}</p>
-    <p>Data Hora: {{dataHoraCabecalho.at(-1) | date: "dd/MM/yyyy HH:mm"}}</p>
+    <p>Temperatura: {{ temperatura.at(-1) }}
+        <span *ngIf="temperatura.at(-1) < 19"> ❄️</span>
+        <span *ngIf="temperatura.at(-1) >= 19 && temperatura.at(-1) < 25"> 😊</span>
+        <span *ngIf="temperatura.at(-1) >= 25 && temperatura.at(-1) < 35"> ☀️</span>
+        <span *ngIf="temperatura.at(-1) >= 35"> 🔥</span>
+    </p>
+    <p>Umidade do ar: {{ umidade.at(-1) }}
+        <span *ngIf="umidade.at(-1) > 80"> 😞</span>
+        <span *ngIf="umidade.at(-1) <= 80"> 😊</span>
+    </p>
+    <p>Umidade do Solo: {{ umidadeSolo.at(-1) }}
+        <span *ngIf="umidadeSolo.at(-1) < 40"> 😞</span>
+        <span *ngIf="umidadeSolo.at(-1) >= 40"> 😊</span>
+    </p>
+    <p>Data Hora: {{ dataHoraCabecalho.at(-1) | date: 'dd/MM/yyyy HH:mm' }}</p>
 </div>
 <br>
 <br>
 <div class="chart-wrapper">
     <div class="chart-container">
-        <canvas  id="graficoTemperatura" >{{ chartTemperatura }}</canvas>
+        <!--<canvas id="graficoTemperatura">{{ chartTemperatura }}</canvas>-->
+        <canvas id="graficoUmidade">{{ chartUmidade }}</canvas>
     </div>
 </div>
-<div class="chart-wrapper">
+<!--<div class="chart-wrapper">
     <div class="chart-container">
-        <canvas  id="graficoUmidade" >{{ chartUmidade }}</canvas>  
+        <canvas id="graficoUmidadeSolo">{{ chartUmidadeSolo }}</canvas>
     </div>
-</div>
+</div>-->

@@ -16,28 +16,45 @@ export class ClimaAmbienteComponent implements OnInit {
   dataHoraCabecalho: any[] = [];
   temperatura: any[] = [];
   umidade: any[] = [];
+  umidadeSolo: any[] = [];
 
   public chartUmidade: any;
   public chartTemperatura: any;
+  public chartUmidadeSolo: any;
 
   constructor(private climaAmbienteService: ClimaAmbienteService) { }
 
   ngOnInit(): void {
     Chart.register(...registerables);
-    Chart.register(ChartDataLabels);
+    //Chart.register(ChartDataLabels); Responsável pelos valores nos gráficos
     this.buscarInformacoes();
   }
 
-  criaGraficoUmidade(dataHora: any, umidade: any) {
+  criaGraficoUmidade(dataHora: any, temperatura: any, umidade: any, umidadeSolo: any) {
     this.chartUmidade = new Chart("graficoUmidade", {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: dataHora,
         datasets: [{
-          label: 'Umidade',
+          label: 'Temperatura 🔥',
+          data: temperatura,
+          borderColor: '#D2691E',
+          backgroundColor: '#D2691E',
+          fill: false,
+        },
+        {
+          label: 'Umidade do Ar 💧',
           data: umidade,
-          borderColor: '#006400',
-          backgroundColor: '#006400',
+          borderColor: '#4169E1',
+          backgroundColor: '#4682B4',
+          fill: false,
+        },
+        {
+          label: 'Umidade do Solo 🌍',
+          data: umidadeSolo,
+          borderColor: '#D2B48C',
+          backgroundColor: '#DEB887',
+          fill: false,
         }]
       },
       options: {
@@ -72,7 +89,7 @@ export class ClimaAmbienteComponent implements OnInit {
     });
   }
 
-  criaGraficoTemperatura(dataHora: any, temperatura: any) {
+  /*criaGraficoTemperatura(dataHora: any, temperatura: any) {
     this.chartTemperatura = new Chart("graficoTemperatura", {
       type: 'bar',
       data: {
@@ -91,8 +108,7 @@ export class ClimaAmbienteComponent implements OnInit {
             position: 'top',
           },
           title: {
-            display: true/*,
-            text: 'Clima Ambiente'*/
+            display: true
           },
           datalabels: {
             anchor: 'end',
@@ -116,6 +132,49 @@ export class ClimaAmbienteComponent implements OnInit {
     });
   }
 
+  criaGraficoUmidadeSolo(dataHora: any, umidadeSolo: any) {
+    this.chartUmidadeSolo = new Chart("graficoUmidadeSolo", {
+      type: 'line',
+      data: {
+        labels: dataHora,
+        datasets: [{
+          label: 'Umidade do Solo',
+          data: umidadeSolo,
+          borderColor: '#D2B48C',
+          backgroundColor: '#DEB887',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true
+          },
+          datalabels: {
+            anchor: 'end',
+            align: 'top',
+            color: '#555555',
+            font: {
+              weight: 'bold',
+              size: 8
+            },
+            formatter: function (value: any) {
+              return value;
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      },
+    });
+  }*/
+
   buscarInformacoes() {
     this.climaAmbienteService.getClimaAmbienteService().subscribe(item => {
       this.chartInfo = item;
@@ -127,9 +186,11 @@ export class ClimaAmbienteComponent implements OnInit {
           this.dataHoraCabecalho.push(this.chartInfo[i].dataHora);
           this.temperatura.push(this.chartInfo[i].temperatura);
           this.umidade.push(this.chartInfo[i].umidade);
+          this.umidadeSolo.push(this.chartInfo[i].umidadeSolo);
         }
-        this.criaGraficoUmidade(this.dataHora, this.umidade);
-        this.criaGraficoTemperatura(this.dataHora, this.temperatura);
+        this.criaGraficoUmidade(this.dataHora, this.temperatura, this.umidade, this.umidadeSolo);
+        //this.criaGraficoTemperatura(this.dataHora, this.temperatura);
+        //this.criaGraficoUmidadeSolo(this.dataHora, this.umidadeSolo);
       }
     });
   }
