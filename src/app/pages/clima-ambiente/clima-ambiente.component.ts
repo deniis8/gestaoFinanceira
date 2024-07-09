@@ -31,6 +31,18 @@ export class ClimaAmbienteComponent implements OnInit {
   }
 
   criaGraficoUmidade(dataHora: any, temperatura: any, umidade: any, umidadeSolo: any) {
+    const backgroundColorPlugin = {
+      id: 'custom_canvas_background_color',
+      beforeDraw: (chart: any) => {
+        const ctx = chart.canvas.getContext('2d');
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.fillStyle = '#F0F8FF'; // Cor de fundo desejada
+        ctx.fillRect(0, 0, chart.width, chart.height);
+        ctx.restore();
+      }
+    };
+  
     this.chartUmidade = new Chart("graficoUmidade", {
       type: 'line',
       data: {
@@ -41,6 +53,7 @@ export class ClimaAmbienteComponent implements OnInit {
           borderColor: '#D2691E',
           backgroundColor: '#D2691E',
           fill: false,
+          pointRadius: 0 // Adicionado para remover os pontos
         },
         {
           label: 'Umidade do Ar 💧',
@@ -48,6 +61,7 @@ export class ClimaAmbienteComponent implements OnInit {
           borderColor: '#4169E1',
           backgroundColor: '#4682B4',
           fill: false,
+          pointRadius: 0 // Adicionado para remover os pontos
         },
         {
           label: 'Umidade do Solo 🌍',
@@ -55,6 +69,7 @@ export class ClimaAmbienteComponent implements OnInit {
           borderColor: '#D2B48C',
           backgroundColor: '#DEB887',
           fill: false,
+          pointRadius: 0 // Adicionado para remover os pontos
         }]
       },
       options: {
@@ -86,8 +101,11 @@ export class ClimaAmbienteComponent implements OnInit {
           }
         }
       },
+      plugins: [backgroundColorPlugin]
     });
   }
+  
+  
 
   /*criaGraficoTemperatura(dataHora: any, temperatura: any) {
     this.chartTemperatura = new Chart("graficoTemperatura", {
