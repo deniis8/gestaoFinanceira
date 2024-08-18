@@ -1,30 +1,42 @@
 <div *ngIf="temperatura">
     <p>Temperatura: {{ temperatura.at(-1) }}°C&nbsp;
-        <span *ngIf="temperatura.at(-1) < 19"> ❄️</span>
-        <span *ngIf="temperatura.at(-1) >= 19 && temperatura.at(-1) < 25"> 😊</span>
-        <span *ngIf="temperatura.at(-1) >= 25 && temperatura.at(-1) < 35"> ☀️</span>
-        <span *ngIf="temperatura.at(-1) >= 35"> 🔥</span>
+      <span *ngIf="temperatura.at(-1) < 19"> ❄️</span>
+      <span *ngIf="temperatura.at(-1) >= 19 && temperatura.at(-1) < 25"> 😊</span>
+      <span *ngIf="temperatura.at(-1) >= 25 && temperatura.at(-1) < 35"> ☀️</span>
+      <span *ngIf="temperatura.at(-1) >= 35"> 🔥</span>
     </p>
     <p>Umidade do ar: {{ umidade.at(-1) }}%&nbsp;
-        <span *ngIf="umidade.at(-1) > 80"> 😞</span>
-        <span *ngIf="umidade.at(-1) <= 80"> 😊</span>
+      <span *ngIf="umidade.at(-1) > 80"> 😞</span>
+      <span *ngIf="umidade.at(-1) <= 80"> 😊</span>
     </p>
     <p>Umidade do Solo: {{ umidadeSolo.at(-1) }}%&nbsp;
-        <span *ngIf="umidadeSolo.at(-1) < 40"> 😞</span>
-        <span *ngIf="umidadeSolo.at(-1) >= 40"> 😊</span>
+      <span *ngIf="umidadeSolo.at(-1) < 40"> 😞</span>
+      <span *ngIf="umidadeSolo.at(-1) >= 40"> 😊</span>
     </p>
     <p>Data Hora: {{ dataHoraCabecalho.at(-1) | date: 'dd/MM/yyyy HH:mm' }}</p>
-</div>
-<br>
-<br>
-<div class="chart-wrapper">
+  </div>
+  <br>
+  <br>
+  <div class="chart-wrapper">
     <div class="chart-container">
-        <!--<canvas id="graficoTemperatura">{{ chartTemperatura }}</canvas>-->
-        <canvas id="graficoUmidade">{{ chartUmidade }}</canvas>
+      <canvas id="graficoUmidade">{{ chartUmidade }}</canvas>
     </div>
-</div>
-<!--<div class="chart-wrapper">
-    <div class="chart-container">
-        <canvas id="graficoUmidadeSolo">{{ chartUmidadeSolo }}</canvas>
+  </div>
+  <br>
+  <br>
+<!-- Carrossel -->
+<div *ngIf="imagens.length > 0" class="carousel">
+    <div *ngFor="let imagem of imagens; let i = index" class="carousel-item" (click)="openModal(i)">
+      <img [src]="'data:image/jpeg;base64,' + imagem.arquivoImagem" alt="Imagem" style="transform: rotate(180deg);">
     </div>
-</div>-->
+  </div>
+  
+  <!-- Modal -->
+  <div id="imagemModal" class="modal" [ngClass]="{'show': isModalOpen}" (click)="closeModal()">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <a class="prev" (click)="prevImage($event)">&#10094;</a>
+    <a class="next" (click)="nextImage($event)">&#10095;</a>
+    <img class="modal-content" id="imgModal" [src]="'data:image/jpeg;base64,' + modalImage" style="transform: rotate(180deg);">
+    <div class="caption">{{modalCaption}}</div>
+  </div>
+  

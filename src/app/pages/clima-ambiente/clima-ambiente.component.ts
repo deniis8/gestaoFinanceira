@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import Chart, { registerables } from 'chart.js/auto';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ClimaAmbiente } from 'src/app/Clima-Ambiente';
 import { ClimaAmbienteService } from 'src/app/services/clima-ambiente.service';
+import { Imagens } from 'src/app/Imagens';
 
 @Component({
   selector: 'app-clima-ambiente',
@@ -17,17 +17,22 @@ export class ClimaAmbienteComponent implements OnInit {
   temperatura: any[] = [];
   umidade: any[] = [];
   umidadeSolo: any[] = [];
+  imagens: Imagens[] = [];
 
   public chartUmidade: any;
-  public chartTemperatura: any;
-  public chartUmidadeSolo: any;
+
+  // Modal properties
+  isModalOpen: boolean = false;
+  modalImage: string = '';
+  modalCaption: string = '';
+  currentImageIndex: number = 0;
 
   constructor(private climaAmbienteService: ClimaAmbienteService) { }
 
   ngOnInit(): void {
     Chart.register(...registerables);
-    //Chart.register(ChartDataLabels); Responsável pelos valores nos gráficos
     this.buscarInformacoes();
+    this.buscarImagens();
   }
 
   criaGraficoUmidade(dataHora: any, temperatura: any, umidade: any, umidadeSolo: any) {
@@ -42,7 +47,7 @@ export class ClimaAmbienteComponent implements OnInit {
         ctx.restore();
       }
     };
-  
+
     this.chartUmidade = new Chart("graficoUmidade", {
       type: 'line',
       data: {
@@ -104,98 +109,11 @@ export class ClimaAmbienteComponent implements OnInit {
       plugins: [backgroundColorPlugin]
     });
   }
-  
-  
-
-  /*criaGraficoTemperatura(dataHora: any, temperatura: any) {
-    this.chartTemperatura = new Chart("graficoTemperatura", {
-      type: 'bar',
-      data: {
-        labels: dataHora,
-        datasets: [{
-          label: 'Temperatura',
-          data: temperatura,
-          borderColor: '#D2691E',
-          backgroundColor: '#D2691E',
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true
-          },
-          datalabels: {
-            anchor: 'end',
-            align: 'top',
-            color: '#555555',
-            font: {
-              weight: 'bold',
-              size: 8
-            },
-            formatter: function (value: any) {
-              return value;
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      },
-    });
-  }
-
-  criaGraficoUmidadeSolo(dataHora: any, umidadeSolo: any) {
-    this.chartUmidadeSolo = new Chart("graficoUmidadeSolo", {
-      type: 'line',
-      data: {
-        labels: dataHora,
-        datasets: [{
-          label: 'Umidade do Solo',
-          data: umidadeSolo,
-          borderColor: '#D2B48C',
-          backgroundColor: '#DEB887',
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true
-          },
-          datalabels: {
-            anchor: 'end',
-            align: 'top',
-            color: '#555555',
-            font: {
-              weight: 'bold',
-              size: 8
-            },
-            formatter: function (value: any) {
-              return value;
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      },
-    });
-  }*/
 
   buscarInformacoes() {
     this.climaAmbienteService.getClimaAmbienteService().subscribe(item => {
       this.chartInfo = item;
+      console.log(item);
       if (this.chartInfo != null) {
         for (let i = 0; i < this.chartInfo.length; i++) {
           const date = new Date(this.chartInfo[i].dataHora);
@@ -207,10 +125,45 @@ export class ClimaAmbienteComponent implements OnInit {
           this.umidadeSolo.push(this.chartInfo[i].umidadeSolo);
         }
         this.criaGraficoUmidade(this.dataHora, this.temperatura, this.umidade, this.umidadeSolo);
-        //this.criaGraficoTemperatura(this.dataHora, this.temperatura);
-        //this.criaGraficoUmidadeSolo(this.dataHora, this.umidadeSolo);
       }
     });
+  }
+
+  buscarImagens() {
+    this.climaAmbienteService.getImagensService().subscribe(imagens => {
+      this.imagens = imagens;
+    });
+  }
+
+  openModal(index: number) {
+    this.currentImageIndex = index;
+    this.modalImage = this.imagens[index].arquivoImagem;
+    this.modalCaption = `Imagem ${index + 1}`;
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.modalImage = '';
+    this.modalCaption = '';
+  }
+
+  prevImage(event: Event) {
+    event.stopPropagation(); // Prevent the modal from closing
+    if (this.currentImageIndex > 0) {
+      this.currentImageIndex--;
+      this.modalImage = this.imagens[this.currentImageIndex].arquivoImagem;
+      this.modalCaption = `Imagem ${this.currentImageIndex + 1}`;
+    }
+  }
+
+  nextImage(event: Event) {
+    event.stopPropagation(); // Prevent the modal from closing
+    if (this.currentImageIndex < this.imagens.length - 1) {
+      this.currentImageIndex++;
+      this.modalImage = this.imagens[this.currentImageIndex].arquivoImagem;
+      this.modalCaption = `Imagem ${this.currentImageIndex + 1}`;
+    }
   }
 
   formatDate(date: Date): string {
