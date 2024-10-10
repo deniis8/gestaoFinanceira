@@ -1,5 +1,5 @@
 <form (ngSubmit)="submit()" [formGroup]="lancamentoForm" #formDir="ngForm">
-    <!--<input type="hidden" formControlName="id" required>-->
+    
     <div class="form-group">
         <input type="hidden" formControlName="id" />
     </div>
@@ -24,14 +24,7 @@
             <p *ngIf="descricao.errors?.['required']">A descrição é obrigatória.</p>
         </div>
     </div>   
-
-    <!--<div class="form-group">
-        <label for="status">Status:</label>
-        <input type="text" placeholder="Coloque o status do Lançamento" formControlName="status" required>
-        <div *ngIf="status.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="status.errors?.['required']">O status é obrigatória.</p>
-        </div>
-    </div>-->
+    
     <div class="form-group">
         <label for="status">Status:</label>
         <select formControlName="status" required>

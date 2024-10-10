@@ -26,7 +26,6 @@ export class LancamentoFormComponent implements OnInit{
         descricao: new FormControl(this.lancamentoData ? this.lancamentoData.descricao : '', [Validators.required]),
         status: new FormControl(this.lancamentoData ? this.lancamentoData.status : '', [Validators.required]),
         idCCusto: new FormControl(this.lancamentoData ? this.lancamentoData.idCCusto : '', [Validators.required]),
-        //idUsuario: new FormControl('', [Validators.required]),
       });
 
       this.centroCustoService.getAllCentroCustos().subscribe((centroCustos) => (this.centroCustos = centroCustos));
@@ -60,7 +59,6 @@ export class LancamentoFormComponent implements OnInit{
     if(this.lancamentoForm.invalid){
       return;
     }
-    //console.log("Enviou formulário")!;
     console.log(this.valor);
     this.onSubmit.emit(this.lancamentoForm.value);
   }
