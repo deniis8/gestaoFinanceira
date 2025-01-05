@@ -3,5 +3,7 @@ export interface GastosMensais{
     ano: number;
     mes: string;
     dataHora?: Date;
+    sobraMes: number;
+    valorRecebidoMes: number;
     idUsuario: number;
 }
