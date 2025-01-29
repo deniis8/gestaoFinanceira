@@ -83,3 +83,10 @@ button:disabled {
         font-size: 1em;
     }
 }
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  

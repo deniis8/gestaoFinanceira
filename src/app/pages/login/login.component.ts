@@ -10,11 +10,12 @@ import { LoginService } from 'src/app/services/login.service'; // Importando o s
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  loginError: string | null = null; // Variável para armazenar a mensagem de erro
 
   constructor(
     private fb: FormBuilder,
     private loginService: LoginService,
-    private router: Router // Injetando o Router
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -27,25 +28,25 @@ export class LoginComponent {
       return;
     }
 
+    this.loginError = null; // Limpa a mensagem de erro antes de tentar o login
+
     const loginData = this.loginForm.value;
 
     this.loginService.postLogin(loginData).subscribe(
       (response) => {
         if (response && response.token && response.refreshToken) {
-          // Armazenando os tokens
           this.loginService.storeTokens({
             token: response.token,
             refreshToken: response.refreshToken
           });
 
-          // Redirecionando para a página inicial (home)
-          this.router.navigate(['/home']); // Redireciona para a rota "home"
+          this.router.navigate(['/home']);
         } else {
-          console.error('Erro ao autenticar');
+          this.loginError = 'E-mail ou senha inválidos.'; // Mensagem para erro inesperado
         }
       },
       (error) => {
-        console.error('Erro na requisição de login', error);
+        this.loginError = 'E-mail ou senha inválidos.'; // Mensagem de erro genérica
       }
     );
   }
