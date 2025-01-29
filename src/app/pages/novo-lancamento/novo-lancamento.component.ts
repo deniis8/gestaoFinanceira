@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Lancamento } from 'src/app/Lancamento';
+import { Lancamento } from 'src/app/models/Lancamento';
 import { LancamentoService } from 'src/app/services/lancamento.service';
 
 @Component({

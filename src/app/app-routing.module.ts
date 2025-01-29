@@ -6,9 +6,11 @@ import { NovoLancamentoComponent } from './pages/novo-lancamento/novo-lancamento
 import { EditLancamentoComponent } from './pages/edit-lancamento/edit-lancamento.component';
 import { ExcluirLancamentoComponent } from './pages/excluir-lancamento/excluir-lancamento.component';
 import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.component';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: LoginComponent},
+  {path: 'home', component: HomeComponent},
   {path: 'graficos', component: GraficosComponent},
   {path: 'lancamento/edit/:id', component: EditLancamentoComponent},
   {path: 'lancamento/excluir/:id', component: ExcluirLancamentoComponent},

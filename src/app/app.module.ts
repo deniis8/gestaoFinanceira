@@ -15,6 +15,7 @@ import { EditLancamentoComponent } from './pages/edit-lancamento/edit-lancamento
 import { ExcluirLancamentoComponent } from './pages/excluir-lancamento/excluir-lancamento.component';
 import { SaldosComponent } from './components/saldos/saldos.component';
 import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.component';
+import { LoginComponent } from './pages/login/login.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.co
     EditLancamentoComponent,
     ExcluirLancamentoComponent,
     SaldosComponent,
-    ClimaAmbienteComponent
+    ClimaAmbienteComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

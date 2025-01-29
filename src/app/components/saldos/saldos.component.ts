@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Saldo } from 'src/app/Saldo';
+import { Saldo } from 'src/app/models/Saldo';
 import { SaldoService } from 'src/app/services/saldo.service';
 
 @Component({
