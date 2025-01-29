@@ -90,7 +90,7 @@ export class GraficosComponent implements OnInit {
               // Verifica o tipo de gráfico do dataset
               if (context.dataset.type === 'line') {
                 if(context.dataset.data[context.dataIndex] > 0){
-                  return '#32CD32'; // Azul para o gráfico de linha
+                  return '#008000'; // Azul para o gráfico de linha
                 }else{
                   return '#FF6347'; // Azul para o gráfico de linha
                 }
