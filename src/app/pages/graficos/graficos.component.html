@@ -1,11 +1,18 @@
-<div class="chart-container">
-    <canvas  id="gGMChart" >{{ gGMChart }}</canvas>
+<div class="chart-wrapper">
+    <div class="chart-container-gcc">
+        <canvas id="gGMChart">{{ gGMChart }}</canvas>
+    </div>
 </div>
 <br>
 <br>
-<div class="chart-container">
-    <canvas  id="gGCCChart" >{{ gGCCChart }}</canvas>
+
+<div class="chart-wrapper">
+    <div class="chart-container-gmcc">
+        <canvas  id="gGCCChart" >{{ gGCCChart }}</canvas>
+    </div>
 </div>
+
+
 
 <br>
 <br>
@@ -25,6 +32,7 @@
                         <th scope="col">Valor</th>
                         <th scope="col">Descrição Lançamento</th>
                         <th scope="col">Descrição Centro de Custo</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>   
                     <tbody>            
@@ -32,7 +40,9 @@
                         <td>{{_detalhamentoGastosCC.dataHora | date: "dd/MM/yyyy HH:mm"}}</td>
                         <td>{{_detalhamentoGastosCC.valor}}</td>
                         <td>{{_detalhamentoGastosCC.descricaoLancamento}}</td>   
-                        <td>{{_detalhamentoGastosCC.descricaoCentroCusto}}</td>   
+                        <td>{{_detalhamentoGastosCC.descricaoCentroCusto}}</td>
+                        <button routerLink="/lancamento/edit/{{_detalhamentoGastosCC.id}}" type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ></button>
+                        <button routerLink="/lancamento/excluir/{{_detalhamentoGastosCC.id}}" type="button" class="btn btn-danger glyphicon glyphicon-trash" ></button>   
                     </tr>  
                 </tbody>                   
             </table>

@@ -1,0 +1,20 @@
+.chart-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Permite rolagem suave em dispositivos móveis */
+}
+
+.chart-container-gcc {
+    width: 1000px; /* Ajuste a largura conforme necessário para o tamanho do seu gráfico */
+    /* É possível definir uma largura maior para garantir que a rolagem seja necessária */
+}
+
+.chart-container-gmcc {
+    width: 1500px; /* Ajuste a largura conforme necessário para o tamanho do seu gráfico */
+    /* É possível definir uma largura maior para garantir que a rolagem seja necessária */
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+}
