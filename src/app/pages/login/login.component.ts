@@ -37,7 +37,8 @@ export class LoginComponent {
         if (response && response.token && response.refreshToken) {
           this.loginService.storeTokens({
             token: response.token,
-            refreshToken: response.refreshToken
+            refreshToken: response.refreshToken,
+            idUsuario: response.idUsuario
           });
 
           this.router.navigate(['/home']);

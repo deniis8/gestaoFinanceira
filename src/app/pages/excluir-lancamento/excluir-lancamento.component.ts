@@ -39,7 +39,7 @@ export class ExcluirLancamentoComponent implements OnInit{
     formData.append('idUsuario', '1'/*lancamento.idUsuario.toString()*/);
 
     await this.lancamentoService.excluirLancamento(this.lancamento.id!).subscribe((result: any) => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
     },
       (error) => {
         console.log("Erro");

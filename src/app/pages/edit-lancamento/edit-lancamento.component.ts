@@ -38,7 +38,7 @@ export class EditLancamentoComponent implements OnInit{
     formData.append('idUsuario', '1'/*lancamento.idUsuario.toString()*/);
 
     await this.lancamentoService.putLancamento(id!, formData).subscribe((result: any) => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
     },
       (error) => {
         console.log("Erro");

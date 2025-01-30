@@ -14,26 +14,12 @@ export class GastosCentroCustoService {
   
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
-  
-   // Método para obter o token de autenticação
-   private getAuthHeaders() {
-    const token = this.loginService.getAuthToken(); // Obtendo o token armazenado
-    if (!token) {
-      throw new Error('Token não encontrado');
-    }
-
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-  }
-
   //Não consumo mais essa rota
   /*getAllGastosCentroCustos(): Observable<GastosCentroCusto[]>{
     return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/data`);
   }*/
 
   getAllGastosCentroMesAno(mesAno?: string): Observable<GastosCentroCusto[]>{
-    const headers = this.getAuthHeaders();
-    return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/mesano/${mesAno}`, { headers });
+    return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/mesano/${mesAno}`);
   }
 }
