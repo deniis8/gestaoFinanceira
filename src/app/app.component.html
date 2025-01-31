@@ -1,5 +1,11 @@
-<app-header></app-header>
+<ng-container *ngIf="showHeaderFooter">
+  <app-header></app-header>
+</ng-container>
+
 <main class="container">
-    <router-outlet></router-outlet>
-</main> 
-<app-footer></app-footer>  
+  <router-outlet></router-outlet>
+</main>
+
+<ng-container *ngIf="showHeaderFooter">
+  <app-footer></app-footer>
+</ng-container>

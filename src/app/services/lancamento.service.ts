@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Lancamento } from '../models/Lancamento';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { LoginService } from './login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,11 @@ import { environment } from 'src/environments/environment';
 export class LancamentoService {
   private baseApiUrl = environment.baseApiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private loginService: LoginService) { }
 
   getAllLancamentos(): Observable<Lancamento[]> {
-    return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/data/`);
+    const idUsuario = this.loginService.getIdUsuario();
+    return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/usuario/${idUsuario}`);
   }
 
   getLancamentoPorId(id: Number): Observable<Lancamento> {
@@ -21,7 +23,8 @@ export class LancamentoService {
   }
 
   getLancamentoDataDeAte(dataDe: string, dataAte: string, status: string, idCentroCusto: Number): Observable<Lancamento[]> {
-    const url = `${this.baseApiUrl}api/lancamentos/dataDeAte?dataDe=${dataDe}&dataAte=${dataAte}&status=${status}&idCentroCusto=${idCentroCusto}`;
+    const idUsuario = this.loginService.getIdUsuario();
+    const url = `${this.baseApiUrl}api/lancamentos/dataDeAte?idUsuario=${idUsuario}&dataDe=${dataDe}&dataAte=${dataAte}&status=${status}&idCentroCusto=${idCentroCusto}`;
     console.log(url);
     return this.http.get<Lancamento[]>(url);
   }

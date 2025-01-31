@@ -15,6 +15,7 @@ export class DetalhamentoGastosCentroCustoService {
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
   getAllDetalhamentoGastosCentroMesAno(mesAno?: string, descCC?: string): Observable<DetalhamentoGastosCentroCusto[]>{
-    return this.http.get<DetalhamentoGastosCentroCusto[]>(`${this.baseApiUrl}api/detalhamentogastoscentrocustos/descricaoCC?mesAno=${mesAno}&descCC=${descCC}`);
+    const idUsuario = this.loginService.getIdUsuario();
+    return this.http.get<DetalhamentoGastosCentroCusto[]>(`${this.baseApiUrl}api/detalhamentogastoscentrocustos/descricaoCC?idUsuario=${idUsuario}&mesAno=${mesAno}&descCC=${descCC}`);
   }
 }

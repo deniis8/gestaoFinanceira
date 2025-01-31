@@ -20,6 +20,7 @@ export class GastosCentroCustoService {
   }*/
 
   getAllGastosCentroMesAno(mesAno?: string): Observable<GastosCentroCusto[]>{
-    return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/mesano/${mesAno}`);
+    const idUsuario = this.loginService.getIdUsuario();
+    return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/usuario/${idUsuario}/mesano/${mesAno}`);
   }
 }

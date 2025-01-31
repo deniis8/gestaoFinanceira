@@ -13,9 +13,10 @@ export class CentroCustoService {
   private baseApiUrl = environment.baseApiUrl;
   
   constructor(private http: HttpClient, private loginService: LoginService) { }
-
+  
   getAllCentroCustos(): Observable<CentroCusto[]>{
-    return this.http.get<CentroCusto[]>(`${this.baseApiUrl}api/centrocustos`);
+    const idUsuario = this.loginService.getIdUsuario();
+    return this.http.get<CentroCusto[]>(`${this.baseApiUrl}api/centrocustos/usuario/${idUsuario}`);
   }
 
 }

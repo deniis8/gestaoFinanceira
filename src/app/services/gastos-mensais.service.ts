@@ -15,6 +15,7 @@ export class GastosMensaisService {
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
   getGastosMensais(): Observable<GastosMensais[]>{
-    return this.http.get<GastosMensais[]>(`${this.baseApiUrl}api/gastosmensais`);
+    const idUsuario = this.loginService.getIdUsuario();
+    return this.http.get<GastosMensais[]>(`${this.baseApiUrl}api/gastosmensais/usuario/${idUsuario}`);
   }
 }

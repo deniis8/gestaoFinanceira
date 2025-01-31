@@ -14,6 +14,7 @@ export class SaldoService {
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
   getSaldos(): Observable<Saldo>{
-    return this.http.get<Saldo>(`${this.baseApiUrl}api/saldosinvestimentos`);
+    const idUsuario = this.loginService.getIdUsuario();
+    return this.http.get<Saldo>(`${this.baseApiUrl}api/saldosinvestimentos/usuario/${idUsuario}`);
   }
 }
