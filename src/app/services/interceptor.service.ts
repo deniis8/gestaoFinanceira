@@ -3,13 +3,14 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
 import { LoginService } from '../services/login.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-  constructor(private loginService: LoginService) {}
+  constructor(private loginService: LoginService, private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const authToken = this.loginService.getAuthToken();
@@ -38,8 +39,10 @@ export class AuthInterceptor implements HttpInterceptor {
       console.log('Refresh Token:', refreshToken);
 
       if (!refreshToken) {
-        this.isRefreshing = false;        
-        return throwError(() => new Error('Refresh Token não encontrado'));
+        this.isRefreshing = false;
+        this.router.navigate(['/login']);  
+        return throwError(() => new Error('401'));      
+        //return throwError(() => new Error('Refresh Token não encontrado'));
       }
 
       return this.loginService.refreshToken().pipe(
