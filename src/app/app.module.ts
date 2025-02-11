@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +15,8 @@ import { EditLancamentoComponent } from './pages/edit-lancamento/edit-lancamento
 import { ExcluirLancamentoComponent } from './pages/excluir-lancamento/excluir-lancamento.component';
 import { SaldosComponent } from './components/saldos/saldos.component';
 import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.component';
+import { LoginComponent } from './pages/login/login.component';
+import { AuthInterceptor } from './services/interceptor.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.co
     EditLancamentoComponent,
     ExcluirLancamentoComponent,
     SaldosComponent,
-    ClimaAmbienteComponent
+    ClimaAmbienteComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,9 @@ import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.co
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

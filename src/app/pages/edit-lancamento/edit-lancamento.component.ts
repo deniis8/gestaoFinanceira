@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Lancamento } from 'src/app/Lancamento';
+import { Lancamento } from 'src/app/models/Lancamento';
 import { LancamentoService } from 'src/app/services/lancamento.service';
+import { LoginService } from 'src/app/services/login.service';
 
 @Component({
   selector: 'app-edit-lancamento',
@@ -13,7 +14,7 @@ export class EditLancamentoComponent implements OnInit{
   lancamento!: Lancamento;
   btnText: string = 'Confirmar';
   
-  constructor(private lancamentoService: LancamentoService, private route: ActivatedRoute, private router: Router) {
+  constructor(private lancamentoService: LancamentoService, private route: ActivatedRoute, private router: Router, private loginService: LoginService) {
         
   }
 
@@ -29,16 +30,17 @@ export class EditLancamentoComponent implements OnInit{
   async editHendler(lancamentoData: Lancamento){    
     const id = this.lancamento.id;
     const formData = new FormData();
+    const idUsuario = this.loginService.getIdUsuario();
 
     formData.append('dataHora', lancamentoData.dataHora.toString());
     formData.append('valor', lancamentoData.valor.toString());
     formData.append('descricao', lancamentoData.descricao);
     formData.append('status', lancamentoData.status);
     formData.append('idCCusto', lancamentoData.idCCusto.toString());
-    formData.append('idUsuario', '1'/*lancamento.idUsuario.toString()*/);
+    formData.append('idUsuario', idUsuario ?? '');
 
     await this.lancamentoService.putLancamento(id!, formData).subscribe((result: any) => {
-      this.router.navigate(['/']);
+      this.router.navigate(['/home']);
     },
       (error) => {
         console.log("Erro");

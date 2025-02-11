@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import Chart, { registerables } from 'chart.js/auto';
-import { ClimaAmbiente } from 'src/app/Clima-Ambiente';
+import { ClimaAmbiente } from 'src/app/models/Clima-Ambiente';
 import { ClimaAmbienteService } from 'src/app/services/clima-ambiente.service';
-import { Imagens } from 'src/app/Imagens';
+import { Imagens } from 'src/app/models/Imagens';
 
 @Component({
   selector: 'app-clima-ambiente',

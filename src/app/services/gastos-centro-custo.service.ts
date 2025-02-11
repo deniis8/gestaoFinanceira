@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { GastosCentroCusto } from '../Gastos-Centro-Custo';
+import { GastosCentroCusto } from '../models/Gastos-Centro-Custo';
 import { Observable } from 'rxjs';
+import { LoginService } from './login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class GastosCentroCustoService {
 
   private baseApiUrl = environment.baseApiUrl;
   
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private loginService: LoginService) { }
 
   //Não consumo mais essa rota
   /*getAllGastosCentroCustos(): Observable<GastosCentroCusto[]>{
@@ -19,6 +20,7 @@ export class GastosCentroCustoService {
   }*/
 
   getAllGastosCentroMesAno(mesAno?: string): Observable<GastosCentroCusto[]>{
-    return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/mesano/${mesAno}`);
+    const idUsuario = this.loginService.getIdUsuario();
+    return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/usuario/${idUsuario}/mesano/${mesAno}`);
   }
 }
