@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './pages/home/home.component';
 import { GraficosComponent } from './pages/graficos/graficos.component';
@@ -18,9 +17,15 @@ import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.co
 import { LoginComponent } from './pages/login/login.component';
 import { AuthInterceptor } from './services/interceptor.service';
 
+// Importações para o Angular Material
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+
 @NgModule({ declarations: [
         AppComponent,
-        HeaderComponent,
         FooterComponent,
         HomeComponent,
         GraficosComponent,
@@ -35,7 +40,13 @@ import { AuthInterceptor } from './services/interceptor.service';
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
         FormsModule,
-        ReactiveFormsModule], providers: [
+        ReactiveFormsModule,
+        BrowserModule,
+        MatSidenavModule,
+        MatListModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatButtonModule], providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         provideHttpClient(withInterceptorsFromDi())
     ] })

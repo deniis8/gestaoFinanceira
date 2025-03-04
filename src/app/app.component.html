@@ -1,11 +1,34 @@
-<ng-container *ngIf="showHeaderFooter">
-  <app-header></app-header>
-</ng-container>
+<mat-toolbar color="primary">
+  <!-- Botão Hambúrguer -->
+  <button mat-icon-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Gestão Financeira</span>
+</mat-toolbar>
 
-<main class="container">
-  <router-outlet></router-outlet>
-</main>
+<mat-sidenav-container class="example-container">
+  <!-- Menu Lateral -->
+  <mat-sidenav #sidenav mode="side" opened>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home" (click)="selectOption()">
+        <mat-icon>list</mat-icon>
+        Lançamentos
+      </a>
+      <a mat-list-item routerLink="/graficos" (click)="selectOption()">
+        <mat-icon>bar_chart</mat-icon>
+        Gráficos
+      </a>
+      <a mat-list-item routerLink="/centro-custo" (click)="selectOption()">
+        <mat-icon>account_balance_wallet</mat-icon>
+        Centro de Custo
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-<ng-container *ngIf="showHeaderFooter">
-  <app-footer></app-footer>
-</ng-container>
+  <!-- Conteúdo da Página -->
+  <mat-sidenav-content>
+    <div class="content-container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

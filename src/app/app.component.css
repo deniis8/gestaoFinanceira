@@ -1,4 +1,55 @@
-.container {
-    min-height: 65vh;
-    margin-top: 1em;
-}
+/* Ajuste do container principal */
+.example-container {
+    display: flex;
+    justify-content: flex-start; /* Alinha o conteúdo à esquerda com espaçamento */
+    padding: 20px;
+    max-width: 100%; /* Garante que o conteúdo use toda a largura da tela */
+  }
+  
+  /* Ajuste do conteúdo da página */
+  .content-container {
+    width: 100%; /* O conteúdo ocupa 80% da largura disponível */
+    max-width: 1200px; /* Define a largura máxima do conteúdo */
+    margin: 0 auto; /* Centraliza o conteúdo dentro do limite */
+    padding: 20px; /* Adiciona espaçamento interno */
+  }
+  
+  /* Estilo para o menu lateral */
+  mat-sidenav {
+    background-color: #fafafa;
+    padding: 10px;
+  }
+  
+  /* Estilo das opções do menu */
+  mat-nav-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  mat-nav-list a {
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+  }
+  
+  mat-nav-list a:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* Ajuste para os itens do menu ao serem selecionados */
+  .selected {
+    background-color: #c7c7c7; /* Cor de fundo ao selecionar */
+  }
+  
+  @media (max-width: 768px) {
+    /* Para telas menores, os itens do menu se tornam mais compactos */
+    .content-container {
+      width: 90%; /* Ajuste a largura do conteúdo para ocupar mais espaço em telas pequenas */
+      padding: 10px;
+    }
+  
+    .example-container {
+      flex-direction: column;
+    }
+  }
+  
