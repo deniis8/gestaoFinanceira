@@ -5,9 +5,10 @@ import { Lancamento } from 'src/app/models/Lancamento';
 import { CentroCustoService } from 'src/app/services/centro-custo.service';
 
 @Component({
-  selector: 'app-lancamento-form',
-  templateUrl: './lancamento-form.component.html',
-  styleUrls: ['./lancamento-form.component.css']
+    selector: 'app-lancamento-form',
+    templateUrl: './lancamento-form.component.html',
+    styleUrls: ['./lancamento-form.component.css'],
+    standalone: false
 })
 export class LancamentoFormComponent implements OnInit{
   @Output() onSubmit = new EventEmitter<Lancamento>();

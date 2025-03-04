@@ -5,9 +5,10 @@ import { LancamentoService } from 'src/app/services/lancamento.service';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
-  selector: 'app-excluir-lancamento',
-  templateUrl: './excluir-lancamento.component.html',
-  styleUrls: ['./excluir-lancamento.component.css']
+    selector: 'app-excluir-lancamento',
+    templateUrl: './excluir-lancamento.component.html',
+    styleUrls: ['./excluir-lancamento.component.css'],
+    standalone: false
 })
 export class ExcluirLancamentoComponent implements OnInit{
 

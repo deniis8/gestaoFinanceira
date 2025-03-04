@@ -5,9 +5,10 @@ import { CentroCustoService } from 'src/app/services/centro-custo.service';
 import { LancamentoService } from 'src/app/services/lancamento.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css'],
+    standalone: false
 })
 export class HomeComponent {
   lancamentos: Lancamento[] = [];

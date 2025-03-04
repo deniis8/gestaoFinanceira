@@ -5,9 +5,10 @@ import { LancamentoService } from 'src/app/services/lancamento.service';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
-  selector: 'app-edit-lancamento',
-  templateUrl: './edit-lancamento.component.html',
-  styleUrls: ['./edit-lancamento.component.css']
+    selector: 'app-edit-lancamento',
+    templateUrl: './edit-lancamento.component.html',
+    styleUrls: ['./edit-lancamento.component.css'],
+    standalone: false
 })
 export class EditLancamentoComponent implements OnInit{
 

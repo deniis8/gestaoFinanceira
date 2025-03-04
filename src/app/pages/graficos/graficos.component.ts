@@ -7,9 +7,10 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 
 @Component({
-  selector: 'app-graficos',
-  templateUrl: './graficos.component.html',
-  styleUrls: ['./graficos.component.css']
+    selector: 'app-graficos',
+    templateUrl: './graficos.component.html',
+    styleUrls: ['./graficos.component.css'],
+    standalone: false
 })
 export class GraficosComponent implements OnInit {
   

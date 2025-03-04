@@ -3,9 +3,10 @@ import { Saldo } from 'src/app/models/Saldo';
 import { SaldoService } from 'src/app/services/saldo.service';
 
 @Component({
-  selector: 'app-saldos',
-  templateUrl: './saldos.component.html',
-  styleUrls: ['./saldos.component.css']
+    selector: 'app-saldos',
+    templateUrl: './saldos.component.html',
+    styleUrls: ['./saldos.component.css'],
+    standalone: false
 })
 export class SaldosComponent {
   saldo!: Saldo;

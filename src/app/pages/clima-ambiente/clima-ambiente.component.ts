@@ -5,9 +5,10 @@ import { ClimaAmbienteService } from 'src/app/services/clima-ambiente.service';
 import { Imagens } from 'src/app/models/Imagens';
 
 @Component({
-  selector: 'app-clima-ambiente',
-  templateUrl: './clima-ambiente.component.html',
-  styleUrls: ['./clima-ambiente.component.css']
+    selector: 'app-clima-ambiente',
+    templateUrl: './clima-ambiente.component.html',
+    styleUrls: ['./clima-ambiente.component.css'],
+    standalone: false
 })
 export class ClimaAmbienteComponent implements OnInit {
   public climaAmbiente: ClimaAmbiente[] = [];
