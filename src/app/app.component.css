@@ -3,6 +3,7 @@
     width: 100%; /* O conteúdo ocupa 80% da largura disponível */
     margin: 0 auto; /* Centraliza o conteúdo dentro do limite */
     padding: 20px; /* Adiciona espaçamento interno */
+    background-color: white;
   }
   
   /* Estilo para o menu lateral */
