@@ -20,7 +20,7 @@ export class AppComponent {
   // Método chamado ao selecionar uma opção no menu
   selectOption() {
     this.sidenav.close();  // Fecha a sidebar ao selecionar uma opção
-  }
+  } 
 
   title = 'gestaoFinanceira';
   showHeaderFooter = true; // Define se o header e footer devem ser exibidos
@@ -31,5 +31,9 @@ export class AppComponent {
         this.showHeaderFooter = event.url !== '/login'; // Atualiza com base na URL
       }
     });
+  }
+
+  isLoginPage(): boolean {
+    return this.router.url === '/login';
   }
 }

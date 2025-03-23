@@ -1,22 +1,13 @@
-/* Ajuste do container principal */
-.example-container {
-    display: flex;
-    justify-content: flex-start; /* Alinha o conteúdo à esquerda com espaçamento */
-    padding: 20px;
-    max-width: 100%; /* Garante que o conteúdo use toda a largura da tela */
-  }
-  
   /* Ajuste do conteúdo da página */
   .content-container {
     width: 100%; /* O conteúdo ocupa 80% da largura disponível */
-    max-width: 1200px; /* Define a largura máxima do conteúdo */
     margin: 0 auto; /* Centraliza o conteúdo dentro do limite */
     padding: 20px; /* Adiciona espaçamento interno */
   }
   
   /* Estilo para o menu lateral */
   mat-sidenav {
-    background-color: #fafafa;
+    background-color: rgb(235, 235, 235);
     padding: 10px;
   }
   
@@ -35,6 +26,17 @@
   mat-nav-list a:hover {
     background-color: #e0e0e0;
   }
+
+  mat-list-item {
+    display: flex;
+    align-items: center; /* Alinha ícone e texto na mesma linha */
+    gap: 10px; /* Espaçamento entre ícone e texto */
+  }
+  
+  mat-icon {
+    font-size: 24px; /* Garante um tamanho adequado para o ícone */
+    vertical-align: middle; /* Mantém o alinhamento correto */
+  }
   
   /* Ajuste para os itens do menu ao serem selecionados */
   .selected {
@@ -47,9 +49,17 @@
       width: 90%; /* Ajuste a largura do conteúdo para ocupar mais espaço em telas pequenas */
       padding: 10px;
     }
-  
-    .example-container {
-      flex-direction: column;
-    }
+
   }
+
+  button:focus {
+    outline: none; /* Remove o contorno ao focar */
+}
+
+button {
+    border: none; /* Remove qualquer borda */
+    background: none; /* Remove o fundo padrão */
+    cursor: pointer; /* Garante que o cursor fique como um botão */
+}
+
   
