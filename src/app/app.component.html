@@ -1,6 +1,5 @@
 <mat-toolbar *ngIf="showHeaderFooter" mat-icon-button (click)="sidenav.toggle()" color="primary">
-  <!-- Botão Hambúrguer (só aparece se NÃO estiver na tela de login) -->
-  <button >
+  <button>
     <mat-icon>menu</mat-icon>
   </button>
   <span>Gestão Financeira</span>
@@ -10,21 +9,19 @@
   <!-- Menu Lateral -->
   <mat-sidenav #sidenav mode="over" (click)="sidenav.close()">
     <mat-nav-list>
-      <a mat-list-item routerLink="/home" (click)="selectOption()">
+      <a>
+        <mat-icon>list</mat-icon>        
+      </a>
+      <a mat-list-item routerLink="/home" routerLinkActive="selected" (click)="selectOption()">
         <mat-icon>list</mat-icon>
         Lançamentos
       </a>
-      <a mat-list-item routerLink="/graficos" (click)="selectOption()">
+      <a mat-list-item routerLink="/graficos" routerLinkActive="selected" (click)="selectOption()">
         <mat-icon>bar_chart</mat-icon>
         Gráficos
       </a>
-      <!--<a mat-list-item routerLink="/centro-custo" (click)="selectOption()">
-        <mat-icon>account_balance_wallet</mat-icon>
-        Centro de Custo
-      </a>-->
     </mat-nav-list>
   </mat-sidenav>
-
   <!-- Conteúdo da Página -->
   <mat-sidenav-content>
     <div class="content-container">
@@ -32,5 +29,5 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-<app-footer></app-footer>
 
+<app-footer></app-footer>

@@ -86,3 +86,12 @@
     width: 90%; /* Garantir que os campos não fiquem muito largos */
   }
 }
+
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: rgb(90, 165, 90);
+}
+

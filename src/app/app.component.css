@@ -1,66 +1,88 @@
-  /* Ajuste do conteúdo da página */
-  .content-container {
-    width: 100%; /* O conteúdo ocupa 80% da largura disponível */
-    margin: 0 auto; /* Centraliza o conteúdo dentro do limite */
-    padding: 20px; /* Adiciona espaçamento interno */
-    background-color: white;
-  }
-  
-  /* Estilo para o menu lateral */
-  mat-sidenav {
-    background-color: rgb(235, 235, 235);
-    padding: 10px;
-  }
-  
-  /* Estilo das opções do menu */
-  mat-nav-list {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  mat-nav-list a {
-    padding: 10px;
-    text-decoration: none;
-    color: black;
-  }
-  
-  mat-nav-list a:hover {
-    background-color: #e0e0e0;
-  }
+/* Ajuste do conteúdo da página */
+.content-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 5px;
+  background-color: white;
+  padding-top: 80px; /* Espaço para o título não ser coberto */
+}
 
-  mat-list-item {
-    display: flex;
-    align-items: center; /* Alinha ícone e texto na mesma linha */
-    gap: 10px; /* Espaçamento entre ícone e texto */
-  }
-  
-  mat-icon {
-    font-size: 24px; /* Garante um tamanho adequado para o ícone */
-    vertical-align: middle; /* Mantém o alinhamento correto */
-  }
-  
-  /* Ajuste para os itens do menu ao serem selecionados */
-  .selected {
-    background-color: #c7c7c7; /* Cor de fundo ao selecionar */
-  }
-  
-  @media (max-width: 768px) {
-    /* Para telas menores, os itens do menu se tornam mais compactos */
-    .content-container {
-      width: 90%; /* Ajuste a largura do conteúdo para ocupar mais espaço em telas pequenas */
-      padding: 10px;
-    }
+/* Estilo para a barra de ferramentas (mat-toolbar) */
+mat-toolbar {
+  position: fixed; /* Fixa a barra no topo */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Garante que a barra fique acima de outros elementos */
+  background-color: #eeeeee; /* Cor de fundo da barra */
+  color: black; /* Cor do texto e ícones */
+  display: flex;
+  justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+  align-items: center;
+  padding: 10px;
+  height: 60px; /* Altura da barra */
+}
 
-  }
+/* Ajuste no botão hamburguer */
+mat-toolbar button {
+  z-index: 1050; /* Garante que o botão esteja acima de outros elementos */
+  margin-left: 10px; /* Distância do botão da borda esquerda */
+}
 
-  button:focus {
-    outline: none; /* Remove o contorno ao focar */
+/* Estilo para o menu lateral */
+mat-sidenav {
+  background-color: rgb(235, 235, 235);
+  padding: 10px;
+  position: fixed; /* Fixa o menu lateral */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Garante que o menu ocupe toda a altura da tela */
+  width: 250px; /* Largura do menu lateral */
+  z-index: 1000; /* Menu fixo sobre o conteúdo */
+  transition: transform 0.3s ease-in-out; /* Animação para abrir/fechar */
+}
+
+/* Ajustes do conteúdo do menu lateral */
+mat-nav-list {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-nav-list a {
+  padding: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+mat-nav-list a:hover {
+  background-color: #e0e0e0;
+}
+
+mat-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+mat-icon {
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+/* Ajuste para os itens do menu ao serem selecionados */
+.selected {
+  background-color: #c7c7c7; /* Cor de fundo ao selecionar */
+  color: white; /* Alterando a cor do texto */
+}
+
+
+/* Remover borda e fundo no botão */
+button:focus {
+  outline: none;
 }
 
 button {
-    border: none; /* Remove qualquer borda */
-    background: none; /* Remove o fundo padrão */
-    cursor: pointer; /* Garante que o cursor fique como um botão */
+  border: none;
+  background: none;
+  cursor: pointer;
 }
-
-  
