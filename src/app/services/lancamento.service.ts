@@ -65,4 +65,8 @@ export class LancamentoService {
 
     return this.http.put<FormData>(`${this.baseApiUrl}api/lancamentos/${id}`, data);
   }
+
+  getExisteCentroCusto(idUsuario: string, idCentroCusto: Number): Observable<any>{
+    return this.http.get<any>(`${this.baseApiUrl}api/lancamentos/usuario/${idUsuario}/idcentrocusto/${idCentroCusto}`);
+  }
 }

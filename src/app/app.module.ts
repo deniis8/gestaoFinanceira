@@ -10,8 +10,13 @@ import { HomeComponent } from './pages/home/home.component';
 import { GraficosComponent } from './pages/graficos/graficos.component';
 import { NovoLancamentoComponent } from './pages/lancamentos/novo-lancamento/novo-lancamento.component';
 import { LancamentoFormComponent } from './components/lancamento-form/lancamento-form.component';
+import { CentroCustoFormComponent } from './components/centro-custo-form/centro-custo-form.component';
 import { EditLancamentoComponent } from './pages/lancamentos/edit-lancamento/edit-lancamento.component';
+import { EditCentroCustoComponent } from './pages/centro-custo/edit-centro-custo/edit-centro-custo.component';
 import { ExcluirLancamentoComponent } from './pages/lancamentos/excluir-lancamento/excluir-lancamento.component';
+import { ExcluirCentroCustoComponent } from './pages/centro-custo/excluir-centro-custo/excluir-centro-custo.component';
+import { TabelaCentroCustoComponent } from './pages/centro-custo/tabela-centro-custo/tabela-centro-custo.component';
+import { NovoCentroCustoComponent } from './pages/centro-custo/novo-centro-custo/novo-centro-custo.component';
 import { SaldosComponent } from './components/saldos/saldos.component';
 import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -35,7 +40,12 @@ import { MatButtonModule } from '@angular/material/button';
         ExcluirLancamentoComponent,
         SaldosComponent,
         ClimaAmbienteComponent,
-        LoginComponent
+        LoginComponent,
+        CentroCustoFormComponent,
+        EditCentroCustoComponent,
+        ExcluirCentroCustoComponent,
+        NovoCentroCustoComponent,
+        TabelaCentroCustoComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,

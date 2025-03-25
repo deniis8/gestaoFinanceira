@@ -1,1 +1,6 @@
-<p>excluir-centro-custo works!</p>
+<div *ngIf="centroCusto">
+    <h2>
+        Excluir <span>Centro de Custo</span>
+    </h2>
+    <app-centro-custo-form (onSubmit)="excluirHendler($event)" [centroCustoData]="centroCusto" [btnText]="btnText"></app-centro-custo-form>
+</div>
