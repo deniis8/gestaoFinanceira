@@ -19,4 +19,33 @@ export class CentroCustoService {
     return this.http.get<CentroCusto[]>(`${this.baseApiUrl}api/centrocustos/usuario/${idUsuario}`);
   }
 
+  getIdCentroCustos(id: Number): Observable<CentroCusto>{
+    return this.http.get<CentroCusto>(`${this.baseApiUrl}api/centrocustos/${id}`);
+  }
+
+  postCentroCusto(formData: FormData): Observable<FormData> {
+    var data = { 
+      descriCCusto: formData.getAll("descriCCusto").toString(),
+      idUsuario: Number(formData.getAll("idUsuario"))
+    }; 
+    console.log("Data: "); 
+    console.log(data);   
+    return this.http.post<FormData>(`${this.baseApiUrl}api/centrocustos`, data);
+  }
+
+  putCentroCustos(id: Number, formData: FormData): Observable<FormData> {
+    var data = { 
+      descriCCusto: formData.getAll("descriCCusto").toString()
+    };
+
+    return this.http.put<FormData>(`${this.baseApiUrl}api/centrocustos/${id}`, data);
+  }
+
+  excluirCentroCusto(id: Number) {
+    var data = { 
+      deletado: '*'
+    };
+    return this.http.put(`${this.baseApiUrl}api/centrocustos/del/${id}`, data);
+  } 
+
 }

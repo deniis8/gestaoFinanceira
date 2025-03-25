@@ -1,0 +1,6 @@
+<div *ngIf="centroCusto">
+    <h2>
+        <span>Editar</span> Centro de Custo
+    </h2>
+    <app-centro-custo-form (onSubmit)="editHendler($event)" [centroCustoData]="centroCusto" [btnText]="btnText"></app-centro-custo-form>
+</div>

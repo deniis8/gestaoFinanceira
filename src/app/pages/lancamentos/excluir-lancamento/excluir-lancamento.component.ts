@@ -5,16 +5,17 @@ import { LancamentoService } from 'src/app/services/lancamento.service';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
-  selector: 'app-edit-lancamento',
-  templateUrl: './edit-lancamento.component.html',
-  styleUrls: ['./edit-lancamento.component.css']
+    selector: 'app-excluir-lancamento',
+    templateUrl: './excluir-lancamento.component.html',
+    styleUrls: ['./excluir-lancamento.component.css'],
+    standalone: false
 })
-export class EditLancamentoComponent implements OnInit{
+export class ExcluirLancamentoComponent implements OnInit{
 
   lancamento!: Lancamento;
-  btnText: string = 'Confirmar';
+  btnText: string = 'Remover';
   
-  constructor(private lancamentoService: LancamentoService, private route: ActivatedRoute, private router: Router, private loginService: LoginService) {
+  constructor(private lancamentoService: LancamentoService, private route: ActivatedRoute, private router: Router , private loginService: LoginService) {
         
   }
 
@@ -27,7 +28,8 @@ export class EditLancamentoComponent implements OnInit{
     })
   }
 
-  async editHendler(lancamentoData: Lancamento){    
+
+  async excluirHendler(lancamentoData: Lancamento){    
     const id = this.lancamento.id;
     const formData = new FormData();
     const idUsuario = this.loginService.getIdUsuario();
@@ -39,11 +41,12 @@ export class EditLancamentoComponent implements OnInit{
     formData.append('idCCusto', lancamentoData.idCCusto.toString());
     formData.append('idUsuario', idUsuario ?? '');
 
-    await this.lancamentoService.putLancamento(id!, formData).subscribe((result: any) => {
+    await this.lancamentoService.excluirLancamento(this.lancamento.id!).subscribe((result: any) => {
       this.router.navigate(['/home']);
     },
       (error) => {
         console.log("Erro");
       })
   }
+
 }

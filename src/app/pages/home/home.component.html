@@ -80,7 +80,7 @@
                           <th scope="col">Valor</th>
                           <th scope="col">Descrição</th>
                           <th scope="col">Status</th>
-                          <th scope="col"></th>
+                          <th scope="col">Ações</th>
                         </tr>
                       </thead>   
                       <tbody>            
@@ -89,8 +89,12 @@
                             <td>{{lancamento.valor}}</td>
                             <td>{{lancamento.descricao}}</td>   
                             <td>{{lancamento.status}}</td>                        
-                            <button routerLink="/lancamento/edit/{{lancamento.id}}" type="button" class="btn btn-secondary glyphicon glyphicon-pencil" ></button>
-                            <button routerLink="/lancamento/excluir/{{lancamento.id}}" type="button" class="btn btn-danger glyphicon glyphicon-trash" ></button>
+                            <td>
+                                <div class="btn-group">
+                                    <button routerLink="/lancamento/edit/{{lancamento.id}}" type="button" class="btn btn-secondary glyphicon glyphicon-pencil"></button>
+                                    <button routerLink="/lancamento/excluir/{{lancamento.id}}" type="button" class="btn btn-danger glyphicon glyphicon-trash"></button>
+                                </div>
+                            </td>
                         </tr>  
                     </tbody>                   
                 </table>
@@ -98,5 +102,10 @@
     <ng-template #noLancamentos>
         <h1>Não exitem registros cadastrados :P</h1>
     </ng-template>
+
+    <button mat-fab color="primary" class="fab" routerLink="/lancamento/novo/">
+        <mat-icon>add</mat-icon>
+      </button>
+
 </div>
 </div>

@@ -1,0 +1,16 @@
+<form (ngSubmit)="submit()" [formGroup]="centroCustoForm" #formDir="ngForm">
+    
+    <div class="form-group">
+        <input type="hidden" formControlName="id" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Descrição:</label>
+        <textarea placeholder="Descrição do Centro de Custo" formControlName="descriCCusto" required></textarea>
+        <div *ngIf="descriCCusto.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="descriCCusto.errors?.['required']">A descrição é obrigatória.</p>
+        </div>
+    </div>   
+
+    <input type="submit" value="{{btnText}}">    
+</form>

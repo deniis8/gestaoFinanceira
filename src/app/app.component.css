@@ -1,4 +1,88 @@
-.container {
-    min-height: 65vh;
-    margin-top: 1em;
+/* Ajuste do conteúdo da página */
+.content-container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 5px;
+  background-color: white;
+  padding-top: 80px; /* Espaço para o título não ser coberto */
+}
+
+/* Estilo para a barra de ferramentas (mat-toolbar) */
+mat-toolbar {
+  position: fixed; /* Fixa a barra no topo */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Garante que a barra fique acima de outros elementos */
+  background-color: #eeeeee; /* Cor de fundo da barra */
+  color: black; /* Cor do texto e ícones */
+  display: flex;
+  justify-content: flex-start; /* Alinha o conteúdo à esquerda */
+  align-items: center;
+  padding: 10px;
+  height: 60px; /* Altura da barra */
+}
+
+/* Ajuste no botão hamburguer */
+mat-toolbar button {
+  z-index: 1050; /* Garante que o botão esteja acima de outros elementos */
+  margin-left: 10px; /* Distância do botão da borda esquerda */
+}
+
+/* Estilo para o menu lateral */
+mat-sidenav {
+  background-color: rgb(235, 235, 235);
+  padding: 10px;
+  position: fixed; /* Fixa o menu lateral */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Garante que o menu ocupe toda a altura da tela */
+  width: 250px; /* Largura do menu lateral */
+  z-index: 1000; /* Menu fixo sobre o conteúdo */
+  transition: transform 0.3s ease-in-out; /* Animação para abrir/fechar */
+}
+
+/* Ajustes do conteúdo do menu lateral */
+mat-nav-list {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-nav-list a {
+  padding: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+mat-nav-list a:hover {
+  background-color: #e0e0e0;
+}
+
+mat-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+mat-icon {
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+/* Ajuste para os itens do menu ao serem selecionados */
+.selected {
+  background-color: #c7c7c7; /* Cor de fundo ao selecionar */
+  color: white; /* Alterando a cor do texto */
+}
+
+
+/* Remover borda e fundo no botão */
+button:focus {
+  outline: none;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
 }

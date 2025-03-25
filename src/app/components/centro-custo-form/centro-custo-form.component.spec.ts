@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderComponent } from './header.component';
+import { CentroCustoFormComponent } from './centro-custo-form.component';
 
-describe('HeaderComponent', () => {
-  let component: HeaderComponent;
-  let fixture: ComponentFixture<HeaderComponent>;
+describe('CentroCustoFormComponent', () => {
+  let component: CentroCustoFormComponent;
+  let fixture: ComponentFixture<CentroCustoFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ]
+      imports: [CentroCustoFormComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HeaderComponent);
+    fixture = TestBed.createComponent(CentroCustoFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,11 +1,37 @@
-<ng-container *ngIf="showHeaderFooter">
-  <app-header></app-header>
-</ng-container>
+<mat-toolbar *ngIf="showHeaderFooter" mat-icon-button (click)="sidenav.toggle()" color="primary">
+  <button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>Gestão Financeira</span>
+</mat-toolbar>
 
-<main class="container">
-  <router-outlet></router-outlet>
-</main>
+<mat-sidenav-container>
+  <!-- Menu Lateral -->
+  <mat-sidenav #sidenav mode="over" (click)="sidenav.close()">
+    <mat-nav-list>
+      <a>
+        <mat-icon>list</mat-icon>        
+      </a>
+      <a mat-list-item routerLink="/home" routerLinkActive="selected" (click)="selectOption()">
+        <mat-icon>list</mat-icon>
+        Lançamentos
+      </a>
+      <a mat-list-item routerLink="/graficos" routerLinkActive="selected" (click)="selectOption()">
+        <mat-icon>bar_chart</mat-icon>
+        Gráficos
+      </a>
+      <a mat-list-item routerLink="/centro-custo" routerLinkActive="selected" (click)="selectOption()">
+        <mat-icon>list</mat-icon>
+        Centros de Custo
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <!-- Conteúdo da Página -->
+  <mat-sidenav-content>
+    <div class="content-container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
-<ng-container *ngIf="showHeaderFooter">
-  <app-footer></app-footer>
-</ng-container>
+<app-footer></app-footer>

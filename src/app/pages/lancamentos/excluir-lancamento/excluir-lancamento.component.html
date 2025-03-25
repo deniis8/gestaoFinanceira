@@ -1,6 +1,6 @@
 <div *ngIf="lancamento">
     <h2>
-        Excluir <span>Lancamento</span>!
+        Excluir <span>Lancamento</span>
     </h2>
     <app-lancamento-form (onSubmit)="excluirHendler($event)" [lancamentoData]="lancamento" [btnText]="btnText"></app-lancamento-form>
 </div>

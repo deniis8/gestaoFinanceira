@@ -5,9 +5,10 @@ import { LancamentoService } from 'src/app/services/lancamento.service';
 import { LoginService } from 'src/app/services/login.service';
 
 @Component({
-  selector: 'app-novo-lancamento',
-  templateUrl: './novo-lancamento.component.html',
-  styleUrls: ['./novo-lancamento.component.css']
+    selector: 'app-novo-lancamento',
+    templateUrl: './novo-lancamento.component.html',
+    styleUrls: ['./novo-lancamento.component.css'],
+    standalone: false
 })
 export class NovoLancamentoComponent implements OnInit{
   btnText: string = "Registrar";
