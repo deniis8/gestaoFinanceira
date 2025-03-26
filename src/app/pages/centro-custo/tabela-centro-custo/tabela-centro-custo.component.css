@@ -52,18 +52,17 @@
     .table {
         width: 100%; /* Tabela ocupa toda a largura em telas pequenas */
         font-size: 12px; /* Fonte menor para melhor visualização em telas pequenas */
-    }
+    }    
+}
 
-    h2 {
-        font-size: 18px; /* Ajuste no tamanho do título em telas menores */
-    }
+h2 {
+    font-size: 18px; /* Ajuste no tamanho do título em telas menores */
+} 
 
-    .fab {
-        position: fixed; /* Para manter o botão flutuante */
-        bottom: 20px;    /* Distância da parte inferior da tela */
-        right: 20px;     /* Distância da parte direita da tela */
-        z-index: 1000;   /* Garantir que o botão esteja sobre outros elementos */
-        background-color: rgb(90, 165, 90); /* Cor do botão */
-    }
-    
+.fab {
+    position: fixed; /* Para manter o botão flutuante */
+    bottom: 20px;    /* Distância da parte inferior da tela */
+    right: 20px;     /* Distância da parte direita da tela */
+    z-index: 1000;   /* Garantir que o botão esteja sobre outros elementos */
+    background-color: rgb(90, 165, 90); /* Cor do botão */
 }
