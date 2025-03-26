@@ -53,7 +53,7 @@ export class ExcluirCentroCustoComponent implements OnInit {
       Swal.fire({
         icon: 'warning',
         title: 'Atenção',
-        text: 'Esse centro de custo não pode ser excluído, pois existem alguns lançamentos atribuídos a ele.',
+        text: `Esse centro de custo não pode ser excluído, pois ${this.quantidade === 1 ? 'existe ' : 'existem '} ${this.quantidade} ${this.quantidade === 1 ? 'lançamento ' : 'lançamentos '} ${this.quantidade === 1 ? 'atribuído' : 'atribuídos'} a ele.`,
     });
     }    
   }
