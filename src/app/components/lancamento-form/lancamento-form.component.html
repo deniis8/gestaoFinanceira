@@ -12,7 +12,7 @@
     </div>
     <div class="form-group">
         <label for="valor">Valor:</label>
-        <input type="text" placeholder="Coloque o valor do Lançamento" formControlName="valor" required>
+        <input type="tel" placeholder="Coloque o valor do Lançamento" formControlName="valor" required (input)="formatValor()">
         <div *ngIf="valor.invalid && formDir.submitted" class="validation-error">
             <p *ngIf="valor.errors?.['required']">O valor é obrigatória.</p>
         </div>

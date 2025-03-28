@@ -1,5 +1,5 @@
 <div *ngIf="saldo">
-    <h2>Sado: {{saldo.saldo}}</h2>
-    <h2>Investimento Fixo: {{saldo.investimentoFixo}}</h2>
-    <h2>Investimento Variável: {{saldo.investimentoVariavel}}</h2>
+    <h2>Sado: {{saldo.saldo | formatValor}}</h2>
+    <h2>Investimento Fixo: {{saldo.investimentoFixo | formatValor}}</h2>
+    <h2>Investimento Variável: {{saldo.investimentoVariavel | formatValor}}</h2>
 </div>
