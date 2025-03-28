@@ -28,6 +28,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { FormatValorPipe } from './pipes/format-valor.pipe';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -45,7 +46,8 @@ import { MatButtonModule } from '@angular/material/button';
         EditCentroCustoComponent,
         ExcluirCentroCustoComponent,
         NovoCentroCustoComponent,
-        TabelaCentroCustoComponent
+        TabelaCentroCustoComponent,
+        FormatValorPipe
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
