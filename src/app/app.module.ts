@@ -17,6 +17,7 @@ import { ExcluirLancamentoComponent } from './pages/lancamentos/excluir-lancamen
 import { ExcluirCentroCustoComponent } from './pages/centro-custo/excluir-centro-custo/excluir-centro-custo.component';
 import { TabelaCentroCustoComponent } from './pages/centro-custo/tabela-centro-custo/tabela-centro-custo.component';
 import { NovoCentroCustoComponent } from './pages/centro-custo/novo-centro-custo/novo-centro-custo.component';
+import { LancamentoFixoFormComponent } from './components/lancamento-fixo-form/lancamento-fixo-form.component';
 import { SaldosComponent } from './components/saldos/saldos.component';
 import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -47,7 +48,8 @@ import { FormatValorPipe } from './pipes/format-valor.pipe';
         ExcluirCentroCustoComponent,
         NovoCentroCustoComponent,
         TabelaCentroCustoComponent,
-        FormatValorPipe
+        FormatValorPipe,
+        LancamentoFixoFormComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,

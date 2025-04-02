@@ -1,0 +1,51 @@
+<form (ngSubmit)="submit()" [formGroup]="lancamentoForm" #formDir="ngForm">
+    
+    <div class="form-group">
+        <input type="hidden" formControlName="id" />
+    </div>
+    <div class="form-group">
+        <label for="dataHora">Data:</label>
+        <input type="datetime-local" placeholder="Coloque a data do Lançamento" formControlName= "dataHora" required>
+        <div *ngIf="dataHora.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="dataHora.errors?.['required']">A data é obrigatória.</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="valor">Valor:</label>
+        <input type="text" inputmode="numeric" placeholder="Coloque o valor do Lançamento" formControlName="valor" required (input)="formatValor()">
+        <div *ngIf="valor.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="valor.errors?.['required']">O valor é obrigatória.</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="description">Descrição:</label>
+        <textarea placeholder="Descrição do Lancamento" formControlName="descricao" required></textarea>
+        <div *ngIf="descricao.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="descricao.errors?.['required']">A descrição é obrigatória.</p>
+        </div>
+    </div>   
+    
+    <div class="form-group">
+        <label for="status">Status:</label>
+        <select formControlName="status" required>
+            <option value="A Receber">A Receber</option>
+            <option value="A Pagar">A Pagar</option>
+            <option value="Recebido">Recebido</option>
+            <option value="Pago">Pago</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="status">Centro Custo:</label>
+        <select formControlName="idCCusto" required>
+            <option *ngFor="let centroCusto of centroCustos" value={{centroCusto.id}}>{{centroCusto.descriCCusto}}</option>
+        </select>
+    </div>
+    
+    <div *ngIf="idCCusto.invalid && formDir.submitted" class="validation-error">
+        <p *ngIf="idCCusto.errors?.['required']">O centro de custo é obrigatória.</p>
+    </div>
+    
+
+    <input type="submit" value="{{btnText}}">    
+</form>
