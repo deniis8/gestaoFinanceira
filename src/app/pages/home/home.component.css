@@ -95,3 +95,12 @@
   background-color: rgb(90, 165, 90);
 }
 
+.status-verde {
+  background-color: #d4edda !important; /* Verde claro */
+}
+
+.status-verde td {
+  color: #155724; /* Um verde escuro para o texto */
+}
+
+

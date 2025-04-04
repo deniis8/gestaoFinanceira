@@ -84,7 +84,8 @@
                         </tr>
                       </thead>   
                       <tbody>            
-                        <tr *ngFor="let lancamento of lancamentos">
+                        <tr *ngFor="let lancamento of lancamentos"
+                            [ngClass]="{'status-verde': lancamento.status === 'A Pagar' || lancamento.status === 'A Receber'}">
                             <td>{{lancamento.dataHora | date: "dd/MM/yyyy HH:mm"}}</td>
                             <td>{{ lancamento.valor | formatValor }}</td>
                             <td>{{lancamento.descricao}}</td>   

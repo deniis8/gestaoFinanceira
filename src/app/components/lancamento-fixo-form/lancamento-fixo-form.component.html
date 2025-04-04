@@ -1,15 +1,19 @@
-<form (ngSubmit)="submit()" [formGroup]="lancamentoForm" #formDir="ngForm">
+<form (ngSubmit)="submit()" [formGroup]="lancamentoFixoForm" #formDir="ngForm">
     
     <div class="form-group">
         <input type="hidden" formControlName="id" />
     </div>
     <div class="form-group">
-        <label for="dataHora">Data:</label>
-        <input type="datetime-local" placeholder="Coloque a data do Lançamento" formControlName= "dataHora" required>
-        <div *ngIf="dataHora.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="dataHora.errors?.['required']">A data é obrigatória.</p>
+        <label for="dia">Dia do Mês:</label>
+        <select id="dia" formControlName="diaMes" required>
+            <option value="" disabled selected>Selecione o dia</option>
+            <option *ngFor="let dia of dias" [value]="dia">{{ dia }}</option>
+        </select>
+        <div *ngIf="diaMes.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="diaMes.errors?.['required']">O dia é obrigatório.</p>
         </div>
     </div>
+    
     <div class="form-group">
         <label for="valor">Valor:</label>
         <input type="text" inputmode="numeric" placeholder="Coloque o valor do Lançamento" formControlName="valor" required (input)="formatValor()">

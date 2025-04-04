@@ -13,19 +13,18 @@ export class LancamentoFixoService {
   private baseApiUrl = environment.baseApiUrl;
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
-  getAllLancamentos(): Observable<LancamentoFixo[]> {
+  getAllLancamentosFixos(): Observable<LancamentoFixo[]> {
       const idUsuario = this.loginService.getIdUsuario();
       return this.http.get<LancamentoFixo[]>(`${this.baseApiUrl}api/lancamentosfixos/usuario/${idUsuario}`);
     }
   
-    getLancamentoPorId(id: Number): Observable<LancamentoFixo> {
+    getLancamentoFixoPorId(id: Number): Observable<LancamentoFixo> {
       return this.http.get<LancamentoFixo>(`${this.baseApiUrl}api/lancamentosfixos/${id}`);
     }
   
-    postLancamento(formData: FormData): Observable<FormData> {
-      var dataLancamento = new Date(formData.getAll("dataHora").toString() + "Z");
+    postLancamentoFixo(formData: FormData): Observable<FormData> {
       var data = { 
-        dataHora: dataLancamento,
+        diaMes: Number(formData.getAll("diaMes")),
         valor: Number(formData.getAll("valor")),
         descricao: formData.getAll("descricao").toString(),
         status: formData.getAll("status").toString(),
@@ -38,17 +37,16 @@ export class LancamentoFixoService {
       return this.http.post<FormData>(`${this.baseApiUrl}api/lancamentosfixos`, data);
     }
   
-    excluirLancamento(id: Number) {
+    excluirLancamentoFixo(id: Number) {
       var data = { 
         deletado: '*'
       };
       return this.http.put(`${this.baseApiUrl}api/lancamentosfixos/del/${id}`, data);
     }
   
-    putLancamento(id: Number, formData: FormData): Observable<FormData> {
-      var dataLancamento = new Date(formData.getAll("dataHora").toString() + "Z");
+    putLancamentoFixo(id: Number, formData: FormData): Observable<FormData> {
       var data = { 
-        dataHora: dataLancamento,
+        diaMes: Number(formData.getAll("diaMes")),
         valor: Number(formData.getAll("valor")),
         descricao: formData.getAll("descricao").toString(),
         status: formData.getAll("status").toString(),

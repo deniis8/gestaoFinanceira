@@ -1,1 +1,6 @@
-<p>edit-lancamento-fixo works!</p>
+<div *ngIf="lancamentoFixo">
+    <h2>
+        <span>Editar</span> Lançamento Fixo
+    </h2>
+    <app-lancamento-fixo-form (onSubmit)="editHendler($event)" [lancamentoFixoData]="lancamentoFixo" [btnText]="btnText"></app-lancamento-fixo-form>
+</div>

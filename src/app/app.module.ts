@@ -30,6 +30,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { FormatValorPipe } from './pipes/format-valor.pipe';
+import { EditLancamentoFixoComponent } from './pages/lancamento-fixo/edit-lancamento-fixo/edit-lancamento-fixo.component';
+import { ExcluirLancamentoFixoComponent } from './pages/lancamento-fixo/excluir-lancamento-fixo/excluir-lancamento-fixo.component';
+import { NovoLancamentoFixoComponent } from './pages/lancamento-fixo/novo-lancamento-fixo/novo-lancamento-fixo.component';
+import { TabelaLancamentoFixoComponent } from './pages/lancamento-fixo/tabela-lancamento-fixo/tabela-lancamento-fixo.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -49,7 +53,11 @@ import { FormatValorPipe } from './pipes/format-valor.pipe';
         NovoCentroCustoComponent,
         TabelaCentroCustoComponent,
         FormatValorPipe,
-        LancamentoFixoFormComponent
+        LancamentoFixoFormComponent,
+        EditLancamentoFixoComponent,
+        ExcluirLancamentoFixoComponent,
+        NovoLancamentoFixoComponent,
+        TabelaLancamentoFixoComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,

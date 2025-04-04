@@ -13,20 +13,21 @@ import { CentroCustoService } from 'src/app/services/centro-custo.service';
 export class LancamentoFixoFormComponent  implements OnInit {
   @Output() onSubmit = new EventEmitter<LancamentoFixo>();
   @Input() btnText!: string;
-  @Input() lancamentoData: LancamentoFixo | null = null;
-  lancamentoForm!: FormGroup;
+  @Input() lancamentoFixoData: LancamentoFixo | null = null;
+  lancamentoFixoForm!: FormGroup;
   centroCustos: CentroCusto[] = [];
+  dias: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
 
   constructor(private centroCustoService: CentroCustoService) { }
 
   ngOnInit(): void {
-    this.lancamentoForm = new FormGroup({
-      id: new FormControl(this.lancamentoData ? this.lancamentoData.idLancFixo : ''),
-      dataHora: new FormControl(this.lancamentoData ? this.lancamentoData.dataHora : this.getDataHoraAtual(), [Validators.required]),
-      valor: new FormControl(this.lancamentoData ? this.formatValorInicial(this.lancamentoData.valor) : '', [Validators.required]),
-      descricao: new FormControl(this.lancamentoData ? this.lancamentoData.descricao : '', [Validators.required]),
-      status: new FormControl(this.lancamentoData ? this.lancamentoData.status : '', [Validators.required]),
-      idCCusto: new FormControl(this.lancamentoData ? this.lancamentoData.idCCusto : '', [Validators.required]),
+    this.lancamentoFixoForm = new FormGroup({
+      id: new FormControl(this.lancamentoFixoData ? this.lancamentoFixoData.id : ''),
+      diaMes: new FormControl(this.lancamentoFixoData?.diaMes, [Validators.required]),
+      valor: new FormControl(this.lancamentoFixoData ? this.formatValorInicial(this.lancamentoFixoData.valor) : '', [Validators.required]),
+      descricao: new FormControl(this.lancamentoFixoData ? this.lancamentoFixoData.descricao : '', [Validators.required]),
+      status: new FormControl(this.lancamentoFixoData ? this.lancamentoFixoData.status : '', [Validators.required]),
+      idCCusto: new FormControl(this.lancamentoFixoData ? this.lancamentoFixoData.idCCusto : '', [Validators.required]),
     });
 
     this.centroCustoService.getAllCentroCustos().subscribe((centroCustos) => (this.centroCustos = centroCustos));
@@ -45,7 +46,7 @@ export class LancamentoFixoFormComponent  implements OnInit {
     let valor = this.valor.value.replace(/\D/g, ''); // Remove tudo que não for número
   
     if (valor.length === 0) {
-      this.lancamentoForm.controls['valor'].setValue('', { emitEvent: false });
+      this.lancamentoFixoForm.controls['valor'].setValue('', { emitEvent: false });
       return;
     }
   
@@ -54,7 +55,7 @@ export class LancamentoFixoFormComponent  implements OnInit {
   
     // Se tiver menos de 3 dígitos, apenas adiciona a vírgula corretamente
     if (valor.length <= 2) {
-      this.lancamentoForm.controls['valor'].setValue(`0,${valor.padStart(2, '0')}`, { emitEvent: false });
+      this.lancamentoFixoForm.controls['valor'].setValue(`0,${valor.padStart(2, '0')}`, { emitEvent: false });
       return;
     }
   
@@ -69,41 +70,35 @@ export class LancamentoFixoFormComponent  implements OnInit {
     let valorFormatado = `${inteiro},${decimal}`;
   
     // Atualiza o campo sem disparar eventos infinitos
-    this.lancamentoForm.controls['valor'].setValue(valorFormatado, { emitEvent: false });
+    this.lancamentoFixoForm.controls['valor'].setValue(valorFormatado, { emitEvent: false });
   }
 
-  getDataHoraAtual(): string {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    return now.toISOString().slice(0, 16);
-  }
-
-  get dataHora() {
-    return this.lancamentoForm.get('dataHora')!;
+  get diaMes() {
+    return this.lancamentoFixoForm.get('diaMes')!;
   }
 
   get valor() {
-    return this.lancamentoForm.get('valor')!;
+    return this.lancamentoFixoForm.get('valor')!;
   }
 
   get descricao() {
-    return this.lancamentoForm.get('descricao')!;
+    return this.lancamentoFixoForm.get('descricao')!;
   }
 
   get status() {
-    return this.lancamentoForm.get('status')!;
+    return this.lancamentoFixoForm.get('status')!;
   }
 
   get idCCusto() {
-    return this.lancamentoForm.get('idCCusto')!;
+    return this.lancamentoFixoForm.get('idCCusto')!;
   }
 
   get idUsuario() {
-    return this.lancamentoForm.get('idUsuario')!;
+    return this.lancamentoFixoForm.get('idUsuario')!;
   }
 
   submit(): void {
-    if (this.lancamentoForm.invalid) {
+    if (this.lancamentoFixoForm.invalid) {
       return;
     }
   
@@ -112,7 +107,7 @@ export class LancamentoFixoFormComponent  implements OnInit {
       .replace(',', '.'); // Troca vírgula por ponto para decimal
   
     let lancamentoFormatado = {
-      ...this.lancamentoForm.value,
+      ...this.lancamentoFixoForm.value,
       valor: valorFormatado
     };
   

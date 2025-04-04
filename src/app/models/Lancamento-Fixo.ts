@@ -1,6 +1,6 @@
 export interface LancamentoFixo{
-    idLancFixo?: number;
-    dataHora: Date;
+    id?: number;
+    diaMes: number;
     valor: number;
     descricao: string;
     status: string;
