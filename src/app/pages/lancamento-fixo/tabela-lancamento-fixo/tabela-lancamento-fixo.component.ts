@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CentroCusto } from 'src/app/models/Centro-Custo';
 import { LancamentoFixo } from 'src/app/models/Lancamento-Fixo';
-import { CentroCustoService } from 'src/app/services/centro-custo.service';
-import { LancamentoFixoService } from 'src/app/services/lancamento-fixo.service';
+import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
+import { LancamentoFixoService } from 'src/app/services/lancamento-fixo/lancamento-fixo.service';
 
 @Component({
   selector: 'app-tabela-lancamento-fixo',

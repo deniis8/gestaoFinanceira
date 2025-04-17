@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LancamentoFixo } from 'src/app/models/Lancamento-Fixo';
-import { LancamentoFixoService } from 'src/app/services/lancamento-fixo.service';
-import { LoginService } from 'src/app/services/login.service';
+import { LancamentoFixoService } from 'src/app/services/lancamento-fixo/lancamento-fixo.service';
+import { LoginService } from 'src/app/services/login/login.service';
 
 @Component({
   selector: 'app-excluir-lancamento-fixo',

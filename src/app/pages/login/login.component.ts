@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router'; // Importando o Router
-import { LoginService } from 'src/app/services/login.service'; // Importando o serviço de login
+import { LoginService } from 'src/app/services/login/login.service'; // Importando o serviço de login
 
 @Component({
     selector: 'app-login',

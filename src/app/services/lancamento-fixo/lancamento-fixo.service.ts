@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginService } from './login.service';
-import { LancamentoFixo } from '../models/Lancamento-Fixo';
+import { LoginService } from '../login/login.service';
+import { LancamentoFixo } from '../../models/Lancamento-Fixo';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -26,7 +26,7 @@ export class LancamentoFixoService {
       var data = { 
         diaMes: Number(formData.getAll("diaMes")),
         valor: Number(formData.getAll("valor")),
-        descricao: formData.getAll("descricao").toString(),
+        descricao: formData.getAll("descricao").toString().trim(),
         status: formData.getAll("status").toString(),
         idCCusto: Number(formData.getAll("idCCusto")),
         idUsuario: Number(formData.getAll("idUsuario"))
@@ -48,7 +48,7 @@ export class LancamentoFixoService {
       var data = { 
         diaMes: Number(formData.getAll("diaMes")),
         valor: Number(formData.getAll("valor")),
-        descricao: formData.getAll("descricao").toString(),
+        descricao: formData.getAll("descricao").toString().trim(),
         status: formData.getAll("status").toString(),
         idCCusto: Number(formData.getAll("idCCusto")),
         idUsuario: Number(formData.getAll("idUsuario"))

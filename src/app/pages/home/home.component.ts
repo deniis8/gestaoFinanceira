@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CentroCusto } from 'src/app/models/Centro-Custo';
 import { Lancamento } from 'src/app/models/Lancamento';
-import { CentroCustoService } from 'src/app/services/centro-custo.service';
-import { LancamentoService } from 'src/app/services/lancamento.service';
+import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
+import { LancamentoService } from 'src/app/services/lancamento/lancamento.service';
 
 @Component({
     selector: 'app-home',

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CentroCusto } from 'src/app/models/Centro-Custo';
-import { CentroCustoService } from 'src/app/services/centro-custo.service';
-import { LoginService } from 'src/app/services/login.service';
+import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
+import { LoginService } from 'src/app/services/login/login.service';
 
 @Component({
   selector: 'app-novo-centro-custo',

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Saldo } from 'src/app/models/Saldo';
-import { SaldoService } from 'src/app/services/saldo.service';
+import { SaldoService } from 'src/app/services/saldo/saldo.service';
 
 @Component({
     selector: 'app-saldos',

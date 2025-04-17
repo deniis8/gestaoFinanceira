@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Lancamento } from '../models/Lancamento';
+import { Lancamento } from '../../models/Lancamento';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { LoginService } from './login.service';
+import { LoginService } from '../login/login.service';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +34,7 @@ export class LancamentoService {
     var data = { 
       dataHora: dataLancamento,
       valor: Number(formData.getAll("valor")),
-      descricao: formData.getAll("descricao").toString(),
+      descricao: formData.getAll("descricao").toString().trim(),
       status: formData.getAll("status").toString(),
       idCCusto: Number(formData.getAll("idCCusto")),
       idUsuario: Number(formData.getAll("idUsuario"))
@@ -57,7 +57,7 @@ export class LancamentoService {
     var data = { 
       dataHora: dataLancamento,
       valor: Number(formData.getAll("valor")),
-      descricao: formData.getAll("descricao").toString(),
+      descricao: formData.getAll("descricao").toString().trim(),
       status: formData.getAll("status").toString(),
       idCCusto: Number(formData.getAll("idCCusto")),
       idUsuario: Number(formData.getAll("idUsuario"))

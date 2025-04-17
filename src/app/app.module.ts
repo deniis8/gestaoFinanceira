@@ -21,7 +21,6 @@ import { LancamentoFixoFormComponent } from './components/lancamento-fixo-form/l
 import { SaldosComponent } from './components/saldos/saldos.component';
 import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.component';
 import { LoginComponent } from './pages/login/login.component';
-import { AuthInterceptor } from './services/interceptor.service';
 
 // Importações para o Angular Material
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -34,6 +33,7 @@ import { EditLancamentoFixoComponent } from './pages/lancamento-fixo/edit-lancam
 import { ExcluirLancamentoFixoComponent } from './pages/lancamento-fixo/excluir-lancamento-fixo/excluir-lancamento-fixo.component';
 import { NovoLancamentoFixoComponent } from './pages/lancamento-fixo/novo-lancamento-fixo/novo-lancamento-fixo.component';
 import { TabelaLancamentoFixoComponent } from './pages/lancamento-fixo/tabela-lancamento-fixo/tabela-lancamento-fixo.component';
+import { AuthInterceptor } from './services/interceptor/interceptor.service';
 
 @NgModule({ declarations: [
         AppComponent,

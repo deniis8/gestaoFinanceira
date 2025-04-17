@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import Chart, { registerables } from 'chart.js/auto';
-import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-centro-custo.service';
-import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo.service';
-import { GastosMensaisService } from 'src/app/services/gastos-mensais.service';
+import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-custo/detalhamento-gastos-centro-custo.service';
+import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/gastos-centro-custo.service';
+import { GastosMensaisService } from 'src/app/services/gastos-mensais/gastos-mensais.service';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 

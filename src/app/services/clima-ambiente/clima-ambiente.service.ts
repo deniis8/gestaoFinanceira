@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ClimaAmbiente } from '../models/Clima-Ambiente';
-import { Imagens } from '../models/Imagens';
+import { ClimaAmbiente } from '../../models/Clima-Ambiente';
+import { Imagens } from '../../models/Imagens';
 
 @Injectable({
   providedIn: 'root'
