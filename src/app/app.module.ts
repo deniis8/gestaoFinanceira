@@ -28,6 +28,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+
+import { MatCardModule } from '@angular/material/card';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { FormatValorPipe } from './pipes/format-valor.pipe';
 import { EditLancamentoFixoComponent } from './pages/lancamento-fixo/edit-lancamento-fixo/edit-lancamento-fixo.component';
 import { ExcluirLancamentoFixoComponent } from './pages/lancamento-fixo/excluir-lancamento-fixo/excluir-lancamento-fixo.component';
@@ -64,6 +68,8 @@ import { AuthInterceptor } from './services/interceptor/interceptor.service';
         FormsModule,
         ReactiveFormsModule,
         BrowserModule,
+        BrowserAnimationsModule,
+        MatCardModule,
         MatSidenavModule,
         MatListModule,
         MatIconModule,

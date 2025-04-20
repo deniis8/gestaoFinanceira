@@ -1,5 +1,16 @@
-<div *ngIf="saldo">
-    <h2>Sado: {{saldo.saldo | formatValor}}</h2>
-    <h2>Investimento Fixo: {{saldo.investimentoFixo | formatValor}}</h2>
-    <h2>Investimento Variável: {{saldo.investimentoVariavel | formatValor}}</h2>
+<div class="cards-container" *ngIf="saldo">
+  <mat-card class="quadrante">
+    <mat-card-title class="label-titulo">Saldo</mat-card-title>
+    <mat-card-content class="label-resultado">{{ saldo.saldo | formatValor }}</mat-card-content>
+  </mat-card>
+
+  <mat-card class="quadrante">
+    <mat-card-title class="label-titulo">Investimento Fixo</mat-card-title>
+    <mat-card-content class="label-resultado">{{ saldo.investimentoFixo | formatValor }}</mat-card-content>
+  </mat-card>
+
+  <mat-card class="quadrante">
+    <mat-card-title class="label-titulo">Investimento Variável</mat-card-title>
+    <mat-card-content class="label-resultado">{{ saldo.investimentoVariavel | formatValor }}</mat-card-content>
+  </mat-card>
 </div>
