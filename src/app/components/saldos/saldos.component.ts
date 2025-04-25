@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Saldo } from 'src/app/models/Saldo';
 import { SaldoService } from 'src/app/services/saldo/saldo.service';
 
@@ -9,6 +9,7 @@ import { SaldoService } from 'src/app/services/saldo/saldo.service';
     standalone: false
 })
 export class SaldosComponent {
+  @Input() saldoValoresSelecionados: number = 0;
   saldo!: Saldo;
 
   constructor(private saldoService: SaldoService) {

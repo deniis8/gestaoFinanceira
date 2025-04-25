@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CentroCusto } from 'src/app/models/Centro-Custo';
 import { Lancamento } from 'src/app/models/Lancamento';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
@@ -30,11 +30,22 @@ export class TabelaLancamentoComponent {
 
   filtroCentroCusto = 0;
 
+  @Input() saldoValoresSelecionados: number = 0;
+
   constructor(private lancamentoService: LancamentoService, private centroCustoService: CentroCustoService) {
   }
 
   ngOnInit(): void {
-    this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => (this.lancamentos = lancamentos));
+    //this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => (this.lancamentos = lancamentos));
+    this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => {
+      if (lancamentos != null) {
+        for (let i = 0; i < lancamentos.length; i++) {
+          this.lancamentos.push(lancamentos[i]);
+          this.saldoValoresSelecionados += lancamentos[i].valor;
+        }
+      }
+    });
+
     this.centroCustoService.getAllCentroCustos().subscribe((centroCustos) => (this.centroCustos = centroCustos));
   }
 
@@ -55,6 +66,9 @@ export class TabelaLancamentoComponent {
   }
 
   filtroData(): void {
+
+    this.saldoValoresSelecionados = 0;
+
     this.filtroStatus = "";
     if (this.isAPagarChecked) {
       this.aPagar = "A Pagar"
@@ -81,10 +95,6 @@ export class TabelaLancamentoComponent {
     }
 
     this.filtroStatus = this.aPagar + this.pago + this.aReceber + this.recebido;
-    /*console.log(this.dataDe);
-    console.log(this.dataAte);
-    console.log(this.filtroStatus);
-    console.log(this.filtroCentroCusto);*/
 
     if (this.dataDe != "" && this.dataAte != "") {
       this.lancamentoService.getLancamentoDataDeAte(this.dataDe, this.dataAte, this.filtroStatus, this.filtroCentroCusto).subscribe(item => {
@@ -92,11 +102,12 @@ export class TabelaLancamentoComponent {
         this.lancamentos = [];
         if (infoLancamentos != null) {
           for (let i = 0; i < infoLancamentos.length; i++) {
-            this.lancamentos.push(infoLancamentos[i])
+            this.lancamentos.push(infoLancamentos[i]);
+            this.saldoValoresSelecionados += infoLancamentos[i].valor;
           }
         }
-      });
-    }
+      });      
+    }   
   }
 
   removerLancamento(id: Number): void {

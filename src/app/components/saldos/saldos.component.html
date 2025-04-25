@@ -13,4 +13,9 @@
     <mat-card-title class="label-titulo">Investimento Variável</mat-card-title>
     <mat-card-content class="label-resultado">{{ saldo.investimentoVariavel | formatValor }}</mat-card-content>
   </mat-card>
+
+  <mat-card class="quadrante-saldo-filtro">
+    <mat-card-title class="label-titulo-saldo-filtro">Saldo do filtro</mat-card-title>
+    <mat-card-content class="label-resultado-saldo-filtro">{{ saldoValoresSelecionados | formatValor }}</mat-card-content>
+  </mat-card>
 </div>
