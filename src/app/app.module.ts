@@ -17,10 +17,10 @@ import { ExcluirLancamentoComponent } from './pages/lancamentos/excluir-lancamen
 import { ExcluirCentroCustoComponent } from './pages/centro-custo/excluir-centro-custo/excluir-centro-custo.component';
 import { TabelaCentroCustoComponent } from './pages/centro-custo/tabela-centro-custo/tabela-centro-custo.component';
 import { NovoCentroCustoComponent } from './pages/centro-custo/novo-centro-custo/novo-centro-custo.component';
+import { LancamentoFixoFormComponent } from './components/lancamento-fixo-form/lancamento-fixo-form.component';
 import { SaldosComponent } from './components/saldos/saldos.component';
 import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.component';
 import { LoginComponent } from './pages/login/login.component';
-import { AuthInterceptor } from './services/interceptor.service';
 
 // Importações para o Angular Material
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -28,7 +28,21 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+
+import { MatCardModule } from '@angular/material/card';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { FormatValorPipe } from './pipes/format-valor.pipe';
+import { EditLancamentoFixoComponent } from './pages/lancamento-fixo/edit-lancamento-fixo/edit-lancamento-fixo.component';
+import { ExcluirLancamentoFixoComponent } from './pages/lancamento-fixo/excluir-lancamento-fixo/excluir-lancamento-fixo.component';
+import { NovoLancamentoFixoComponent } from './pages/lancamento-fixo/novo-lancamento-fixo/novo-lancamento-fixo.component';
+import { TabelaLancamentoFixoComponent } from './pages/lancamento-fixo/tabela-lancamento-fixo/tabela-lancamento-fixo.component';
+import { AuthInterceptor } from './services/interceptor/interceptor.service';
+import { TabelaLancamentoComponent } from './components/tabela-lancamento/tabela-lancamento.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -47,18 +61,30 @@ import { FormatValorPipe } from './pipes/format-valor.pipe';
         ExcluirCentroCustoComponent,
         NovoCentroCustoComponent,
         TabelaCentroCustoComponent,
-        FormatValorPipe
+        FormatValorPipe,
+        LancamentoFixoFormComponent,
+        EditLancamentoFixoComponent,
+        ExcluirLancamentoFixoComponent,
+        NovoLancamentoFixoComponent,
+        TabelaLancamentoFixoComponent,
+        TabelaLancamentoComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
         BrowserModule,
+        BrowserAnimationsModule,
+        MatCardModule,
         MatSidenavModule,
         MatListModule,
         MatIconModule,
         MatToolbarModule,
-        MatButtonModule], providers: [
+        MatButtonModule,
+        MatDatepickerModule,
+        MatFormFieldModule,
+        MatNativeDateModule,
+        MatInputModule], providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         provideHttpClient(withInterceptorsFromDi())
     ] })

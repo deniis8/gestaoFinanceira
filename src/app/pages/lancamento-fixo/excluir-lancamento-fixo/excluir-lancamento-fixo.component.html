@@ -1,0 +1,6 @@
+<div *ngIf="lancamentoFixo">
+    <h2>
+        Excluir <span>Lançamento Fixo</span>
+    </h2>
+    <app-lancamento-fixo-form (onSubmit)="excluirHendler($event)" [lancamentoFixoData]="lancamentoFixo" [btnText]="btnText"></app-lancamento-fixo-form>
+</div>

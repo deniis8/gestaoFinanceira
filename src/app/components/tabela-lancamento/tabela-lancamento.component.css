@@ -1,0 +1,143 @@
+/*
+Data de e Data até
+*/
+.date-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0; /* Removido o margin padrão */
+  justify-content: flex-start; /* força o alinhamento à esquerda */
+}
+
+.date-picker {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-picker label {
+  margin-bottom: 4px;
+  font-weight: 500;
+  font-size: 16px; /* aumenta o tamanho da fonte */
+  color: #333;
+}
+
+.date-picker input[type="date"] {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.date-picker input[type="date"]:focus {
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+/*
+Fim - Data de e Data até
+*/
+
+/*
+Botão checkbox
+*/
+
+.checkbox-group {
+  display: flex;
+  gap: 32px;
+  margin: 16px 0;
+}
+
+.checkbox-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.custom-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  color: #333;
+}
+
+.custom-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3f51b5; /* cor moderna e bonita */
+  cursor: pointer;
+}
+/*
+Fim - Botão checkbox
+*/
+
+/*
+Botão group 
+*/
+.select-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+  width: 250px;
+}
+
+.select-group label {
+  font-weight: 600;
+  font-size: 16px; /* aumenta o tamanho da fonte */
+  color: #333;
+}
+
+.select-group select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  background-color: #fff;
+  color: #333;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20fill%3D'%23333'%20height%3D'24'%20viewBox%3D'0%200%2024%2024'%20width%3D'24'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M7%2010l5%205%205-5H7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 18px;
+}
+
+.select-group select:focus {
+  outline: none;
+  border-color: #3f51b5;
+  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+}
+/*
+Fim - Botão group
+*/
+
+/*
+Botão Inserir
+*/
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: rgb(90, 165, 90);
+}
+
+.status-verde {
+  background-color: #d4edda !important; /* Verde claro */
+}
+
+.status-verde td {
+  color: #155724; /* Um verde escuro para o texto */
+}
+
+mat-form-field {
+  width: 200px;
+}
+/*
+Fim - Botão Inserir
+*/
+
+

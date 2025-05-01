@@ -11,6 +11,10 @@ import { EditCentroCustoComponent } from './pages/centro-custo/edit-centro-custo
 import { ExcluirCentroCustoComponent } from './pages/centro-custo/excluir-centro-custo/excluir-centro-custo.component';
 import { NovoCentroCustoComponent } from './pages/centro-custo/novo-centro-custo/novo-centro-custo.component';
 import { TabelaCentroCustoComponent } from './pages/centro-custo/tabela-centro-custo/tabela-centro-custo.component';
+import { TabelaLancamentoFixoComponent } from './pages/lancamento-fixo/tabela-lancamento-fixo/tabela-lancamento-fixo.component';
+import { EditLancamentoFixoComponent } from './pages/lancamento-fixo/edit-lancamento-fixo/edit-lancamento-fixo.component';
+import { ExcluirLancamentoFixoComponent } from './pages/lancamento-fixo/excluir-lancamento-fixo/excluir-lancamento-fixo.component';
+import { NovoLancamentoFixoComponent } from './pages/lancamento-fixo/novo-lancamento-fixo/novo-lancamento-fixo.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -19,6 +23,10 @@ const routes: Routes = [
   {path: 'lancamento/edit/:id', component: EditLancamentoComponent},
   {path: 'lancamento/excluir/:id', component: ExcluirLancamentoComponent},
   {path: 'lancamento/novo', component: NovoLancamentoComponent},
+  {path: 'lancamento-fixo', component: TabelaLancamentoFixoComponent},
+  {path: 'lancamento-fixo/edit/:id', component: EditLancamentoFixoComponent},
+  {path: 'lancamento-fixo/excluir/:id', component: ExcluirLancamentoFixoComponent},
+  {path: 'lancamento-fixo/novo', component: NovoLancamentoFixoComponent},
   {path: 'clima-ambiente', component: ClimaAmbienteComponent},
   {path: 'centro-custo', component: TabelaCentroCustoComponent},
   {path: 'centro-custo/edit/:id', component: EditCentroCustoComponent},

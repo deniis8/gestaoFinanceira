@@ -1,6 +1,56 @@
-h2 {
-    text-align: end;
-    margin-top: 1px;
-    font-size: 12px;
-    color: #000000;
-}
+.cards-container {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    flex-wrap: wrap; /* pra quebrar em telas pequenas */
+    margin: 1px 0;
+  }
+  
+  .quadrante {
+    flex: 1 1 calc(33.333% - 16px); /* divide em 3 colunas com espaçamento */
+    min-width: 20px;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    background-color: rgb(243, 243, 243); 
+  }
+
+  .label-titulo{
+    color: #2e2e2e;
+    font-family: Arial, sans-serif;
+  }
+
+  .label-resultado{
+    color: #2e2e2e;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+  }
+
+  /*
+  Saldo Filtro
+  */
+  .quadrante-saldo-filtro {
+    flex: 1 1 calc(33.333% - 16px); /* divide em 3 colunas com espaçamento */
+    min-width: 20px;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    background-color: rgb(243, 243, 243);
+    height: 60px;
+    /* Centraliza verticalmente e horizontalmente */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;     
+  }
+
+  .label-titulo-saldo-filtro{
+    color: #2e2e2e;
+    font-family: Arial, sans-serif;
+  }
+
+  .label-resultado-saldo-filtro{
+    color: #2e2e2e;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+  }
+  

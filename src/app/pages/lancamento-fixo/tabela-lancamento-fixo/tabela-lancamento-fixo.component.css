@@ -1,0 +1,105 @@
+/* Container principal - cria margem à esquerda e à direita, e centraliza o conteúdo */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Alinha o conteúdo ao centro */
+    align-items: flex-start;
+    padding: 10px;
+    margin: 0 auto; /* Centraliza o container */
+    max-width: 1200px; /* Limita a largura do container */
+  }
+  
+  /* Contêiner de data */
+  .date-container,
+  .checkbox-columns {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  /* Ajuste para os campos de data */
+  .date-picker {
+    margin-bottom: 10px;
+  }
+  
+  /* Estilo das colunas de checkboxes */
+  .checkbox-columns {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .checkbox-column {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  .checkbox-item {
+    margin-bottom: 10px;
+  }
+  
+  /* Estilo do campo de seleção de Centro Custo */
+  #status {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #fff;
+  }
+  
+  /* Estilo do conteúdo para telas maiores que 600px */
+  @media (min-width: 600px) {
+    .container {
+      flex-wrap: nowrap; /* Ajusta o layout para telas maiores */
+    }
+  
+    /* Data container ocupando 45% da largura */
+    .date-container {
+      width: 45%;
+      flex-direction: column;
+    }
+  
+    /* Checkbox columns ocupando 50% da largura */
+    .checkbox-columns {
+      width: 50%;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  
+    .checkbox-column {
+      width: 45%;
+    }
+  }
+  
+  /* Estilos responsivos para telas menores */
+  @media (max-width: 599px) {
+    .date-container,
+    .checkbox-columns {
+      width: 100%; /* Ocupa toda a largura em telas menores */
+    }
+  
+    /* Ajuste de margens para componentes menores */
+    .checkbox-column,
+    .date-picker {
+      margin: 0 auto;
+      width: 90%; /* Garantir que os campos não fiquem muito largos */
+    }
+  }
+  
+  .fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: rgb(90, 165, 90);
+  }
+  
+  .linha-verde {
+    background-color: #d4edda !important; /* Verde claro */
+  }
+  
+  .linha-verde td {
+    color: #155724; /* Um verde escuro para o texto */
+  }
+  

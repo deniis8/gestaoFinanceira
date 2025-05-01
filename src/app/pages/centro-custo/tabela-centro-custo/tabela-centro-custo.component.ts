@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CentroCusto } from 'src/app/models/Centro-Custo';
-import { CentroCustoService } from 'src/app/services/centro-custo.service';
+import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
 
 @Component({
   selector: 'app-tabela-centro-custo',

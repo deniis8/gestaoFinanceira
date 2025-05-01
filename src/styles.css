@@ -1,7 +1,7 @@
 * {
     padding: 0;
     margin: 0;
-    font-family: Cambria;
+    font-family: Arial, sans-serif;
     box-sizing: border-box;
     color: #444;
 }
@@ -63,5 +63,8 @@ input[type="submit"]:hover{
     border-left: 3px solid #dc3545;
     padding-left: 0.2em;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

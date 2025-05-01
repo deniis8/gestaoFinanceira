@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Lancamento } from 'src/app/models/Lancamento';
-import { LancamentoService } from 'src/app/services/lancamento.service';
-import { LoginService } from 'src/app/services/login.service';
+import { LancamentoService } from 'src/app/services/lancamento/lancamento.service';
+import { LoginService } from 'src/app/services/login/login.service';
 
 @Component({
     selector: 'app-edit-lancamento',
