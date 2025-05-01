@@ -13,13 +13,13 @@ import { LancamentoService } from 'src/app/services/lancamento/lancamento.servic
 export class TabelaLancamentoComponent {
   lancamentos: Lancamento[] = [];
   centroCustos: CentroCusto[] = [];
-  dataDe: string = this.getDataDiasAtras(15);
+  dataDe: string = this.getDataDiasAtras(30);
   dataAte: string = this.getHoje();
 
-  isAPagarChecked = false;
-  isPagoChecked = false;
-  isAReceberChecked = false;
-  isRecebidoChecked = false;
+  isAPagarChecked = true;
+  isPagoChecked = true;
+  isAReceberChecked = true;
+  isRecebidoChecked = true;
 
   aPagar = "";
   pago = "";
@@ -36,8 +36,8 @@ export class TabelaLancamentoComponent {
   }
 
   ngOnInit(): void {
-    //this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => (this.lancamentos = lancamentos));
-    this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => {
+    this.filtroStatus = this.agrupaStatus();
+    this.lancamentoService.getLancamentoDataDeAte(this.dataDe, this.dataAte, this.filtroStatus, this.filtroCentroCusto).subscribe((lancamentos) => {
       if (lancamentos != null) {
         for (let i = 0; i < lancamentos.length; i++) {
           this.lancamentos.push(lancamentos[i]);
@@ -67,34 +67,9 @@ export class TabelaLancamentoComponent {
 
   filtroData(): void {
 
-    this.saldoValoresSelecionados = 0;
+    this.saldoValoresSelecionados = 0;    
 
-    this.filtroStatus = "";
-    if (this.isAPagarChecked) {
-      this.aPagar = "A Pagar"
-    } else {
-      this.aPagar = ""
-    }
-
-    if (this.isPagoChecked) {
-      this.pago = "Pago"
-    } else {
-      this.pago = ""
-    }
-
-    if (this.isAReceberChecked) {
-      this.aReceber = "A Receber"
-    } else {
-      this.aReceber = ""
-    }
-
-    if (this.isRecebidoChecked) {
-      this.recebido = "Recebido"
-    } else {
-      this.recebido = ""
-    }
-
-    this.filtroStatus = this.aPagar + this.pago + this.aReceber + this.recebido;
+    this.filtroStatus = this.agrupaStatus();
 
     if (this.dataDe != "" && this.dataAte != "") {
       this.lancamentoService.getLancamentoDataDeAte(this.dataDe, this.dataAte, this.filtroStatus, this.filtroCentroCusto).subscribe(item => {
@@ -109,6 +84,17 @@ export class TabelaLancamentoComponent {
       });      
     }   
   }
+
+  agrupaStatus(): string{
+    this.filtroStatus = "";
+    this.aPagar = this.isAPagarChecked ? "A Pagar" : "";
+    this.pago = this.isPagoChecked ? "Pago" : "";
+    this.aReceber = this.isAReceberChecked ? "A Receber" : "";
+    this.recebido = this.isRecebidoChecked ? "Recebido" : "";
+
+    return this.aPagar + this.pago + this.aReceber + this.recebido;
+  }
+  
 
   removerLancamento(id: Number): void {
     this.lancamentoService.excluirLancamento(id).subscribe();
