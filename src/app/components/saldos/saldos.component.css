@@ -12,18 +12,20 @@
     text-align: center;
     padding: 12px;
     font-size: 14px;
-    background-color: rgb(243, 243, 243); 
+    background-color: rgb(243, 243, 243);
   }
 
   .label-titulo{
     color: #2e2e2e;
     font-family: Arial, sans-serif;
+    font-size: 16px;
   }
 
   .label-resultado{
     color: #2e2e2e;
     font-family: Arial, sans-serif;
     font-weight: bold;
+    font-size: 14px;
   }
 
   /*
@@ -41,16 +43,5 @@
     display: flex;
     flex-direction: column;
     justify-content: center;     
-  }
-
-  .label-titulo-saldo-filtro{
-    color: #2e2e2e;
-    font-family: Arial, sans-serif;
-  }
-
-  .label-resultado-saldo-filtro{
-    color: #2e2e2e;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
   }
   

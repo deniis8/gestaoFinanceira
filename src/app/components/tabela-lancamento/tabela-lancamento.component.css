@@ -115,6 +115,37 @@ Fim - Botão group
 */
 
 /*
+Tabela
+*/
+th{
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  background-color: #302f2f;  
+}
+td{
+  font-family: Arial, sans-serif;
+  font-size: 11px;  
+  color: #616161;
+}
+/*
+Fim - Tabela
+*/
+
+/*
+Botões
+*/
+.botao-editar{
+  background-color: #e7e7fd;
+}
+
+.botao-remover{
+  background-color: #fda6a6;
+}
+/*
+Botões
+*/
+
+/*
 Botão Inserir
 */
 .fab {
@@ -125,12 +156,12 @@ Botão Inserir
   background-color: rgb(90, 165, 90);
 }
 
-.status-verde {
-  background-color: #d4edda !important; /* Verde claro */
+tr.status-verde td {
+  background-color: #bbecc7 !important;
 }
 
-.status-verde td {
-  color: #155724; /* Um verde escuro para o texto */
+tr.status-vermelho td {
+  background-color: #fdcdcd !important;
 }
 
 mat-form-field {
