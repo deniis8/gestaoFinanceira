@@ -102,16 +102,6 @@
   background-color: rgb(90, 165, 90);
 }
 
-.linha-verde {
-  background-color: #d4edda !important;
-  /* Verde claro */
-}
-
-.linha-verde td {
-  color: #155724;
-  /* Um verde escuro para o texto */
-}
-
 th{
   font-family: Arial, sans-serif;
   font-size: 11px;

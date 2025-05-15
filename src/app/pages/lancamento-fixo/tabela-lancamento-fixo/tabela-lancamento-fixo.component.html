@@ -1,8 +1,6 @@
-<div class="class">
-
 <div>
     <div *ngIf="lancamentosFixos.length > 0; else noLancamentos">
-                <table class="table table-striped">   
+                <table class="table table-striped table-bordered align-middle shadow-sm">   
                     <thead class="table-dark">
                         <tr>
                           <th>Dia do Mês</th>
@@ -12,7 +10,7 @@
                           <th>Ações</th>
                       </thead>   
                       <tbody>            
-                        <tr *ngFor="let lancamentoFixo of lancamentosFixos" class="linha-verde">
+                        <tr *ngFor="let lancamentoFixo of lancamentosFixos">
                             <td>{{lancamentoFixo.diaMes}}</td>
                             <td>{{ lancamentoFixo.valor | formatValor }}</td>
                             <td>{{lancamentoFixo.descricao}}</td>   
@@ -41,5 +39,4 @@
         <mat-icon>add</mat-icon>
       </button>
 
-</div>
 </div>
