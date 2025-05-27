@@ -1,68 +1,62 @@
-/* Estilo da tabela - aumento de largura para melhor visualização */
-.table {
-    width: 95%; /* Aumenta a largura da tabela */
-    margin: 20px auto; /* Margem entre a tabela e outros componentes */
-    border-collapse: collapse; /* Melhora a renderização da tabela */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para a tabela */
-    border-radius: 8px;
-}
-
-/* Ajustes para os cabeçalhos da tabela */
+/* Cabeçalho da tabela */
 .table th {
-    background-color: #343a40; /* Cor de fundo para o cabeçalho */
-    color: white; /* Cor do texto do cabeçalho */
+    background-color: #343a40;
+    color: white;
     padding: 10px;
-    font-size: 16px; /* Tamanho da fonte */
-}
-
-/* Ajustes para as células da tabela */
-.table td {
-    padding: 10px; /* Espaçamento interno */
-    border-bottom: 1px solid #ddd; /* Linha de divisão entre as linhas */
-    font-size: 14px; /* Tamanho da fonte */
-}
-
-/* Botões dentro da tabela - com melhor visual */
-.table td .btn {
-    width: 40px; /* Largura consistente para os botões */
-    height: 40px; /* Altura consistente */
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Células da tabela */
+  .table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    color: #616161;
+  }
+  
+  /* Botões de ação dentro da tabela */
+  .table td .btn {
+    width: 40px;
+    height: 40px;
     align-items: center;
     justify-content: center;
-    border-radius: 50%; /* Botões com bordas arredondadas */
+    border-radius: 50%;
     border: none;
     color: white;
     font-size: 18px;
-    transition: background-color 0.3s ease; /* Transição suave para o fundo */
-}
-
-.table td .btn-secondary {
-    background-color: #6c757d; /* Cor de fundo para o botão de editar */
-}
-
-.table td .btn-danger {
-    background-color: #dc3545; /* Cor de fundo para o botão de excluir */
-}
-
-.table td .btn:hover {
-    opacity: 0.8; /* Efeito de hover nos botões */
-}
-
-/* Responsividade para dispositivos móveis */
-@media (max-width: 599px) {
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Botões específicos */
+  .botao-editar {
+    background-color: #e7e7fd;
+  }
+  
+  .botao-remover {
+    background-color: #fda6a6;
+  }
+  
+  /* Título da página */
+  h2 {
+    font-size: 18px;
+  }
+  
+  /* Botão flutuante */
+  .fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background-color: rgb(90, 165, 90);
+  }
+  
+  /* Responsividade */
+  @media (max-width: 599px) {
     .table {
-        width: 100%; /* Tabela ocupa toda a largura em telas pequenas */
-        font-size: 12px; /* Fonte menor para melhor visualização em telas pequenas */
-    }    
-}
-
-h2 {
-    font-size: 18px; /* Ajuste no tamanho do título em telas menores */
-} 
-
-.fab {
-    position: fixed; /* Para manter o botão flutuante */
-    bottom: 20px;    /* Distância da parte inferior da tela */
-    right: 20px;     /* Distância da parte direita da tela */
-    z-index: 1000;   /* Garantir que o botão esteja sobre outros elementos */
-    background-color: rgb(90, 165, 90); /* Cor do botão */
-}
+      width: 100%;
+      font-size: 12px;
+    }
+  }
+  

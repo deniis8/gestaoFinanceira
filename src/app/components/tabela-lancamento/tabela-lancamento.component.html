@@ -1,104 +1,108 @@
 <app-saldos [saldoValoresSelecionados]="saldoValoresSelecionados"></app-saldos>
 <br>
 <div>
-    <!-- Container para os campos de data -->
-    <div class="date-container">
-        <div class="date-picker">
-          <label for="startDate">Data de:</label>
-          <input id="startDate" type="date" [(ngModel)]="dataDe" (ngModelChange)="filtroData()" />
-        </div>
-      
-        <div class="date-picker">
-          <label for="endDate">Data até:</label>
-          <input id="endDate" type="date" [(ngModel)]="dataAte" (ngModelChange)="filtroData()" />
-        </div>
-      </div>
-      
+  <!-- Container para os campos de data -->
+  <div class="date-container">
+    <div class="date-picker">
+      <label for="startDate">Data de:</label>
+      <input id="startDate" type="date" [(ngModel)]="dataDe" (ngModelChange)="filtroData()" />
+    </div>
 
-    <!-- Container para os checkboxes -->
-    <div class="checkbox-group">
-        <!-- Coluna 1 -->
-        <div class="checkbox-column">
-          <label class="custom-checkbox">
-            <input type="checkbox" [(ngModel)]="isAPagarChecked" (ngModelChange)="filtroData()" />
-            <span>A Pagar</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" [(ngModel)]="isPagoChecked" (ngModelChange)="filtroData()" />
-            <span>Pago</span>
-          </label>
-        </div>
-      
-        <!-- Coluna 2 -->
-        <div class="checkbox-column">
-          <label class="custom-checkbox">
-            <input type="checkbox" [(ngModel)]="isAReceberChecked" (ngModelChange)="filtroData()" />
-            <span>A Receber</span>
-          </label>
-          <label class="custom-checkbox">
-            <input type="checkbox" [(ngModel)]="isRecebidoChecked" (ngModelChange)="filtroData()" />
-            <span>Recebido</span>
-          </label>
-        </div>
-      </div>      
+    <div class="date-picker">
+      <label for="endDate">Data até:</label>
+      <input id="endDate" type="date" [(ngModel)]="dataAte" (ngModelChange)="filtroData()" />
+    </div>
+  </div>
 
-      <div class="select-group">
-        <label for="status">Centro de Custo:</label>
-        <select id="status" required (change)="filtrarCentroCusto($event)">
-          <option disabled selected hidden>Todos</option>
-          <option [value]="0">Todos</option>
-          <option *ngFor="let centroCusto of centroCustos" [value]="centroCusto.id">
-            {{ centroCusto.descriCCusto }}
-          </option>
-        </select>
-      </div>      
+
+  <!-- Container para os checkboxes -->
+  <div class="checkbox-group">
+    <!-- Coluna 1 -->
+    <div class="checkbox-column">
+      <label class="custom-checkbox">
+        <input type="checkbox" [(ngModel)]="isAPagarChecked" (ngModelChange)="filtroData()" />
+        <span>A Pagar</span>
+      </label>
+      <label class="custom-checkbox">
+        <input type="checkbox" [(ngModel)]="isPagoChecked" (ngModelChange)="filtroData()" />
+        <span>Pago</span>
+      </label>
+    </div>
+
+    <!-- Coluna 2 -->
+    <div class="checkbox-column">
+      <label class="custom-checkbox">
+        <input type="checkbox" [(ngModel)]="isAReceberChecked" (ngModelChange)="filtroData()" />
+        <span>A Receber</span>
+      </label>
+      <label class="custom-checkbox">
+        <input type="checkbox" [(ngModel)]="isRecebidoChecked" (ngModelChange)="filtroData()" />
+        <span>Recebido</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="select-group">
+    <label for="status">Centro de Custo:</label>
+    <select id="status" required (change)="filtrarCentroCusto($event)">
+      <option disabled selected hidden>Todos</option>
+      <option [value]="0">Todos</option>
+      <option *ngFor="let centroCusto of centroCustos" [value]="centroCusto.id">
+        {{ centroCusto.descriCCusto }}
+      </option>
+    </select>
+  </div>
 </div>
 
 <br>
-  
+
 <div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.js"></script>
+  <div>
+    <div *ngIf="lancamentos.length > 0; else noLancamentos">
+      <table class="table table-striped table-bordered align-middle shadow-sm">
+        <thead class="table-dark">
+          <tr>
+            <th>Data Hora</th>
+            <th>Valor</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-<div ng-app="myApp">
-    <div *ngIf="lancamentos.length > 0; else noLancamentos"  ng-controller="myController">
-                <table class="table table-striped">   
-                    <thead class="thead-dark">
-                        <tr>
-                          <th scope="col">Data Hora</th>
-                          <th scope="col">Valor</th>
-                          <th scope="col">Descrição</th>
-                          <th scope="col">Status</th>
-                          <th scope="col">Ações</th>
-                        </tr>
-                      </thead>   
-                      <tbody>            
-                        <tr *ngFor="let lancamento of lancamentos"
-                            [ngClass]="{'status-verde': lancamento.status === 'A Pagar' || lancamento.status === 'A Receber'}">
-                            <td>{{lancamento.dataHora | date: "dd/MM/yyyy HH:mm"}}</td>
-                            <td>{{ lancamento.valor | formatValor }}</td>
-                            <td>{{lancamento.descricao}}</td>   
-                            <td>{{lancamento.status}}</td>                        
-                            <td>
-                                <div class="btn-group">
-                                    <button routerLink="/lancamento/edit/{{lancamento.id}}" type="button" class="btn btn-secondary glyphicon glyphicon-pencil"></button>
-                                    <button routerLink="/lancamento/excluir/{{lancamento.id}}" type="button" class="btn btn-danger glyphicon glyphicon-trash"></button>
-                                </div>
-                            </td>
-                        </tr>  
-                    </tbody>                   
-                </table>
+        <tbody>
+          <tr *ngFor="let lancamento of lancamentos" [ngClass]="{
+            'status-verde': lancamento.status === 'A Pagar' || lancamento.status === 'A Receber',
+            'status-vermelho': lancamento.descriCCusto === 'Empréstimo'
+          }">
+            <td>{{lancamento.dataHora | date: "dd/MM/yyyy HH:mm"}}</td>
+            <td>{{ lancamento.valor | formatValor }}</td>
+            <td>{{lancamento.descricao}}</td>
+            <td>{{lancamento.status}}</td>
+            <td>
+              <div class="btn-group">
+                <button routerLink="/lancamento/edit/{{lancamento.id}}" type="button"
+                  class="btn btn-outline-primary btn-sm botao-editar">
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button routerLink="/lancamento/excluir/{{lancamento.id}}" type="button"
+                  class="btn btn-outline-danger btn-sm botao-remover">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <ng-template #noLancamentos>
-        <h1>Não exitem registros cadastrados :P</h1>
+      <h1>Não exitem registros cadastrados :P</h1>
     </ng-template>
 
     <button mat-fab color="primary" class="fab" routerLink="/lancamento/novo/">
-        <mat-icon>add</mat-icon>
-      </button>
+      <mat-icon>add</mat-icon>
+    </button>
 
-</div>
+  </div>
 </div>

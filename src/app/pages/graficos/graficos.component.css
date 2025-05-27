@@ -1,20 +1,38 @@
 .chart-wrapper {
     width: 100%;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Permite rolagem suave em dispositivos móveis */
+    -webkit-overflow-scrolling: touch;
 }
 
 .chart-container-gcc {
-    width: 1000px; /* Ajuste a largura conforme necessário para o tamanho do seu gráfico */
-    /* É possível definir uma largura maior para garantir que a rolagem seja necessária */
+    width: 1000px;
 }
 
 .chart-container-gmcc {
-    width: 1500px; /* Ajuste a largura conforme necessário para o tamanho do seu gráfico */
-    /* É possível definir uma largura maior para garantir que a rolagem seja necessária */
+    width: 1500px;
 }
 
 canvas {
     width: 100%;
     height: auto;
+}
+
+th {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    background-color: #302f2f;
+}
+
+td {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #616161;
+}
+
+.botao-editar {
+    background-color: #e7e7fd;
+}
+
+.botao-remover {
+    background-color: #fda6a6;
 }
