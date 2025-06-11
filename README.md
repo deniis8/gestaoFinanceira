@@ -1,27 +1,26 @@
-# GestaoFinanceira
+# 💰 Gestão Financeira
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.7.
+Sistema web para controle de receitas e despesas, categorizadas por centro de custo. Desenvolvido em **Angular** com foco em organização financeira pessoal ou empresarial.
 
-## Development server
+## 🚀 Funcionalidades
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- ✅ Cadastro de lançamentos financeiros (receitas e despesas)
+- ✅ Agrupamento por **centros de custo**
+- ✅ Visualização de totais por categoria
+- ✅ Edição e exclusão de lançamentos
+- ✅ Interface responsiva
 
-## Code scaffolding
+## 🧱 Tecnologias Utilizadas
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- [Angular](https://angular.io/) 17+
+- [TypeScript](https://www.typescriptlang.org/)
+- [RxJS](https://rxjs.dev/)
+- [Bootstrap](https://getbootstrap.com/) (ou outro framework de UI, se usado)
 
-## Build
+## 📦 Instalação
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. Clone o repositório:
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+   ```bash
+   git clone https://github.com/deniis8/gestaoFinanceira.git
+   cd gestaoFinanceira
