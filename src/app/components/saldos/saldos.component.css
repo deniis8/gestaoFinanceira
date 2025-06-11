@@ -12,7 +12,7 @@
     text-align: center;
     padding: 12px;
     font-size: 14px;
-    background-color: rgb(243, 243, 243);
+    background-color: rgba(215, 216, 220, 0.81);
   }
 
   .label-titulo{
@@ -37,7 +37,7 @@
     text-align: center;
     padding: 12px;
     font-size: 14px;
-    background-color: rgb(243, 243, 243);
+    background-color: rgba(215, 216, 220, 0.81);
     height: 60px;
     /* Centraliza verticalmente e horizontalmente */
     display: flex;

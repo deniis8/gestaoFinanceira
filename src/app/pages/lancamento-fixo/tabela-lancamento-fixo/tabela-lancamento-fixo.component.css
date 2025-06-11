@@ -102,15 +102,13 @@
   background-color: rgb(90, 165, 90);
 }
 
-th{
-  font-family: Arial, sans-serif;
+th{;
   font-size: 11px;
-  background-color: #302f2f;  
+  background-color: rgb(73, 73, 73);
 }
 td{
-  font-family: Arial, sans-serif;
   font-size: 11px;  
-  color: #616161;
+  color: rgb(73, 73, 73);
 }
 
 /*
