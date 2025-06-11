@@ -30,6 +30,13 @@ select {
     box-sizing: border-box; /* Garante que o preenchimento esteja incluído na largura total */
 }
 
+input[type="datetime-local"] {
+  -webkit-appearance: none; /* remove estilo padrão do iOS */
+  appearance: none;
+  min-width: 0; /* força ele a respeitar o container */
+}
+
+
 textarea {
     resize: vertical;
 }
