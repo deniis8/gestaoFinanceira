@@ -36,7 +36,7 @@ export class GraficosComponent implements OnInit {
 
   constructor(private saldoService: GastosMensaisService, private gastosCentroCustoService: GastosCentroCustoService, private detalhamentoGastosCentroCusto: DetalhamentoGastosCentroCustoService) {
     //Chart.register(...registerables);
-    Chart.register(...registerables, ChartDataLabels);
+    //Chart.register(...registerables, ChartDataLabels);
   }  
 
   //@ViewChild("meuCanvas", { static: true }) elemento: ElementRef | undefined;
