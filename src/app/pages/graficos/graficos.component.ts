@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import Chart, { registerables } from 'chart.js/auto';
+import Chart from 'chart.js/auto';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-custo/detalhamento-gastos-centro-custo.service';
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/gastos-centro-custo.service';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais/gastos-mensais.service';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+// registre o plugin aqui
+//Chart.register(ChartDataLabels);
 
 @Component({
     selector: 'app-graficos',
@@ -135,6 +137,7 @@ export class GraficosComponent implements OnInit {
           }
         },
       },
+      plugins: [ChartDataLabels] // <- Aqui você registra o plugin apenas neste gráfico
     });
   }
   
@@ -224,6 +227,7 @@ export class GraficosComponent implements OnInit {
           }
         }
       },
+      plugins: [ChartDataLabels] // <- Aqui você registra o plugin apenas neste gráfico
       // events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
       /*plugins: [{
         id: 'myEventCatcher',
