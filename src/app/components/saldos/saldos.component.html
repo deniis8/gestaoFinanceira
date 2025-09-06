@@ -18,5 +18,10 @@
     <mat-card-title class="label-titulo">Valor do filtro</mat-card-title>
     <mat-card-content class="label-resultado">{{ saldoValoresSelecionados | formatValor }}</mat-card-content>
   </mat-card>
-  <app-donut-chart></app-donut-chart>
+  <mat-card>
+  <app-donut-chart class="quadrante-grafico"
+    [despesasGraficoDonut]="despesasGraficoDonut" 
+    [receitasGraficoDonut]="receitasGraficoDonut">
+  </app-donut-chart>
+  </mat-card>
 </div>

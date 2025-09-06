@@ -45,3 +45,7 @@
     justify-content: center;     
   }
   
+  .quadrante-grafico {
+    background-color: rgba(215, 216, 220, 0.81); 
+    border-radius: 10px;
+  }
