@@ -14,7 +14,7 @@ mat-toolbar {
   left: 0;
   width: 100%;
   z-index: 1000; /* Garante que a barra fique acima de outros elementos */
-  background-color: #eeeeee; /* Cor de fundo da barra */
+  background-color:rgb(200, 200, 200); /* Cor de fundo da barra */
   color: black; /* Cor do texto e ícones */
   display: flex;
   justify-content: flex-start; /* Alinha o conteúdo à esquerda */
@@ -25,7 +25,7 @@ mat-toolbar {
 
 /* Estilo para o menu lateral */
 mat-sidenav {
-  background-color: rgb(235, 235, 235);
+  background-color: rgb(210, 210, 210);
   padding: 10px;
   position: fixed; /* Fixa o menu lateral */
   top: 0px;
@@ -49,7 +49,7 @@ mat-nav-list a {
 }
 
 mat-nav-list a:hover {
-  background-color: #e0e0e0;
+  background-color: #FFF;
 }
 
 mat-list-item {
@@ -65,7 +65,7 @@ mat-icon {
 
 /* Ajuste para os itens do menu ao serem selecionados */
 .selected {
-  background-color: #c7c7c7; /* Cor de fundo ao selecionar */
+  background-color: #FFF; /* Cor de fundo ao selecionar */
   color: white; /* Alterando a cor do texto */
 }
 

@@ -31,7 +31,7 @@ export class ClimaAmbienteComponent implements OnInit {
   constructor(private climaAmbienteService: ClimaAmbienteService) { }
 
   ngOnInit(): void {
-    Chart.register(...registerables);
+    //Chart.register(...registerables);
     this.buscarInformacoes();
     this.buscarImagens();
   }

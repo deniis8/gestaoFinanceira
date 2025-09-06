@@ -43,8 +43,11 @@ import { NovoLancamentoFixoComponent } from './pages/lancamento-fixo/novo-lancam
 import { TabelaLancamentoFixoComponent } from './pages/lancamento-fixo/tabela-lancamento-fixo/tabela-lancamento-fixo.component';
 import { AuthInterceptor } from './services/interceptor/interceptor.service';
 import { TabelaLancamentoComponent } from './components/tabela-lancamento/tabela-lancamento.component';
+import { NgChartsModule } from 'ng2-charts';
+import { DonutChartComponent } from './components/donut-chart/donut-chart.component';
 
-@NgModule({ declarations: [
+@NgModule({
+    declarations: [
         AppComponent,
         FooterComponent,
         HomeComponent,
@@ -67,9 +70,10 @@ import { TabelaLancamentoComponent } from './components/tabela-lancamento/tabela
         ExcluirLancamentoFixoComponent,
         NovoLancamentoFixoComponent,
         TabelaLancamentoFixoComponent,
-        TabelaLancamentoComponent
+        TabelaLancamentoComponent,
+        DonutChartComponent
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent], imports: [
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
@@ -84,8 +88,10 @@ import { TabelaLancamentoComponent } from './components/tabela-lancamento/tabela
         MatDatepickerModule,
         MatFormFieldModule,
         MatNativeDateModule,
-        MatInputModule], providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+        MatInputModule,
+        NgChartsModule], providers: [
+            { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+            provideHttpClient(withInterceptorsFromDi())
+        ]
+})
 export class AppModule { }

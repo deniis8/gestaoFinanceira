@@ -10,6 +10,8 @@ import { SaldoService } from 'src/app/services/saldo/saldo.service';
 })
 export class SaldosComponent {
   @Input() saldoValoresSelecionados: number = 0;
+  @Input() despesasGraficoDonut!: number;
+  @Input() receitasGraficoDonut!: number;
   saldo!: Saldo;
 
   constructor(private saldoService: SaldoService) {
@@ -18,7 +20,7 @@ export class SaldosComponent {
   ngOnInit(): void {
     this.saldoService.getSaldos().subscribe((item) => {
       this.saldo = item;
-      console.log(this.saldo)
+      console.log(this.saldo);
     })
   }
 }

@@ -3,6 +3,8 @@ export interface Saldo{
     saldo: number;
     investimentoFixo: number;
     investimentoVariavel: number;
+    gastosMesAtual: number,
+	receitaMesAtual: number,
     dataHora: Date;
     idUsuario: number;
 }

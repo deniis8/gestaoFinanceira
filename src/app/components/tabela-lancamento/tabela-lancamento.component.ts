@@ -31,6 +31,9 @@ export class TabelaLancamentoComponent {
   filtroCentroCusto = 0;
 
   @Input() saldoValoresSelecionados: number = 0;
+  @Input() despesasGraficoDonut: number = 0;
+  @Input() receitasGraficoDonut: number = 0;
+  private idsInvalidos = new Set([19, 51]);
 
   constructor(private lancamentoService: LancamentoService, private centroCustoService: CentroCustoService) {
   }
@@ -42,6 +45,12 @@ export class TabelaLancamentoComponent {
         for (let i = 0; i < lancamentos.length; i++) {
           this.lancamentos.push(lancamentos[i]);
           this.saldoValoresSelecionados += lancamentos[i].valor;
+          if (this.lancamentos[i].status === "Pago" && !this.idsInvalidos.has(this.lancamentos[i].idCCusto)) {
+            this.despesasGraficoDonut += lancamentos[i].valor;
+          }
+          if (this.lancamentos[i].status === "Recebido") {
+            this.receitasGraficoDonut += lancamentos[i].valor;
+          }
         }
       }
     });
@@ -67,25 +76,32 @@ export class TabelaLancamentoComponent {
 
   filtroData(): void {
 
-    this.saldoValoresSelecionados = 0;    
-
+    this.saldoValoresSelecionados = 0;
+    this.despesasGraficoDonut = 0;
+    this.receitasGraficoDonut = 0;
     this.filtroStatus = this.agrupaStatus();
 
     if (this.dataDe != "" && this.dataAte != "") {
       this.lancamentoService.getLancamentoDataDeAte(this.dataDe, this.dataAte, this.filtroStatus, this.filtroCentroCusto).subscribe(item => {
-        let infoLancamentos = item;
         this.lancamentos = [];
-        if (infoLancamentos != null) {
-          for (let i = 0; i < infoLancamentos.length; i++) {
-            this.lancamentos.push(infoLancamentos[i]);
-            this.saldoValoresSelecionados += infoLancamentos[i].valor;
+        this.lancamentos = item;
+        if (this.lancamentos != null) {
+          for (let i = 0; i < this.lancamentos.length; i++) {
+            this.saldoValoresSelecionados += this.lancamentos[i].valor;
+
+            if (this.lancamentos[i].status === "Pago" && !this.idsInvalidos.has(this.lancamentos[i].idCCusto)) {
+              this.despesasGraficoDonut += this.lancamentos[i].valor;
+            }
+            if (this.lancamentos[i].status === "Recebido") {
+              this.receitasGraficoDonut += this.lancamentos[i].valor;
+            }
           }
         }
-      });      
-    }   
+      });
+    }
   }
 
-  agrupaStatus(): string{
+  agrupaStatus(): string {
     this.filtroStatus = "";
     this.aPagar = this.isAPagarChecked ? "A Pagar" : "";
     this.pago = this.isPagoChecked ? "Pago" : "";
@@ -94,7 +110,7 @@ export class TabelaLancamentoComponent {
 
     return this.aPagar + this.pago + this.aReceber + this.recebido;
   }
-  
+
 
   removerLancamento(id: Number): void {
     this.lancamentoService.excluirLancamento(id).subscribe();

@@ -3,22 +3,15 @@ Data de e Data até
 */
 .date-container {
   display: flex;
+  justify-content: flex-start; /* força o alinhamento à esquerda */
   flex-wrap: wrap;
   gap: 16px;
-  margin: 0; /* Removido o margin padrão */
-  justify-content: flex-start; /* força o alinhamento à esquerda */
+  
 }
 
 .date-picker {
   display: flex;
   flex-direction: column;
-}
-
-.date-picker label {
-  margin-bottom: 4px;
-  font-weight: 500;
-  font-size: 16px; /* aumenta o tamanho da fonte */
-  color: #333;
 }
 
 .date-picker input[type="date"] {
@@ -31,8 +24,8 @@ Data de e Data até
 }
 
 .date-picker input[type="date"]:focus {
-  border-color: #3f51b5;
-  box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+  border-color:rgb(80, 80, 80);
+  box-shadow: 0 0 0 2px rgba(80, 80, 80, 0.2);
 }
 /*
 Fim - Data de e Data até
@@ -57,17 +50,15 @@ Botão checkbox
 .custom-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: Arial, sans-serif;
+  gap: 8px;  
   font-size: 15px;
-  cursor: pointer;
   color: #333;
 }
 
 .custom-checkbox input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #3f51b5; /* cor moderna e bonita */
+  accent-color:rgb(91, 91, 151); /* cor moderna e bonita */
   cursor: pointer;
 }
 /*
@@ -82,13 +73,7 @@ Botão group
   flex-direction: column;
   gap: 6px;
   margin-top: 16px;
-  width: 250px;
-}
-
-.select-group label {
-  font-weight: 600;
-  font-size: 16px; /* aumenta o tamanho da fonte */
-  color: #333;
+  width: 290px;
 }
 
 .select-group select {
@@ -118,14 +103,13 @@ Fim - Botão group
 Tabela
 */
 th{
-  font-family: Arial, sans-serif;
   font-size: 11px;
-  background-color: #302f2f;  
+  background-color:rgb(73, 73, 73);  
 }
+
 td{
-  font-family: Arial, sans-serif;
   font-size: 11px;  
-  color: #616161;
+  color:rgb(73, 73, 73);
 }
 /*
 Fim - Tabela
