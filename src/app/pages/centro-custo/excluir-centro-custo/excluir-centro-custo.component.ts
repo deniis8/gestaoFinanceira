@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { CentroCusto } from 'src/app/models/Centro-Custo';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
 import { LancamentoService } from 'src/app/services/lancamento/lancamento.service';
 import { LoginService } from 'src/app/services/login/login.service';
+import { CentroCusto } from 'src/types';
 import Swal from 'sweetalert2';
 
 @Component({

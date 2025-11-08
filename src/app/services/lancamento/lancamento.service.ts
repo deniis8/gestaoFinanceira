@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Lancamento } from '../../models/Lancamento';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoginService } from '../login/login.service';
+import { Lancamento } from 'src/types';
 
 @Injectable({
   providedIn: 'root'

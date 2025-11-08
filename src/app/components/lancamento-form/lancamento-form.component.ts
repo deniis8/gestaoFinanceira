@@ -1,8 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CentroCusto } from 'src/app/models/Centro-Custo';
-import { Lancamento } from 'src/app/models/Lancamento';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
+import { CentroCusto, Lancamento } from 'src/types';
 
 @Component({
   selector: 'app-lancamento-form',

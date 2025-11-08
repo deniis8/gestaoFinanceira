@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { CentroCusto } from 'src/app/models/Centro-Custo';
-import { Lancamento } from 'src/app/models/Lancamento';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
 import { LancamentoService } from 'src/app/services/lancamento/lancamento.service';
+import { CentroCusto, Lancamento } from 'src/types';
 
 @Component({
   selector: 'app-tabela-lancamento',

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginService } from '../login/login.service';
-import { LancamentoFixo } from '../../models/Lancamento-Fixo';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { LancamentoFixo } from 'src/types';
 
 @Injectable({
   providedIn: 'root'

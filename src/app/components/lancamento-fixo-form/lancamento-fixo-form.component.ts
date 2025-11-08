@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CentroCusto } from 'src/app/models/Centro-Custo';
-import { LancamentoFixo } from 'src/app/models/Lancamento-Fixo';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
+import { LancamentoFixo, CentroCusto } from 'src/types';
 
 @Component({
   selector: 'app-lancamento-fixo-form',

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CentroCusto } from 'src/app/models/Centro-Custo';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
+import { CentroCusto } from 'src/types';
 
 @Component({
   selector: 'app-centro-custo-form',

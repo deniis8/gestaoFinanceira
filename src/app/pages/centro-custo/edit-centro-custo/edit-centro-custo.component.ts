@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CentroCusto } from 'src/app/models/Centro-Custo';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
 import { LoginService } from 'src/app/services/login/login.service';
+import { CentroCusto } from 'src/types';
 
 @Component({
   selector: 'app-edit-centro-custo',
