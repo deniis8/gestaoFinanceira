@@ -1,25 +1,28 @@
-/* Reset básico */
-html, body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    height: 100%;  /* Garantir que o body ocupe toda a altura */
-    margin: 0;
+.container-principal{
     display: flex;
-    justify-content: center; /* Centraliza horizontalmente */
-    align-items: center; /* Centraliza verticalmente */
+    justify-content: center;
+    align-items: center;
+    height: 280px;
 }
 
-/* Título */
-h2 {
-    margin-bottom: 20px;
-    color: #333;
+.container-login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 300px;
+    background-color: #faf9f9;
+    height: 270px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #969696;
+    border-radius: 8px;
 }
 
-/* Estilização dos campos do formulário */
 .form-group {
+    display: flex;
     margin-bottom: 15px;
     text-align: left;
-    width: 100%;
+    min-width: 270px;
 }
 
 label {
@@ -31,7 +34,6 @@ label {
 
 input[type="email"],
 input[type="password"] {
-    width: 100%;
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #ccc;
@@ -76,7 +78,7 @@ button:disabled {
 
 /* Responsividade */
 @media (max-width: 600px) {
-    .login-container {
+    .container-login {
         padding: 15px;
     }
 
