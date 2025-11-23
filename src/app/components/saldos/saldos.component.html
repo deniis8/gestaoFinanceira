@@ -1,28 +1,28 @@
-<div class="container">
-  <div class="container-superior">
-    <div class="quadrantes">
-      <p class="titulo">Saldo</p>
-      <strong class="resultado">R$ {{ saldo.investimentoFixo | formatValor }}</strong>
+<div class="container-saldos">
+  <div class="container-saldos-superior">
+    <div class="quadrantes-saldos">
+      <p class="titulo-saldos">Saldo</p>
+      <strong class="resultado-saldos">R$ {{ saldo.investimentoFixo | formatValor }}</strong>
     </div>
 
-    <div class="quadrantes">
-      <p class="titulo">Invest. Fixo</p>
-      <strong class="resultado">R$ {{ saldo.investimentoFixo | formatValor }}</strong>
+    <div class="quadrantes-saldos">
+      <p class="titulo-saldos">Invest. Fixo</p>
+      <strong class="resultado-saldos">R$ {{ saldo.investimentoFixo | formatValor }}</strong>
     </div>
 
-    <div class="quadrantes">
-      <p class="titulo">Invest. Variável</p>
-      <strong class="resultado">R$ {{ saldo.investimentoVariavel | formatValor }}</strong>
+    <div class="quadrantes-saldos">
+      <p class="titulo-saldos">Invest. Variável</p>
+      <strong class="resultado-saldos">R$ {{ saldo.investimentoVariavel | formatValor }}</strong>
     </div>
   </div>
 
-  <div class="container-inferior">
-    <div class="quadrante-saldo-filtro">
-      <p class="titulo">Valor do filtro</p>
-      <strong class="resultado">R$ {{ saldoValoresSelecionados | formatValor }}</strong>
+  <div class="container-saldos-inferior">
+    <div class="quadrante-saldos-saldo-filtro">
+      <p class="titulo-saldos">Valor do filtro</p>
+      <strong class="resultado-saldos">R$ {{ saldoValoresSelecionados | formatValor }}</strong>
     </div>
 
-    <app-donut-chart class="quadrante-grafico" [despesasGraficoDonut]="despesasGraficoDonut"
+    <app-donut-chart class="quadrante-saldos-grafico" [despesasGraficoDonut]="despesasGraficoDonut"
       [receitasGraficoDonut]="receitasGraficoDonut">
     </app-donut-chart>
   </div>

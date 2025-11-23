@@ -1,4 +1,4 @@
-.container {
+.container-saldos {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -7,59 +7,63 @@
   width: 100%;
 }
 
-.container-superior {
+.container-saldos-superior {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   width: 100%;
 }
 
-.container-inferior{
+.container-saldos-inferior{
   display: flex;
   justify-content: space-between;
   gap: 12px;
   width: 100%;
 }
 
-.quadrantes {
-  display: grid;
-  width: 100%;
-  height: 100%;
+.quadrantes-saldos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;  
   border-radius: 8px;
   background-color: #E6E7EB;
   padding: 10px;
 }
 
-.quadrante-saldo-filtro {
-  display: grid;
+.quadrante-saldos-saldo-filtro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 60px;
-  justify-content: center;
   border-radius: 8px;
   background-color: #E6E7EB;
   padding: 10px;
 }
 
-.quadrantes p,
-.quadrantes strong,
-.quadrante-saldo-filtro p,
-.quadrante-saldo-filtro strong {
+.quadrantes-saldos p,
+.quadrantes-saldos strong,
+.quadrante-saldos-saldo-filtro p,
+.quadrante-saldos-saldo-filtro strong {
   margin: 0;
   padding: 0;
   padding-top: 6px;
   line-height: 1;
 }
 
-.titulo {
+.titulo-saldos {
   font-size: 14px;
 }
 
-.resultado {
+.resultado-saldos {
   font-size: 15px;
 }
 
-.quadrante-grafico {
+.quadrante-saldos-grafico {
   background-color: rgba(215, 216, 220, 0.81);
   border-radius: 8px;
 }
