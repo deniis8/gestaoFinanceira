@@ -1,27 +1,30 @@
-<div class="cards-container" *ngIf="saldo">
-  <mat-card class="quadrante">
-    <mat-card-title class="label-titulo">Saldo</mat-card-title>
-    <mat-card-content class="label-resultado">{{ saldo.saldo | formatValor }}</mat-card-content>
-  </mat-card>
+<div class="container-saldos">
+  <div class="container-saldos-superior">
+    <div class="quadrantes-saldos">
+      <p class="titulo-saldos">Saldo</p>
+      <strong class="resultado-saldos">R$ {{ saldo.investimentoFixo | formatValor }}</strong>
+    </div>
 
-  <mat-card class="quadrante">
-    <mat-card-title class="label-titulo">Investimento Fixo</mat-card-title>
-    <mat-card-content class="label-resultado">{{ saldo.investimentoFixo | formatValor }}</mat-card-content>
-  </mat-card>
+    <div class="quadrantes-saldos">
+      <p class="titulo-saldos">Invest. Fixo</p>
+      <strong class="resultado-saldos">R$ {{ saldo.investimentoFixo | formatValor }}</strong>
+    </div>
 
-  <mat-card class="quadrante">
-    <mat-card-title class="label-titulo">Investimento Variável</mat-card-title>
-    <mat-card-content class="label-resultado">{{ saldo.investimentoVariavel | formatValor }}</mat-card-content>
-  </mat-card>
+    <div class="quadrantes-saldos">
+      <p class="titulo-saldos">Invest. Variável</p>
+      <strong class="resultado-saldos">R$ {{ saldo.investimentoVariavel | formatValor }}</strong>
+    </div>
+  </div>
 
-  <mat-card class="quadrante-saldo-filtro">
-    <mat-card-title class="label-titulo">Valor do filtro</mat-card-title>
-    <mat-card-content class="label-resultado">{{ saldoValoresSelecionados | formatValor }}</mat-card-content>
-  </mat-card>
-  <mat-card>
-  <app-donut-chart class="quadrante-grafico"
-    [despesasGraficoDonut]="despesasGraficoDonut" 
-    [receitasGraficoDonut]="receitasGraficoDonut">
-  </app-donut-chart>
-  </mat-card>
+  <div class="container-saldos-inferior">
+    <div class="quadrante-saldos-saldo-filtro">
+      <p class="titulo-saldos">Valor do filtro</p>
+      <strong class="resultado-saldos">R$ {{ saldoValoresSelecionados | formatValor }}</strong>
+    </div>
+
+    <app-donut-chart class="quadrante-saldos-grafico" [despesasGraficoDonut]="despesasGraficoDonut"
+      [receitasGraficoDonut]="receitasGraficoDonut">
+    </app-donut-chart>
+  </div>
+
 </div>
