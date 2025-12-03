@@ -24,6 +24,7 @@ export class NovoCentroCustoComponent implements OnInit{
     const idUsuario = this.loginService.getIdUsuario();
 
     formData.append('descriCCusto', centroCusto.descriCCusto ?? '');
+    formData.append('valorLimite', centroCusto.valorLimite.toString());
     formData.append('idUsuario', idUsuario ?? '');
     
     this.centroCustoService.postCentroCusto(formData).subscribe((result: any) => {

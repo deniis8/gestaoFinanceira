@@ -32,6 +32,7 @@ export class EditCentroCustoComponent implements OnInit{
     const formData = new FormData();
 
     formData.append('descriCCusto', centroCustoData.descriCCusto ?? '');
+    formData.append('valorLimite', centroCustoData.valorLimite.toString());
 
     await this.centroCustoService.putCentroCustos(id!, formData).subscribe((result: any) => {
       this.router.navigate(['/centro-custo']);

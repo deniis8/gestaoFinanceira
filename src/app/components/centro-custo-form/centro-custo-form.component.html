@@ -10,7 +10,15 @@
         <div *ngIf="descriCCusto.invalid && formDir.submitted" class="validation-error">
             <p *ngIf="descriCCusto.errors?.['required']">A descrição é obrigatória.</p>
         </div>
-    </div>   
+    </div>
+    
+    <div class="form-group">
+        <label for="valor">Valor Limite:</label>
+        <input type="text" inputmode="numeric" placeholder="Coloque o valor limite" formControlName="valorLimite" required (input)="formatValor()">
+        <div *ngIf="valorLimite.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="valorLimite.errors?.['required']">O valor limite é obrigatório.</p>
+        </div>
+    </div>
 
     <input type="submit" value="{{btnText}}">    
 </form>

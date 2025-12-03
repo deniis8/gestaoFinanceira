@@ -12,7 +12,7 @@ export class SaldosComponent {
   @Input() saldoValoresSelecionados: number = 0;
   @Input() despesasGraficoDonut!: number;
   @Input() receitasGraficoDonut!: number;
-  saldo!: Saldo;
+  saldo: Saldo | undefined;
 
   constructor(private saldoService: SaldoService) {
   }

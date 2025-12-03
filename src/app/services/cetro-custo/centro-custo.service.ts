@@ -26,6 +26,7 @@ export class CentroCustoService {
   postCentroCusto(formData: FormData): Observable<FormData> {
     var data = { 
       descriCCusto: formData.getAll("descriCCusto").toString().trim(),
+      valorLimite: Number(formData.getAll("valorLimite")),
       idUsuario: Number(formData.getAll("idUsuario"))
     }; 
     console.log("Data: "); 
@@ -35,7 +36,8 @@ export class CentroCustoService {
 
   putCentroCustos(id: Number, formData: FormData): Observable<FormData> {
     var data = { 
-      descriCCusto: formData.getAll("descriCCusto").toString().trim()
+      descriCCusto: formData.getAll("descriCCusto").toString().trim(),
+      valorLimite: Number(formData.getAll("valorLimite"))
     };
 
     return this.http.put<FormData>(`${this.baseApiUrl}api/centrocustos/${id}`, data);

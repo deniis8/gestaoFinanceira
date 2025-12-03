@@ -27,7 +27,7 @@ export class GraficosComponent implements OnInit {
   //Variáveis gráfico Gastos por Centro de Custo
   private chartInfoCC: any;
   private gGCCValor: any[] = [];
-  private gGCCValorMesAnterior: any[] = [];
+  private gGCCValorLimite: any[] = [];
   private gGCCDescricao: any[] = [];
   private gGCCmesAnoAtual: any[] = []; 
   private gGCCmesAnoAnterior: any[] = []; 
@@ -73,13 +73,13 @@ export class GraficosComponent implements OnInit {
           {
             label: 'Valores Recebidos do Mês',
             data: gGMDataValorRecebidoMes,
-            borderWidth: 1,
-            backgroundColor: '#3CB371',
+            borderWidth: 0,
+            backgroundColor: '#0e7b29ff',
           },
           {
             label: 'Gastos Mensais - 1 Ano',
             data: gGMDataValor,
-            borderWidth: 1,
+            borderWidth: 0,
             backgroundColor: '#DEB887',
           }
         ],
@@ -156,23 +156,30 @@ export class GraficosComponent implements OnInit {
   }
 
   //Gráfico Gastos por Centro de Custo
-  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any, gGCCValorMesAnterior: any, gGCCmesAnoAtual: any, gGCCmesAnoAnterior: any){
+  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any, gGCCValorLimite: any, gGCCmesAnoAtual: any, gGCCmesAnoAnterior: any){
+    
+     const coresValor = gGCCValor.map((valor: number, index: number) => {
+    return valor > gGCCValorLimite[index] ? '#f5736fff' : '#0e7b29ff';
+  });
+
     this.gGCCChart = new Chart("gGCCChart", {
       type: 'bar',
       data: {
         labels: gGCCDescricao,
         datasets: [
           {
-            label: 'Mês Anterior',
-            data: gGCCValorMesAnterior,
-            borderWidth: 1,
-            backgroundColor: '#B0C4DE'
+            label: 'Valor Limite',
+            data: gGCCValorLimite,
+            borderWidth: 0,
+            borderColor: '#000000',
+            backgroundColor: '#728cb4ff'
           },
           {
-          label: 'Mês atual',
+          label: 'Valor Gasto',
           data: gGCCValor,
-          borderWidth: 1,
-          backgroundColor: '#778899'
+          borderWidth: 0,
+          borderColor: '#000000',
+          backgroundColor: coresValor
         }]
       },
       options: {
@@ -211,11 +218,12 @@ export class GraficosComponent implements OnInit {
             const valor = this.gGCCChart.data.datasets[datasetIndex].data[index];
 
             let mesAno = '';
-            if (datasetIndex === 0) { // Mês Anterior
+            mesAno = gGCCmesAnoAtual[index];
+            /*if (datasetIndex === 0) { // Mês Anterior
                 mesAno = gGCCmesAnoAnterior[index];
             } else if (datasetIndex === 1) { // Mês Atual
                 mesAno = gGCCmesAnoAtual[index];
-            }
+            }*/
 
             console.log("mesAno: " + mesAno);
             console.log("desCC: " + desCC);
@@ -249,7 +257,7 @@ export class GraficosComponent implements OnInit {
     this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
       this.chartInfoCC = item;
       this.gGCCValor = [];
-      this.gGCCValorMesAnterior = [];
+      this.gGCCValorLimite = [];
       this.gGCCDescricao = [];
       this.gGCCmesAnoAtual = [];
       this.gGCCmesAnoAnterior = [];
@@ -258,14 +266,14 @@ export class GraficosComponent implements OnInit {
         for (let i = 0; i < this.chartInfoCC.length; i++) {
           
           this.gGCCValor.push(this.chartInfoCC[i].valor);
-          this.gGCCValorMesAnterior.push(this.chartInfoCC[i].valorMesAnterior);
+          this.gGCCValorLimite.push(this.chartInfoCC[i].valorLimite);
           this.gGCCDescricao.push(this.chartInfoCC[i].descricao);
           this.gGCCmesAnoAtual.push(this.chartInfoCC[i].mesAno);
           this.gGCCmesAnoAnterior.push(this.chartInfoCC[i].mesAnoMesAnterior);
         }
         //console.log(this.gGCCmesAnoAtual);
         //console.log(this.gGCCmesAnoAnterior);
-        this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor, this.gGCCValorMesAnterior, this.gGCCmesAnoAtual, this.gGCCmesAnoAnterior);
+        this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor, this.gGCCValorLimite, this.gGCCmesAnoAtual, this.gGCCmesAnoAnterior);
         this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, [...this.gGCCDescricao].pop());
         //this.gGCCChart.update();
         

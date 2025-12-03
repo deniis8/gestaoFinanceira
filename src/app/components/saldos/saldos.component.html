@@ -2,17 +2,17 @@
   <div class="container-saldos-superior">
     <div class="quadrantes-saldos">
       <p class="titulo-saldos">Saldo</p>
-      <strong class="resultado-saldos">R$ {{ saldo.saldo | formatValor }}</strong>
+      <strong class="resultado-saldos">R$ {{ saldo?.saldo | formatValor }}</strong>
     </div>
 
     <div class="quadrantes-saldos">
       <p class="titulo-saldos">Invest. Fixo</p>
-      <strong class="resultado-saldos">R$ {{ saldo.investimentoFixo | formatValor }}</strong>
+      <strong class="resultado-saldos">R$ {{ saldo?.investimentoFixo | formatValor }}</strong>
     </div>
 
     <div class="quadrantes-saldos">
       <p class="titulo-saldos">Invest. Variável</p>
-      <strong class="resultado-saldos">R$ {{ saldo.investimentoVariavel | formatValor }}</strong>
+      <strong class="resultado-saldos">R$ {{ saldo?.investimentoVariavel | formatValor }}</strong>
     </div>
   </div>
 

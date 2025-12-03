@@ -38,6 +38,7 @@ export class ExcluirCentroCustoComponent implements OnInit {
     const idUsuario = this.loginService.getIdUsuario()?.toString();
 
     formData.append('descriCCusto', centroCustoData.descriCCusto ?? '');
+    formData.append('valorLimite', centroCustoData.valorLimite.toString());
 
     const item = await firstValueFrom(this.lancamentoService.getExisteCentroCusto(idUsuario ?? '', idCentroCusto));
     this.quantidade = item.quantidade;

@@ -9,6 +9,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Descrição</th>
+                        <th>Valor Limite</th>
                         <th class="text-center">Ações</th>
                     </tr>
                 </thead>
@@ -16,6 +17,7 @@
                     <tr *ngFor="let centroCusto of centroCustos">
                         <td>{{ centroCusto.id }}</td>
                         <td>{{ centroCusto.descriCCusto }}</td>
+                        <td>{{ centroCusto.valorLimite | formatValor }}</td>
                         <div class="btn-group">
                             <button [routerLink]="['/centro-custo/edit', centroCusto.id]" type="button"
                                 class="btn btn-outline-primary btn-sm botao-editar">

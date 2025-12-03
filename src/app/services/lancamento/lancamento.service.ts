@@ -54,6 +54,7 @@ export class LancamentoService {
 
   putLancamento(id: Number, formData: FormData): Observable<FormData> {
     var dataLancamento = new Date(formData.getAll("dataHora").toString() + "Z");
+    console.log(Number(formData.getAll("valor")));
     var data = { 
       dataHora: dataLancamento,
       valor: Number(formData.getAll("valor")),
