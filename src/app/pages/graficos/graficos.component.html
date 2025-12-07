@@ -1,4 +1,4 @@
-<div class="chart-wrapper">
+<!--<div class="chart-wrapper">
     <div class="chart-container-gcc">
         <canvas id="gGMChart">{{ gGMChart }}</canvas>
     </div>
@@ -10,41 +10,90 @@
     <div class="chart-container-gmcc">
         <canvas  id="gGCCChart" >{{ gGCCChart }}</canvas>
     </div>
-</div>
+</div>-->
 
-<br>
-<br>
+<strong class="nome-grafico">Últimos 12 meses</strong>
 
-    <div>
-        <div *ngIf="detalhamentoGastosCC.length > 0">
-            <table class="table table-striped table-bordered align-middle shadow-sm">   
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">Data Hora</th>
-                        <th scope="col">Valor</th>
-                        <th scope="col">Descrição Lançamento</th>
-                        <th scope="col">Descrição Centro de Custo</th>
-                        <th>Ações</th>
-                    </tr>
-                    </thead>   
-                    <tbody>            
-                    <tr *ngFor="let _detalhamentoGastosCC of detalhamentoGastosCC">
-                        <td>{{_detalhamentoGastosCC.dataHora | date: "dd/MM/yyyy HH:mm"}}</td>
-                        <td>{{_detalhamentoGastosCC.valor}}</td>
-                        <td>{{_detalhamentoGastosCC.descricaoLancamento}}</td>   
-                        <td>{{_detalhamentoGastosCC.descricaoCentroCusto}}</td>
-                        <div class="btn-group">
-                            <button routerLink="/lancamento/edit/{{_detalhamentoGastosCC.id}}" type="button" 
-                                class="btn btn-outline-primary btn-sm botao-editar">
-                                <i class="bi bi-pencil-square"></i>
-                            </button>
-                            <button routerLink="/lancamento/excluir/{{_detalhamentoGastosCC.id}}" type="button" 
-                                class="btn btn-outline-danger btn-sm botao-remover">
-                                <i class="bi bi-trash"></i>
-                            </button>  
-                        </div>
-                    </tr>  
-                </tbody>                   
-            </table>
+<div class="grafico-calendario">
+    <div class="calendario-linha">
+        <div class="quadrante">
+            <p class="legenda">+ R$ 20.000,00</p>
+            <p class="legenda">- R$ 4.000,00</p>
+            <p class="legenda">R$ 16.000,00</p>
+        </div>
+        <div class="quadrante">
+
+        </div>
+        <div class="quadrante">
+
+        </div>
+        <div class="quadrante">
+
         </div>
     </div>
+    <div class="calendario-linha">
+        <div class="quadrante">
+
+        </div>
+        <div class="quadrante">
+
+        </div>
+        <div class="quadrante">
+
+        </div>
+        <div class="quadrante">
+
+        </div>
+    </div>
+    
+    <div class="calendario-linha">
+        <div class="quadrante">
+
+        </div>
+        <div class="quadrante">
+
+        </div>
+        <div class="quadrante">
+
+        </div>
+        <div class="quadrante">
+
+        </div>
+    </div>
+</div>
+
+<br/>
+
+<div>
+    <div *ngIf="detalhamentoGastosCC.length > 0">
+        <table class="table table-striped table-bordered align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Data Hora</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Descrição Lançamento</th>
+                    <th scope="col">Descrição Centro de Custo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let _detalhamentoGastosCC of detalhamentoGastosCC">
+                    <td>{{_detalhamentoGastosCC.dataHora | date: "dd/MM/yyyy HH:mm"}}</td>
+                    <td>{{_detalhamentoGastosCC.valor}}</td>
+                    <td>{{_detalhamentoGastosCC.descricaoLancamento}}</td>
+                    <td>{{_detalhamentoGastosCC.descricaoCentroCusto}}</td>
+                    <div class="btn-group">
+                        <button routerLink="/lancamento/edit/{{_detalhamentoGastosCC.id}}" type="button"
+                            class="btn btn-outline-primary btn-sm botao-editar">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button routerLink="/lancamento/excluir/{{_detalhamentoGastosCC.id}}" type="button"
+                            class="btn btn-outline-danger btn-sm botao-remover">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
