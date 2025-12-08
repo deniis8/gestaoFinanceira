@@ -36,3 +36,69 @@ td {
 .botao-remover {
     background-color: #fda6a6;
 }
+
+/*
+Gráfico Calendário
+*/
+
+.nome-grafico{
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+    justify-content: center; 
+    margin-block-end: 10px;   
+}
+.grafico-calendario {
+    display: block;
+    width: auto;
+    height: auto;
+    align-items: center;
+    justify-content: center;    
+    border: 1px solid;
+    border-color: #c7c7c7;
+    border-radius: 8px;
+}
+
+.calendario-linha {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.quadrante {
+    display: block;
+    
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100px;
+    border: 1px solid;
+    border-color: #727272;
+    border-radius: 8px;
+}
+
+.nome-mes{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 15px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 12px;
+    gap: 2px;
+}
+
+.valores{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin: 3px;      /* remove espaçamento vertical */
+    padding: 0;     /* opcional, deixa tudo bem juntinho */
+}
