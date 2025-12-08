@@ -4,65 +4,112 @@
     </div>
 </div>
 <br>
-<br>
-
-<div class="chart-wrapper">
-    <div class="chart-container-gmcc">
-        <canvas  id="gGCCChart" >{{ gGCCChart }}</canvas>
-    </div>
-</div>-->
+<br>-->
 
 <strong class="nome-grafico">Últimos 12 meses</strong>
 
-<div class="grafico-calendario">
+<div class="grafico-calendario" *ngIf="gGMMesAno.length > 0">
     <div class="calendario-linha">
-        <div class="quadrante">
-            <p class="legenda">+ R$ 20.000,00</p>
-            <p class="legenda">- R$ 4.000,00</p>
-            <p class="legenda">R$ 16.000,00</p>
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[1]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[1])">
+            <strong class="nome-mes">{{gGMLabelMes[1]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[1]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[1]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[1]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[2]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[2])">
+            <strong class="nome-mes">{{gGMLabelMes[2]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[2]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[2]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[2]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[3]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[3])">
+            <strong class="nome-mes">{{gGMLabelMes[3]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[3]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[3]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[3]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[4]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[4])">
+            <strong class="nome-mes">{{gGMLabelMes[4]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[4]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[4]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[4]}}</p>
         </div>
     </div>
     <div class="calendario-linha">
-        <div class="quadrante">
 
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[5]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[5])">
+            <strong class="nome-mes">{{gGMLabelMes[5]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[5]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[5]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[5]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[6]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[6])">
+            <strong class="nome-mes">{{gGMLabelMes[6]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[6]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[6]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[6]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[7]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[7])">
+            <strong class="nome-mes">{{gGMLabelMes[7]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[7]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[7]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[7]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[8]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[8])">
+            <strong class="nome-mes">{{gGMLabelMes[8]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[8]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[8]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[8]}}</p>
         </div>
     </div>
-    
+
     <div class="calendario-linha">
-        <div class="quadrante">
 
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[9]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[9])">
+            <strong class="nome-mes">{{gGMLabelMes[9]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[9]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[9]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[9]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[10]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[10])">
+            <strong class="nome-mes">{{gGMLabelMes[10]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[10]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[10]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[10]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[11]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[11])">
+            <strong class="nome-mes">{{gGMLabelMes[11]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[11]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[11]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[11]}}</p>
         </div>
-        <div class="quadrante">
-
+        <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[12]"
+            (click)="buscarInformacoesGraficoCentroCusto(gGMMesAno[12])">
+            <strong class="nome-mes">{{gGMLabelMes[12]}}</strong>
+            <p class="valores">+ R$ {{gGMDataValorRecebidoMes[12]}}</p>
+            <p class="valores">- R$ {{gGMDataValor[12]}}</p>
+            <p class="valores">= R$ {{gGMDataSobraMes[12]}}</p>
         </div>
     </div>
 </div>
 
-<br/>
+<br />
+<div class="chart-wrapper">
+    <div class="chart-container-gmcc">
+        <canvas id="gGCCChart">{{ gGCCChart }}</canvas>
+    </div>
+</div>
 
 <div>
     <div *ngIf="detalhamentoGastosCC.length > 0">

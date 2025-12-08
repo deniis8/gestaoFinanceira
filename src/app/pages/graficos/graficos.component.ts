@@ -4,33 +4,36 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-custo/detalhamento-gastos-centro-custo.service';
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/gastos-centro-custo.service';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais/gastos-mensais.service';
+import { getColorForSobra } from '../../utils/colors';
 
 // registre o plugin aqui
 //Chart.register(ChartDataLabels);
 
 @Component({
-    selector: 'app-graficos',
-    templateUrl: './graficos.component.html',
-    styleUrls: ['./graficos.component.css'],
-    standalone: false
+  selector: 'app-graficos',
+  templateUrl: './graficos.component.html',
+  styleUrls: ['./graficos.component.css'],
+  standalone: false
 })
 export class GraficosComponent implements OnInit {
-  
+
   //Variáveis grafico Gastos Mensais
-  private gGMLabelMes: any[] = [];
-  private gGMDataValor: any[] = [];
-  private gGMDataSobraMes: any[] = [];
-  private gGMDataValorRecebidoMes: any[] = [];
+  public gGMLabelMes: any[] = [];
+  public gGMMesAno: any[] = [];
+  public gGMDataValor: any[] = [];
+  public gGMDataSobraMes: any[] = [];
+  public gGMCordoQuadrante: any[] = [];
+  public gGMDataValorRecebidoMes: any[] = [];
   private gGMMesAnoAuxiliar?: string = "";
-  public gGMChart: any;
+  //public gGMChart: any;
 
   //Variáveis gráfico Gastos por Centro de Custo
   private chartInfoCC: any;
   private gGCCValor: any[] = [];
   private gGCCValorLimite: any[] = [];
   private gGCCDescricao: any[] = [];
-  private gGCCmesAnoAtual: any[] = []; 
-  private gGCCmesAnoAnterior: any[] = []; 
+  private gGCCmesAnoAtual: any[] = [];
+  private gGCCmesAnoAnterior: any[] = [];
   public gGCCChart: any;
 
   //Detalhamento GastosCentroCusto
@@ -39,17 +42,17 @@ export class GraficosComponent implements OnInit {
   constructor(private saldoService: GastosMensaisService, private gastosCentroCustoService: GastosCentroCustoService, private detalhamentoGastosCentroCusto: DetalhamentoGastosCentroCustoService) {
     //Chart.register(...registerables);
     //Chart.register(...registerables, ChartDataLabels);
-  }  
+  }
 
   //@ViewChild("meuCanvas", { static: true }) elemento: ElementRef | undefined;
-  ngOnInit(): void {     
-    this.gGMMesAnoAuxiliar = this.trataMesAnoAtual();    
-    this.buscarInformacoes();  
-    this.buscarInformacoesGraficoCentroCusto(this.gGMMesAnoAuxiliar);    
+  ngOnInit(): void {
+    this.gGMMesAnoAuxiliar = this.trataMesAnoAtual();
+    this.buscarInformacoes();
+    this.buscarInformacoesGraficoCentroCusto(this.gGMMesAnoAuxiliar);
   }
 
   //Grafico Gastos Mensais
-  createChart(gGMLabelMes: any, gGMDataValor: any, gGMDataValorRecebidoMes: any) {
+  /*createChart(gGMLabelMes: any, gGMDataValor: any, gGMDataValorRecebidoMes: any) {
     // Define as cores dinamicamente com base nos valores
     const sobraMesColors = this.gGMDataSobraMes.map((value: number) => 
       value > 0 ? '#B0C4DE' : '#FF6347' // Verde para positivo, vermelho para negativo
@@ -139,28 +142,32 @@ export class GraficosComponent implements OnInit {
       },
       plugins: [ChartDataLabels] // <- Aqui você registra o plugin apenas neste gráfico
     });
-  }
-  
-  buscarInformacoes(){
+  }*/
+
+  buscarInformacoes() {
     this.saldoService.getGastosMensais().subscribe(item => {
       if (item != null) {
         for (let i = 0; i < item.length; i++) {
-          this.gGMLabelMes.push(item[i].mes + " - " + item[i].ano);
+          //this.gGMLabelMes.push(item[i].mes + " - " + item[i].ano);
+          this.gGMLabelMes.push(item[i].mes);
+          this.gGMMesAno.push(item[i].mes + " - " + item[i].ano);
           this.gGMDataValor.push(item[i].valor);
           this.gGMDataSobraMes.push(item[i].sobraMes);
+          this.gGMCordoQuadrante.push(this.getColor(item[i].sobraMes));
           this.gGMDataValorRecebidoMes.push(item[i].valorRecebidoMes);
+          //console.log(item[i].mes + " - " + item[i].ano)
         }
-        this.createChart(this.gGMLabelMes, this.gGMDataValor, this.gGMDataValorRecebidoMes);
+        //this.createChart(this.gGMLabelMes, this.gGMDataValor, this.gGMDataValorRecebidoMes);
       }
     });
   }
 
   //Gráfico Gastos por Centro de Custo
-  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any, gGCCValorLimite: any, gGCCmesAnoAtual: any, gGCCmesAnoAnterior: any){
-    
-     const coresValor = gGCCValor.map((valor: number, index: number) => {
-    return valor > gGCCValorLimite[index] ? '#f5736fff' : '#0e7b29ff';
-  });
+  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any, gGCCValorLimite: any, gGCCmesAnoAtual: any, gGCCmesAnoAnterior: any) {
+
+    const coresValor = gGCCValor.map((valor: number, index: number) => {
+      return valor > gGCCValorLimite[index] ? '#f5736fff' : '#0e7b29ff';
+    });
 
     this.gGCCChart = new Chart("gGCCChart", {
       type: 'bar',
@@ -175,12 +182,12 @@ export class GraficosComponent implements OnInit {
             backgroundColor: '#728cb4ff'
           },
           {
-          label: 'Valor Gasto',
-          data: gGCCValor,
-          borderWidth: 0,
-          borderColor: '#000000',
-          backgroundColor: coresValor
-        }]
+            label: 'Valor Gasto',
+            data: gGCCValor,
+            borderWidth: 0,
+            borderColor: '#000000',
+            backgroundColor: coresValor
+          }]
       },
       options: {
         plugins: {
@@ -192,8 +199,8 @@ export class GraficosComponent implements OnInit {
               weight: 'bold',
               size: 8
             },
-            
-            formatter: function(value: any) {
+
+            formatter: function (value: any) {
               return value;
             }
           },
@@ -225,9 +232,9 @@ export class GraficosComponent implements OnInit {
                 mesAno = gGCCmesAnoAtual[index];
             }*/
 
-            console.log("mesAno: " + mesAno);
-            console.log("desCC: " + desCC);
-            console.log("valor: " + valor);
+            //console.log("mesAno: " + mesAno);
+            //console.log("desCC: " + desCC);
+            //console.log("valor: " + valor);
 
 
             //this.gGCCChart.destroy();
@@ -251,9 +258,14 @@ export class GraficosComponent implements OnInit {
     });
   }
 
-  buscarInformacoesGraficoCentroCusto(mesAno?: string){
+  buscarInformacoesGraficoCentroCusto(mesAno?: string) {
     this.gGMMesAnoAuxiliar = mesAno;
-    //this.gGCCChart.destroy();
+    //console.log("this.gGMMesAnoAuxiliar: " + this.gGMMesAnoAuxiliar);
+
+    if (this.gGCCChart) {
+      this.gGCCChart.destroy();
+    }
+
     this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
       this.chartInfoCC = item;
       this.gGCCValor = [];
@@ -264,7 +276,7 @@ export class GraficosComponent implements OnInit {
       //console.log(item);
       if (this.chartInfoCC != null) {
         for (let i = 0; i < this.chartInfoCC.length; i++) {
-          
+
           this.gGCCValor.push(this.chartInfoCC[i].valor);
           this.gGCCValorLimite.push(this.chartInfoCC[i].valorLimite);
           this.gGCCDescricao.push(this.chartInfoCC[i].descricao);
@@ -276,84 +288,88 @@ export class GraficosComponent implements OnInit {
         this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor, this.gGCCValorLimite, this.gGCCmesAnoAtual, this.gGCCmesAnoAnterior);
         this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, [...this.gGCCDescricao].pop());
         //this.gGCCChart.update();
-        
+
       }
     });
-    
+
   }
 
-  trataMesAnoAtual(){
+  trataMesAnoAtual() {
     let dataAtual = new Date().toLocaleDateString('pt-BR');
-    let mes: string = dataAtual.toString().substring(3,5);
-    let ano: string = dataAtual.toString().substring(6,10);
+    let mes: string = dataAtual.toString().substring(3, 5);
+    let ano: string = dataAtual.toString().substring(6, 10);
 
-    switch(mes) { 
-      case "01": { 
-        mes = "Janeiro"; 
-         break; 
-      } 
-      case "02": { 
-         mes = "Fevereiro"; 
-         break; 
-      } 
-      case "03": { 
-          mes = "Março";  
-        break; 
-        }
-        case "04": { 
-          mes = "Abril";  
-          break; 
+    switch (mes) {
+      case "01": {
+        mes = "Janeiro";
+        break;
       }
-      case "05": { 
-        mes = "Maio"; 
-        break; 
+      case "02": {
+        mes = "Fevereiro";
+        break;
       }
-      case "06": { 
+      case "03": {
+        mes = "Março";
+        break;
+      }
+      case "04": {
+        mes = "Abril";
+        break;
+      }
+      case "05": {
+        mes = "Maio";
+        break;
+      }
+      case "06": {
         mes = "Junho";
-        break; 
+        break;
       }
-      case "07": { 
-        mes = "Julho"; 
-      break; 
+      case "07": {
+        mes = "Julho";
+        break;
       }
-      case "08": { 
-        mes = "Agosto"; 
-        break; 
+      case "08": {
+        mes = "Agosto";
+        break;
       }
-      case "09": { 
-        mes = "Setembro";  
-      break; 
+      case "09": {
+        mes = "Setembro";
+        break;
       }
-      case "10": { 
-        mes = "Outubro";  
-      break; 
+      case "10": {
+        mes = "Outubro";
+        break;
       }
-      case "11": { 
-        mes = "Novembro";  
-      break; 
+      case "11": {
+        mes = "Novembro";
+        break;
       }
-      case "12": { 
-        mes = "Dezembro"; 
-      break; 
-      } 
-      
-   }
-   let mesAno: string = mes + " - " + ano;
-   return mesAno;
-    
+      case "12": {
+        mes = "Dezembro";
+        break;
+      }
+
+    }
+    let mesAno: string = mes + " - " + ano;
+    return mesAno;
+
   }
 
-  buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string){
+  buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string) {
     this.detalhamentoGastosCentroCusto.getAllDetalhamentoGastosCentroMesAno(mesAno, desCC).subscribe(item => {
       let infoDetalhamento = item;
       this.detalhamentoGastosCC = [];
       if (infoDetalhamento != null) {
-        for (let i = 0; i < infoDetalhamento.length; i++) {        
+        for (let i = 0; i < infoDetalhamento.length; i++) {
           this.detalhamentoGastosCC.push(infoDetalhamento[i])
         }
         //console.log(this.detalhamentoGastosCC);        
       }
     });
+  }
+
+  getColor(valor: number) {
+    return getColorForSobra(valor);
   }
 
 }
