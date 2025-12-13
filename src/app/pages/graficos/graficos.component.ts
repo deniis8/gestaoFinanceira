@@ -5,9 +5,7 @@ import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhame
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/gastos-centro-custo.service';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais/gastos-mensais.service';
 import { getColorForSobra } from '../../utils/colors';
-
-// registre o plugin aqui
-//Chart.register(ChartDataLabels);
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-graficos',
@@ -16,6 +14,7 @@ import { getColorForSobra } from '../../utils/colors';
   standalone: false
 })
 export class GraficosComponent implements OnInit {
+  [x: string]: any;
 
   //Variáveis grafico Gastos Mensais
   public gGMLabelMes: any[] = [];
@@ -39,126 +38,71 @@ export class GraficosComponent implements OnInit {
   //Detalhamento GastosCentroCusto
   detalhamentoGastosCC: any[] = [];
 
-  constructor(private saldoService: GastosMensaisService, private gastosCentroCustoService: GastosCentroCustoService, private detalhamentoGastosCentroCusto: DetalhamentoGastosCentroCustoService) {
-    //Chart.register(...registerables);
-    //Chart.register(...registerables, ChartDataLabels);
+  form!: FormGroup;
+  anos: number[] = [];
+
+  constructor(private saldoService: GastosMensaisService,
+    private gastosCentroCustoService: GastosCentroCustoService,
+    private detalhamentoGastosCentroCusto: DetalhamentoGastosCentroCustoService,
+    private fb: FormBuilder) {
   }
 
-  //@ViewChild("meuCanvas", { static: true }) elemento: ElementRef | undefined;
   ngOnInit(): void {
+    //Cria o formulário
+    this.form = this.fb.group({
+      ano: [null, Validators.required]
+    });
+
     this.gGMMesAnoAuxiliar = this.trataMesAnoAtual();
-    this.buscarInformacoes();
-    this.buscarInformacoesGraficoCentroCusto(this.gGMMesAnoAuxiliar);
+    this.buscarInformacoes("", "");
+
   }
 
-  //Grafico Gastos Mensais
-  /*createChart(gGMLabelMes: any, gGMDataValor: any, gGMDataValorRecebidoMes: any) {
-    // Define as cores dinamicamente com base nos valores
-    const sobraMesColors = this.gGMDataSobraMes.map((value: number) => 
-      value > 0 ? '#B0C4DE' : '#FF6347' // Verde para positivo, vermelho para negativo
-    );
-  
-    this.gGMChart = new Chart("gGMChart", {
-      type: 'bar',
-      data: {
-        labels: gGMLabelMes,
-        datasets: [
-          {
-            data: this.gGMDataSobraMes,
-            type: 'line', // Define como linha
-            label: 'O que restou no mês',
-            borderColor: sobraMesColors, // Aplica as cores
-            borderWidth: 2, // Largura da linha
-            fill: false, // Sem preenchimento abaixo da linha
-            pointBackgroundColor: sobraMesColors, // Cor dos pontos
-            pointRadius: 3, // Tamanho dos pontos
-          },
-          {
-            label: 'Valores Recebidos do Mês',
-            data: gGMDataValorRecebidoMes,
-            borderWidth: 0,
-            backgroundColor: '#0e7b29ff',
-          },
-          {
-            label: 'Gastos Mensais - 1 Ano',
-            data: gGMDataValor,
-            borderWidth: 0,
-            backgroundColor: '#DEB887',
-          }
-        ],
-      },
-      options: {
-        plugins: {
-          datalabels: {
-            anchor: 'end',
-            align: 'top',
-            color: (context: any) => {
-              // Verifica o tipo de gráfico do dataset
-              if (context.dataset.type === 'line') {
-                if(context.dataset.data[context.dataIndex] > 0){
-                  return '#008000'; // Azul para o gráfico de linha
-                }else{
-                  return '#FF6347'; // Azul para o gráfico de linha
-                }
-              }
-              return '#555555'; // Cor padrão (#555555) para gráfico de barras
-            },
-            font: {
-              weight: 'bold',
-              size: 8,
-            },
-            formatter: function (value: any) {
-              return value;
-            },
-          },
-          tooltip: {
-            enabled: false, // Desativa o tooltip
-          },
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-        onClick: (event: any) => {
-          const points = this.gGMChart.getElementsAtEventForMode(
-            event,
-            'nearest',
-            { intersect: true },
-            false
-          );
-  
-          if (points.length) {
-            const firstPoint = points[0];
-            const datasetIndex = firstPoint.datasetIndex;
-            const index = firstPoint.index;
-  
-            const mesAno = this.gGMChart.data.labels[index];
-            this.gGCCChart.destroy();
-            console.log(mesAno);
-            this.buscarInformacoesGraficoCentroCusto(mesAno);
-          }
-        },
-      },
-      plugins: [ChartDataLabels] // <- Aqui você registra o plugin apenas neste gráfico
-    });
-  }*/
+  get ano() {
+    return this.form.get('ano')!;
+  }
 
-  buscarInformacoes() {
-    this.saldoService.getGastosMensais().subscribe(item => {
-      if (item != null) {
-        for (let i = 0; i < item.length; i++) {
-          //this.gGMLabelMes.push(item[i].mes + " - " + item[i].ano);
-          this.gGMLabelMes.push(item[i].mes);
-          this.gGMMesAno.push(item[i].mes + " - " + item[i].ano);
-          this.gGMDataValor.push(item[i].valor);
-          this.gGMDataSobraMes.push(item[i].sobraMes);
-          this.gGMCordoQuadrante.push(this.getColor(item[i].sobraMes));
-          this.gGMDataValorRecebidoMes.push(item[i].valorRecebidoMes);
-          //console.log(item[i].mes + " - " + item[i].ano)
-        }
-        //this.createChart(this.gGMLabelMes, this.gGMDataValor, this.gGMDataValorRecebidoMes);
+  anoSelecionado(data: Date, datepicker: any) {
+    this.gGCCChart.destroy();
+    const ano = data.getFullYear();
+    this.form.get('ano')?.setValue(new Date(ano, 0, 1));
+    datepicker.close();
+
+    const dataDe = `${ano}-01-01`;
+    const dataAte = `${ano}-12-31`;
+
+    // limpar gráficos
+    this.gGMLabelMes = [];
+    this.gGMMesAno = [];
+    this.gGMDataValor = [];
+    this.gGMDataSobraMes = [];
+    this.gGMCordoQuadrante = [];
+    this.gGMDataValorRecebidoMes = [];
+
+    // chamar API filtrada
+    this.buscarInformacoes(dataDe, dataAte);
+
+  }
+
+  temRegistro(index: number): boolean {
+    return !!this.gGMCordoQuadrante[index];
+  }
+
+  buscarInformacoes(dataDe: string, dataAte: string) {
+    this.saldoService.getGastosMensais(dataDe, dataAte).subscribe(item => {
+      if (!item || item.length === 0) {
+        return;
       }
+      for (let i = 0; i < item.length; i++) {
+        this.gGMLabelMes.push(item[i].mes);
+        this.gGMMesAno.push(item[i].mes + " - " + item[i].ano);
+        this.gGMDataValor.push(item[i].valor);
+        this.gGMDataSobraMes.push(item[i].sobraMes);
+        this.gGMCordoQuadrante.push(this.getColor(item[i].sobraMes));
+        this.gGMDataValorRecebidoMes.push(item[i].valorRecebidoMes);
+      }
+      const ultimoMes = this.gGMMesAno[this.gGMMesAno.length - 1];
+      this.buscarInformacoesGraficoCentroCusto(ultimoMes);
     });
   }
 
@@ -226,41 +170,16 @@ export class GraficosComponent implements OnInit {
 
             let mesAno = '';
             mesAno = gGCCmesAnoAtual[index];
-            /*if (datasetIndex === 0) { // Mês Anterior
-                mesAno = gGCCmesAnoAnterior[index];
-            } else if (datasetIndex === 1) { // Mês Atual
-                mesAno = gGCCmesAnoAtual[index];
-            }*/
-
-            //console.log("mesAno: " + mesAno);
-            //console.log("desCC: " + desCC);
-            //console.log("valor: " + valor);
-
-
-            //this.gGCCChart.destroy();
             this.buscarDetalhamentoGastosCentroCusto(mesAno, desCC);
           }
         }
       },
-      plugins: [ChartDataLabels] // <- Aqui você registra o plugin apenas neste gráfico
-      // events: ['mousemove', 'mouseout', 'click', 'touchstart', 'touchmove'],
-      /*plugins: [{
-        id: 'myEventCatcher',
-        beforeEvent: (chart, args, pluginOptions) => {
-          let event = args.event;
-          if (event.type === 'click') {
-            let desCC = chart.tooltip?.title.toString();
-            //console.log(desCC);
-            this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, desCC);
-          }
-        }
-      }]*/
+      plugins: [ChartDataLabels]
     });
   }
 
   buscarInformacoesGraficoCentroCusto(mesAno?: string) {
     this.gGMMesAnoAuxiliar = mesAno;
-    //console.log("this.gGMMesAnoAuxiliar: " + this.gGMMesAnoAuxiliar);
 
     if (this.gGCCChart) {
       this.gGCCChart.destroy();
@@ -273,7 +192,6 @@ export class GraficosComponent implements OnInit {
       this.gGCCDescricao = [];
       this.gGCCmesAnoAtual = [];
       this.gGCCmesAnoAnterior = [];
-      //console.log(item);
       if (this.chartInfoCC != null) {
         for (let i = 0; i < this.chartInfoCC.length; i++) {
 
@@ -283,12 +201,8 @@ export class GraficosComponent implements OnInit {
           this.gGCCmesAnoAtual.push(this.chartInfoCC[i].mesAno);
           this.gGCCmesAnoAnterior.push(this.chartInfoCC[i].mesAnoMesAnterior);
         }
-        //console.log(this.gGCCmesAnoAtual);
-        //console.log(this.gGCCmesAnoAnterior);
         this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor, this.gGCCValorLimite, this.gGCCmesAnoAtual, this.gGCCmesAnoAnterior);
         this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, [...this.gGCCDescricao].pop());
-        //this.gGCCChart.update();
-
       }
     });
 
@@ -363,7 +277,6 @@ export class GraficosComponent implements OnInit {
         for (let i = 0; i < infoDetalhamento.length; i++) {
           this.detalhamentoGastosCC.push(infoDetalhamento[i])
         }
-        //console.log(this.detalhamentoGastosCC);        
       }
     });
   }

@@ -14,8 +14,13 @@ export class GastosMensaisService {
 
   constructor(private http: HttpClient, private loginService: LoginService) { }
 
-  getGastosMensais(): Observable<GastosMensais[]>{
+  getGastosMensais(dataDe: string, dataAte: string): Observable<GastosMensais[]> {
     const idUsuario = this.loginService.getIdUsuario();
-    return this.http.get<GastosMensais[]>(`${this.baseApiUrl}api/gastosmensais?idUsuario=${idUsuario}`);
+    if (dataDe && dataAte) {
+      return this.http.get<GastosMensais[]>(`${this.baseApiUrl}api/gastosmensais?idUsuario=${idUsuario}&dataDe=${dataDe}&dataAte=${dataAte}`);
+    } else {
+      return this.http.get<GastosMensais[]>(`${this.baseApiUrl}api/gastosmensais?idUsuario=${idUsuario}`);
+    }
+
   }
 }

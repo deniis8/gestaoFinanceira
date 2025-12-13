@@ -40,20 +40,19 @@ td {
 /*
 Gráfico Calendário
 */
-
-.nome-grafico{
-    display: flex;
-    margin-top: 10px;
-    align-items: center;
-    justify-content: center; 
-    margin-block-end: 10px;   
+@media (max-width: 600px) {
+    .campo-ano {
+        display: flex;
+        width: auto;
+    }
 }
+
 .grafico-calendario {
     display: block;
     width: auto;
     height: auto;
     align-items: center;
-    justify-content: center;    
+    justify-content: center;
     border: 1px solid;
     border-color: #c7c7c7;
     border-radius: 8px;
@@ -70,7 +69,6 @@ Gráfico Calendário
 
 .quadrante {
     display: block;
-    
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -78,9 +76,10 @@ Gráfico Calendário
     border: 1px solid;
     border-color: #727272;
     border-radius: 8px;
+    cursor: pointer;
 }
 
-.nome-mes{
+.nome-mes {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -94,11 +93,26 @@ Gráfico Calendário
     gap: 2px;
 }
 
-.valores{
+.valores {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 10px;
-    margin: 3px;      /* remove espaçamento vertical */
-    padding: 0;     /* opcional, deixa tudo bem juntinho */
+    margin: 3px;
+    /* remove espaçamento vertical */
+    padding: 0;
+    /* opcional, deixa tudo bem juntinho */
+}
+
+.quadrante-vazio {
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sem-dados {
+  font-size: 24px;
+  font-weight: bold;
+  color: #999;
 }
