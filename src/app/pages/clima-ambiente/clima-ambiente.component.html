@@ -1,4 +1,4 @@
-<div *ngIf="temperatura">
+<!--<div *ngIf="temperatura">
     <p>Temperatura: {{ temperatura.at(-1) }}°C&nbsp;
       <span *ngIf="temperatura.at(-1) < 19"> ❄️</span>
       <span *ngIf="temperatura.at(-1) >= 19 && temperatura.at(-1) < 25"> 😊</span>
@@ -24,19 +24,18 @@
   </div>
   <br>
   <br>
-<!-- Carrossel -->
+
 <div *ngIf="imagens.length > 0" class="carousel">
     <div *ngFor="let imagem of imagens; let i = index" class="carousel-item" (click)="openModal(i)">
       <img [src]="'data:image/jpeg;base64,' + imagem.arquivoImagem" alt="Imagem" style="transform: rotate(180deg);">
     </div>
   </div>
   
-  <!-- Modal -->
   <div id="imagemModal" class="modal" [ngClass]="{'show': isModalOpen}" (click)="closeModal()">
     <span class="close" (click)="closeModal()">&times;</span>
     <a class="prev" (click)="prevImage($event)">&#10094;</a>
     <a class="next" (click)="nextImage($event)">&#10095;</a>
     <img class="modal-content" id="imgModal" [src]="'data:image/jpeg;base64,' + modalImage" style="transform: rotate(180deg);">
     <div class="caption">{{modalCaption}}</div>
-  </div>
+  </div>-->
   
