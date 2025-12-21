@@ -31,7 +31,6 @@ export class GraficosComponent implements OnInit {
   private gGCCValorLimite: any[] = [];
   private gGCCDescricao: any[] = [];
   private gGCCmesAnoAtual: any[] = [];
-  public gGCCChart: any;
 
   //Detalhamento GastosCentroCusto
   detalhamentoGastosCC: any[] = [];
@@ -52,7 +51,7 @@ export class GraficosComponent implements OnInit {
     });
 
     //this.gGMMesAnoAuxiliar = this.trataMesAnoAtual();
-    this.buscarInformacoes("", "");
+    this.buscarInformacoesGastosMensais("", "");
 
   }
 
@@ -61,7 +60,6 @@ export class GraficosComponent implements OnInit {
   }
 
   anoSelecionado(data: Date, datepicker: any) {
-    this.gGCCChart.destroy();
     const ano = data.getFullYear();
     this.form.get('ano')?.setValue(new Date(ano, 0, 1));
     datepicker.close();
@@ -78,7 +76,7 @@ export class GraficosComponent implements OnInit {
     this.gGMDataValorRecebidoMes = [];
     
     // chamar API filtrada
-    this.buscarInformacoes(dataDe, dataAte);
+    this.buscarInformacoesGastosMensais(dataDe, dataAte);
 
   }
 
@@ -86,7 +84,7 @@ export class GraficosComponent implements OnInit {
     return !!this.gGMCordoQuadrante[index];
   }
 
-  buscarInformacoes(dataDe: string, dataAte: string) {
+  buscarInformacoesGastosMensais(dataDe: string, dataAte: string) {
     this.saldoService.getGastosMensais(dataDe, dataAte).subscribe(item => {
       if (!item || item.length === 0) {
         return;
@@ -100,7 +98,7 @@ export class GraficosComponent implements OnInit {
         this.gGMDataValorRecebidoMes.push(item[i].valorRecebidoMes);
       }
       const ultimoMes = this.gGMMesAno[this.gGMMesAno.length - 1];
-      this.buscarInformacoesGraficoCentroCusto(ultimoMes);
+      this.buscarInformacoesCentroCusto(ultimoMes);
     });
   }
 
@@ -111,12 +109,8 @@ export class GraficosComponent implements OnInit {
     descricaoCentroCusto: string
   }[] = [];
 
-  buscarInformacoesGraficoCentroCusto(mesAno?: string) {
+  buscarInformacoesCentroCusto(mesAno?: string) {
     this.gGMMesAnoAuxiliar = mesAno;
-
-    if (this.gGCCChart) {
-      this.gGCCChart.destroy();
-    }
 
     this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
       this.chartInfoCC = item;
@@ -227,7 +221,7 @@ export class GraficosComponent implements OnInit {
     ${this.gerarTabelaDetalhamentoHTML()}
   `,
       showConfirmButton: true,
-      confirmButtonText: 'Entendi'
+      confirmButtonText: 'Fechar'
     });
 
   }
@@ -294,17 +288,12 @@ export class GraficosComponent implements OnInit {
 
   }*/
 
-  buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string) {
-    console.log(mesAno);
-    console.log(desCC);
-    this.abrirTabela();
+  buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string) {    
     this.detalhamentoGastosCentroCusto.getAllDetalhamentoGastosCentroMesAno(mesAno, desCC).subscribe(item => {
-      let infoDetalhamento = item;
       this.detalhamentoGastosCC = [];
-      if (infoDetalhamento != null) {
-        for (let i = 0; i < infoDetalhamento.length; i++) {
-          this.detalhamentoGastosCC.push(infoDetalhamento[i])
-        }
+      if (item && item.length > 0) {
+        this.detalhamentoGastosCC = item ?? [];
+        this.abrirTabela();
       }
     });
   }

@@ -10,6 +10,9 @@ import { ClimaAmbiente, Imagens } from 'src/types';
     standalone: false
 })
 export class ClimaAmbienteComponent implements OnInit {
+   ngOnInit(): void {
+  }
+}/* 
   public climaAmbiente: ClimaAmbiente[] = [];
   private chartInfo: any;
   dataHora: any[] = [];
@@ -84,8 +87,7 @@ export class ClimaAmbienteComponent implements OnInit {
             position: 'top',
           },
           title: {
-            display: true/*,
-            text: 'Clima Ambiente'*/
+            display: true
           },
           datalabels: {
             anchor: 'end',
@@ -176,4 +178,4 @@ export class ClimaAmbienteComponent implements OnInit {
     //return `${day}/${month}/${year} ${hours}:${minutes}`;
     return `${day}/${month} ${hours}:${minutes}`;
   }
-}
+}*/
