@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import Chart from 'chart.js/auto';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-custo/detalhamento-gastos-centro-custo.service';
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/gastos-centro-custo.service';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais/gastos-mensais.service';
 import { getColorForSobra } from '../../utils/colors';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-graficos',
@@ -32,7 +31,6 @@ export class GraficosComponent implements OnInit {
   private gGCCValorLimite: any[] = [];
   private gGCCDescricao: any[] = [];
   private gGCCmesAnoAtual: any[] = [];
-  private gGCCmesAnoAnterior: any[] = [];
   public gGCCChart: any;
 
   //Detalhamento GastosCentroCusto
@@ -53,7 +51,7 @@ export class GraficosComponent implements OnInit {
       ano: [null, Validators.required]
     });
 
-    this.gGMMesAnoAuxiliar = this.trataMesAnoAtual();
+    //this.gGMMesAnoAuxiliar = this.trataMesAnoAtual();
     this.buscarInformacoes("", "");
 
   }
@@ -78,7 +76,7 @@ export class GraficosComponent implements OnInit {
     this.gGMDataSobraMes = [];
     this.gGMCordoQuadrante = [];
     this.gGMDataValorRecebidoMes = [];
-
+    
     // chamar API filtrada
     this.buscarInformacoes(dataDe, dataAte);
 
@@ -106,77 +104,12 @@ export class GraficosComponent implements OnInit {
     });
   }
 
-  //Gráfico Gastos por Centro de Custo
-  criaGraficoGastosCentroCusto(gGCCDescricao: any, gGCCValor: any, gGCCValorLimite: any, gGCCmesAnoAtual: any, gGCCmesAnoAnterior: any) {
-
-    const coresValor = gGCCValor.map((valor: number, index: number) => {
-      return valor > gGCCValorLimite[index] ? '#f5736fff' : '#0e7b29ff';
-    });
-
-    this.gGCCChart = new Chart("gGCCChart", {
-      type: 'bar',
-      data: {
-        labels: gGCCDescricao,
-        datasets: [
-          {
-            label: 'Valor Limite',
-            data: gGCCValorLimite,
-            borderWidth: 0,
-            borderColor: '#000000',
-            backgroundColor: '#728cb4ff'
-          },
-          {
-            label: 'Valor Gasto',
-            data: gGCCValor,
-            borderWidth: 0,
-            borderColor: '#000000',
-            backgroundColor: coresValor
-          }]
-      },
-      options: {
-        plugins: {
-          datalabels: {
-            anchor: 'end',
-            align: 'top',
-            color: '#555555',
-            font: {
-              weight: 'bold',
-              size: 8
-            },
-
-            formatter: function (value: any) {
-              return value;
-            }
-          },
-          tooltip: {
-            enabled: false // Desativa o tooltip
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        },
-        onClick: (event: any) => {
-          const points = this.gGCCChart.getElementsAtEventForMode(event, 'nearest', { intersect: true }, false);
-
-          if (points.length) {
-            const firstPoint = points[0];
-            const datasetIndex = firstPoint.datasetIndex;
-            const index = firstPoint.index;
-
-            const desCC = this.gGCCChart.data.labels[index];
-            const valor = this.gGCCChart.data.datasets[datasetIndex].data[index];
-
-            let mesAno = '';
-            mesAno = gGCCmesAnoAtual[index];
-            this.buscarDetalhamentoGastosCentroCusto(mesAno, desCC);
-          }
-        }
-      },
-      plugins: [ChartDataLabels]
-    });
-  }
+  centrosCustoVisual: {
+    gasto: number;
+    limite: number;
+    mesEAno: string;
+    descricaoCentroCusto: string
+  }[] = [];
 
   buscarInformacoesGraficoCentroCusto(mesAno?: string) {
     this.gGMMesAnoAuxiliar = mesAno;
@@ -191,23 +124,115 @@ export class GraficosComponent implements OnInit {
       this.gGCCValorLimite = [];
       this.gGCCDescricao = [];
       this.gGCCmesAnoAtual = [];
-      this.gGCCmesAnoAnterior = [];
+
+      //NOVO: limpa a lista visual
+      this.centrosCustoVisual = [];
       if (this.chartInfoCC != null) {
         for (let i = 0; i < this.chartInfoCC.length; i++) {
+
+          const registro = this.chartInfoCC[i];
 
           this.gGCCValor.push(this.chartInfoCC[i].valor);
           this.gGCCValorLimite.push(this.chartInfoCC[i].valorLimite);
           this.gGCCDescricao.push(this.chartInfoCC[i].descricao);
           this.gGCCmesAnoAtual.push(this.chartInfoCC[i].mesAno);
-          this.gGCCmesAnoAnterior.push(this.chartInfoCC[i].mesAnoMesAnterior);
+
+          this.centrosCustoVisual.push({
+            gasto: registro.valor,
+            limite: registro.valorLimite,
+            mesEAno: registro.mesAno,
+            descricaoCentroCusto: registro.descricao
+          });
+
+          console.log(this.centrosCustoVisual);
         }
-        this.criaGraficoGastosCentroCusto(this.gGCCDescricao, this.gGCCValor, this.gGCCValorLimite, this.gGCCmesAnoAtual, this.gGCCmesAnoAnterior);
-        this.buscarDetalhamentoGastosCentroCusto(this.gGMMesAnoAuxiliar, [...this.gGCCDescricao].pop());
       }
     });
 
   }
 
+  getPercentual(item: any): number {
+    if (!item.limite) return 0;
+    return Math.min((item.gasto / item.limite) * 100, 120);
+  }
+
+  getClasse(item: any): string {
+    const percentual = this.getPercentual(item);
+
+    if (percentual > 100) return 'estourado';
+    if (percentual >= 80) return 'alerta';
+    return 'ok';
+  }
+
+
+  private gerarTabelaDetalhamentoHTML(): string {
+
+    let linhas = '';
+
+    for (const item of this.detalhamentoGastosCC) {
+      linhas += `
+      <tr style="font-size:10px">
+        <td>${this.formatarData(item.dataHora)}</td>
+        <td>R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
+        <td>${item.descricaoLancamento}</td>
+        <td>${item.descricaoCentroCusto}</td>
+        <td>
+          <button 
+            class="btn btn-sm btn-outline-primary"
+            onclick="window.location.href='/lancamento/edit/${item.id}'">
+            ✏️
+          </button>
+          <button 
+            class="btn btn-sm btn-outline-danger"
+            onclick="window.location.href='/lancamento/excluir/${item.id}'">
+            🗑️
+          </button>
+        </td>
+      </tr>
+    `;
+    }
+
+    return `
+    <div style="max-height:400px; overflow:auto">
+    <strong>Detalhes</strong>
+      <table class="table table-striped table-bordered table-sm">
+        <thead class="table-dark">
+          <tr style="font-size:10px">
+            <th>Data Hora</th>
+            <th>Valor</th>
+            <th>Descrição</th>
+            <th>C. Custo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${linhas}
+        </tbody>
+      </table>
+    </div>
+  `;
+  }
+
+  private formatarData(data: string | Date): string {
+    const d = new Date(data);
+    return d.toLocaleDateString('pt-BR') + ' ' +
+      d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  abrirTabela() {
+    Swal.fire({
+      width: '100%',
+      html: `
+
+    ${this.gerarTabelaDetalhamentoHTML()}
+  `,
+      showConfirmButton: true,
+      confirmButtonText: 'Entendi'
+    });
+
+  }
+
+/*
   trataMesAnoAtual() {
     let dataAtual = new Date().toLocaleDateString('pt-BR');
     let mes: string = dataAtual.toString().substring(3, 5);
@@ -267,9 +292,12 @@ export class GraficosComponent implements OnInit {
     let mesAno: string = mes + " - " + ano;
     return mesAno;
 
-  }
+  }*/
 
   buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string) {
+    console.log(mesAno);
+    console.log(desCC);
+    this.abrirTabela();
     this.detalhamentoGastosCentroCusto.getAllDetalhamentoGastosCentroMesAno(mesAno, desCC).subscribe(item => {
       let infoDetalhamento = item;
       this.detalhamentoGastosCC = [];

@@ -116,3 +116,72 @@ Gráfico Calendário
   font-weight: bold;
   color: #999;
 }
+
+/*
+Novo gráfico
+*/
+
+.cc-card {
+  padding: 12px;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 12px;
+}
+
+.cc-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.cc-nome {
+  font-weight: 600;
+}
+
+.cc-valor {
+  color: #666;
+}
+
+.cc-bar-container {
+  position: relative;
+  height: 10px;
+  background: #eaeaea;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.cc-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.cc-bar.ok {
+  background-color: #4caf50;
+}
+
+.cc-bar.alerta {
+  background-color: #ffc107;
+}
+
+.cc-bar.estourado {
+  background-color: #f44336;
+}
+
+.cc-limite {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #555;
+}
+
+.cc-percentual {
+  font-size: 12px;
+  color: #777;
+  text-align: right;
+  margin-top: 4px;
+}
+
