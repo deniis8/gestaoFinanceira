@@ -45,6 +45,7 @@ import { AuthInterceptor } from './services/interceptor/interceptor.service';
 import { TabelaLancamentoComponent } from './components/tabela-lancamento/tabela-lancamento.component';
 import { NgChartsModule } from 'ng2-charts';
 import { DonutChartComponent } from './components/donut-chart/donut-chart.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @NgModule({
     declarations: [
@@ -89,7 +90,8 @@ import { DonutChartComponent } from './components/donut-chart/donut-chart.compon
         MatFormFieldModule,
         MatNativeDateModule,
         MatInputModule,
-        NgChartsModule], providers: [
+        NgChartsModule,
+    NgxSkeletonLoaderModule], providers: [
             { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
             provideHttpClient(withInterceptorsFromDi())
         ]

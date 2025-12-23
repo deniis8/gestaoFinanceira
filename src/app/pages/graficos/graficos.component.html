@@ -15,55 +15,138 @@
     </mat-form-field>
 </form>
 
+<!-- SKELETON -->
+<div class="grafico-calendario" *ngIf="loadingGastosMensais">
 
-<div class="grafico-calendario" *ngIf="gGMMesAno.length > 0; else registrosNaoEncontrados">
+    <div class="calendario-linha" *ngFor="let linha of [0,1,2]">
 
-    <div class="calendario-linha" *ngFor="let linha of [0,1,2]; let l = index">
+        <ng-container *ngFor="let col of [0,1,2,3]">
 
-        <ng-container *ngFor="let col of [0,1,2,3]; let c = index">
-
-            <ng-container *ngIf="temRegistro(l * 4 + c); else semRegistro">
-
-                <div class="quadrante" [style.backgroundColor]="gGMCordoQuadrante[l * 4 + c]"
-                    (click)="buscarInformacoesCentroCusto(gGMMesAno[l * 4 + c])">
-
-                    <strong class="nome-mes">
-                        {{ gGMLabelMes[l * 4 + c] }}
-                    </strong>
-
-                    <p class="valores">
-                        + R$ {{ gGMDataValorRecebidoMes[l * 4 + c] }}
-                    </p>
-
-                    <p class="valores">
-                        - R$ {{ gGMDataValor[l * 4 + c] }}
-                    </p>
-
-                    <p class="valores">
-                        = R$ {{ gGMDataSobraMes[l * 4 + c] }}
-                    </p>
-
-                </div>
-            </ng-container>
+            <div class="quadrante">
+                <ngx-skeleton-loader
+                    count="4"
+                    appearance="line"
+                    [theme]="{
+                      height: '14px',
+                      'margin-bottom': '6px',
+                      'border-radius': '4px'
+                    }">
+                </ngx-skeleton-loader>
+            </div>
 
         </ng-container>
     </div>
 
-    <ng-template #semRegistro>
-        <div class="quadrante quadrante-vazio">
-            <span class="sem-dados">✕</span>
-        </div>
-    </ng-template>
-
 </div>
-<ng-template #registrosNaoEncontrados>
-    <div class="quadrante quadrante-vazio">
-        <span>Registros não encontrados!</span>
-    </div>
-</ng-template>
+
+<!--CONTEÚDO -->
+<ng-container *ngIf="!loadingGastosMensais">
+
+  <div class="grafico-calendario" *ngIf="gGMMesAno.length > 0; else registrosNaoEncontrados">
+
+      <div class="calendario-linha" *ngFor="let linha of [0,1,2]; let l = index">
+
+          <ng-container *ngFor="let col of [0,1,2,3]; let c = index">
+
+              <ng-container *ngIf="temRegistro(l * 4 + c); else semRegistro">
+
+                  <div class="quadrante"
+                       [style.backgroundColor]="gGMCordoQuadrante[l * 4 + c]"
+                       (click)="buscarInformacoesCentroCusto(gGMMesAno[l * 4 + c])">
+
+                      <strong class="nome-mes">
+                          {{ gGMLabelMes[l * 4 + c] }}
+                      </strong>
+
+                      <p class="valores">
+                          + R$ {{ gGMDataValorRecebidoMes[l * 4 + c] }}
+                      </p>
+
+                      <p class="valores">
+                          - R$ {{ gGMDataValor[l * 4 + c] }}
+                      </p>
+
+                      <p class="valores">
+                          = R$ {{ gGMDataSobraMes[l * 4 + c] }}
+                      </p>
+
+                  </div>
+              </ng-container>
+
+          </ng-container>
+      </div>
+
+      <ng-template #semRegistro>
+          <div class="quadrante quadrante-vazio">
+              <span class="sem-dados">✕</span>
+          </div>
+      </ng-template>
+
+  </div>
+
+  <!--SEM REGISTROS -->
+  <ng-template #registrosNaoEncontrados>
+      <div class="quadrante quadrante-vazio">
+          <span>Registros não encontrados!</span>
+      </div>
+  </ng-template>
+
+</ng-container>
+
 
 
 <br />
+
+<!-- SKELETON CENTROS DE CUSTO -->
+<ng-container *ngIf="loadingCentrosCusto">
+  <div class="cc-card" *ngFor="let i of [0,1,2,3,4]">
+
+    <div class="cc-header">
+      <ngx-skeleton-loader
+        appearance="line"
+        [theme]="{
+          width: '60%',
+          height: '16px',
+          'border-radius': '4px'
+        }">
+      </ngx-skeleton-loader>
+
+      <ngx-skeleton-loader
+        appearance="line"
+        [theme]="{
+          width: '30%',
+          height: '16px',
+          'border-radius': '4px'
+        }">
+      </ngx-skeleton-loader>
+    </div>
+
+    <div class="cc-bar-container">
+      <ngx-skeleton-loader
+        appearance="line"
+        [theme]="{
+          width: '100%',
+          height: '8px',
+          'border-radius': '4px'
+        }">
+      </ngx-skeleton-loader>
+    </div>
+
+    <div class="cc-percentual">
+      <ngx-skeleton-loader
+        appearance="line"
+        [theme]="{
+          width: '40%',
+          height: '14px',
+          'border-radius': '4px'
+        }">
+      </ngx-skeleton-loader>
+    </div>
+
+  </div>
+</ng-container>
+
+
 
 <div class="cc-card" *ngFor="let item of centrosCustoVisual">
   <div class="cc-header" (click)="buscarDetalhamentoGastosCentroCusto(item.mesEAno, item.descricaoCentroCusto)">

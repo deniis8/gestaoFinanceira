@@ -38,6 +38,9 @@ export class GraficosComponent implements OnInit {
   form!: FormGroup;
   anos: number[] = [];
 
+  loadingGastosMensais = true;
+  loadingCentrosCusto = true;
+
   constructor(private saldoService: GastosMensaisService,
     private gastosCentroCustoService: GastosCentroCustoService,
     private detalhamentoGastosCentroCusto: DetalhamentoGastosCentroCustoService,
@@ -74,10 +77,11 @@ export class GraficosComponent implements OnInit {
     this.gGMDataSobraMes = [];
     this.gGMCordoQuadrante = [];
     this.gGMDataValorRecebidoMes = [];
+    this.centrosCustoVisual = [];   
     
     // chamar API filtrada
     this.buscarInformacoesGastosMensais(dataDe, dataAte);
-
+    
   }
 
   temRegistro(index: number): boolean {
@@ -85,8 +89,10 @@ export class GraficosComponent implements OnInit {
   }
 
   buscarInformacoesGastosMensais(dataDe: string, dataAte: string) {
+    this.loadingGastosMensais = true; 
     this.saldoService.getGastosMensais(dataDe, dataAte).subscribe(item => {
-      if (!item || item.length === 0) {
+      if (!item || item.length === 0) { 
+        this.loadingGastosMensais = false;
         return;
       }
       for (let i = 0; i < item.length; i++) {
@@ -97,6 +103,7 @@ export class GraficosComponent implements OnInit {
         this.gGMCordoQuadrante.push(this.getColor(item[i].sobraMes));
         this.gGMDataValorRecebidoMes.push(item[i].valorRecebidoMes);
       }
+      this.loadingGastosMensais = false;
       const ultimoMes = this.gGMMesAno[this.gGMMesAno.length - 1];
       this.buscarInformacoesCentroCusto(ultimoMes);
     });
@@ -111,6 +118,7 @@ export class GraficosComponent implements OnInit {
 
   buscarInformacoesCentroCusto(mesAno?: string) {
     this.gGMMesAnoAuxiliar = mesAno;
+    this.loadingCentrosCusto = true;    
 
     this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
       this.chartInfoCC = item;
@@ -140,6 +148,7 @@ export class GraficosComponent implements OnInit {
 
           console.log(this.centrosCustoVisual);
         }
+        this.loadingCentrosCusto = false;
       }
     });
 
