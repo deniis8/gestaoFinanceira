@@ -19,7 +19,6 @@ import { TabelaCentroCustoComponent } from './pages/centro-custo/tabela-centro-c
 import { NovoCentroCustoComponent } from './pages/centro-custo/novo-centro-custo/novo-centro-custo.component';
 import { LancamentoFixoFormComponent } from './components/lancamento-fixo-form/lancamento-fixo-form.component';
 import { SaldosComponent } from './components/saldos/saldos.component';
-import { ClimaAmbienteComponent } from './pages/clima-ambiente/clima-ambiente.component';
 import { LoginComponent } from './pages/login/login.component';
 
 // Importações para o Angular Material
@@ -58,7 +57,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
         EditLancamentoComponent,
         ExcluirLancamentoComponent,
         SaldosComponent,
-        ClimaAmbienteComponent,
         LoginComponent,
         CentroCustoFormComponent,
         EditCentroCustoComponent,
