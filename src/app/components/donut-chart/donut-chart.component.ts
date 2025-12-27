@@ -78,7 +78,6 @@ export class DonutChartComponent {
       <p><strong>Gastos:</strong> R$ ${this._despesasGraficoDonut.toFixed(2)}</p>
       <p><strong>Saldo:</strong> R$ ${(this._receitasGraficoDonut - this._despesasGraficoDonut).toFixed(2)}</p>
     `,
-    icon: 'info',
     confirmButtonText: 'Fechar'
   });
 }

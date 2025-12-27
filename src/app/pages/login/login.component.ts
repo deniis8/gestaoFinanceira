@@ -13,6 +13,8 @@ export class LoginComponent {
   loginForm: FormGroup;
   loginError: string | null = null; // Variável para armazenar a mensagem de erro
 
+  isLoading: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private loginService: LoginService,
@@ -30,7 +32,7 @@ export class LoginComponent {
     }
 
     this.loginError = null; // Limpa a mensagem de erro antes de tentar o login
-
+    this.isLoading = true;
     const loginData = this.loginForm.value;
 
     this.loginService.postLogin(loginData).subscribe(
@@ -42,13 +44,16 @@ export class LoginComponent {
             idUsuario: response.idUsuario
           });
 
+          this.isLoading = false;
           this.router.navigate(['/home']);
         } else {
           this.loginError = 'E-mail ou senha inválidos.'; // Mensagem para erro inesperado
+          this.isLoading = false;
         }
       },
       (error) => {
         this.loginError = 'E-mail ou senha inválidos.'; // Mensagem de erro genérica
+        this.isLoading = false;
       }
     );
   }

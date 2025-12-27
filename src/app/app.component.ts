@@ -3,10 +3,10 @@ import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  standalone: false
 })
 export class AppComponent {
 
@@ -20,7 +20,7 @@ export class AppComponent {
   // Método chamado ao selecionar uma opção no menu
   selectOption() {
     this.sidenav.close();  // Fecha a sidebar ao selecionar uma opção
-  } 
+  }
 
   title = 'gestaoFinanceira';
   showHeaderFooter = true; // Define se o header e footer devem ser exibidos
@@ -35,5 +35,11 @@ export class AppComponent {
 
   isLoginPage(): boolean {
     return this.router.url === '/login';
+  }
+
+  selectSair(): void {
+    sessionStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('idUsuario');
   }
 }
