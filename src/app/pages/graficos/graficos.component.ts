@@ -226,7 +226,7 @@ export class GraficosComponent implements OnInit {
   abrirTabela() {
     Swal.fire({
       width: '100%',
-      heightAuto: false,          // 🔥 ESSENCIAL
+      heightAuto: false, 
       allowOutsideClick: true,
       allowEscapeKey: true,
       html: this.gerarTabelaDetalhamentoHTML(),
