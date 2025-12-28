@@ -77,11 +77,11 @@ export class GraficosComponent implements OnInit {
     this.gGMDataSobraMes = [];
     this.gGMCordoQuadrante = [];
     this.gGMDataValorRecebidoMes = [];
-    this.centrosCustoVisual = [];   
-    
+    this.centrosCustoVisual = [];
+
     // chamar API filtrada
     this.buscarInformacoesGastosMensais(dataDe, dataAte);
-    
+
   }
 
   temRegistro(index: number): boolean {
@@ -89,9 +89,9 @@ export class GraficosComponent implements OnInit {
   }
 
   buscarInformacoesGastosMensais(dataDe: string, dataAte: string) {
-    this.loadingGastosMensais = true; 
+    this.loadingGastosMensais = true;
     this.saldoService.getGastosMensais(dataDe, dataAte).subscribe(item => {
-      if (!item || item.length === 0) { 
+      if (!item || item.length === 0) {
         this.loadingGastosMensais = false;
         return;
       }
@@ -118,7 +118,7 @@ export class GraficosComponent implements OnInit {
 
   buscarInformacoesCentroCusto(mesAno?: string) {
     this.gGMMesAnoAuxiliar = mesAno;
-    this.loadingCentrosCusto = true;    
+    this.loadingCentrosCusto = true;
 
     this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
       this.chartInfoCC = item;
@@ -196,9 +196,16 @@ export class GraficosComponent implements OnInit {
     }
 
     return `
-    <div style="max-height:400px; overflow:auto">
     <strong>Detalhes</strong>
-      <table class="table table-striped table-bordered table-sm">
+
+    <div
+      style="
+        max-height: 400px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      "
+    >
+      <table class="table table-striped table-bordered table-sm mb-0">
         <thead class="table-dark">
           <tr style="font-size:10px">
             <th>Data Hora</th>
@@ -235,69 +242,69 @@ export class GraficosComponent implements OnInit {
 
   }
 
-/*
-  trataMesAnoAtual() {
-    let dataAtual = new Date().toLocaleDateString('pt-BR');
-    let mes: string = dataAtual.toString().substring(3, 5);
-    let ano: string = dataAtual.toString().substring(6, 10);
+  /*
+    trataMesAnoAtual() {
+      let dataAtual = new Date().toLocaleDateString('pt-BR');
+      let mes: string = dataAtual.toString().substring(3, 5);
+      let ano: string = dataAtual.toString().substring(6, 10);
+  
+      switch (mes) {
+        case "01": {
+          mes = "Janeiro";
+          break;
+        }
+        case "02": {
+          mes = "Fevereiro";
+          break;
+        }
+        case "03": {
+          mes = "Março";
+          break;
+        }
+        case "04": {
+          mes = "Abril";
+          break;
+        }
+        case "05": {
+          mes = "Maio";
+          break;
+        }
+        case "06": {
+          mes = "Junho";
+          break;
+        }
+        case "07": {
+          mes = "Julho";
+          break;
+        }
+        case "08": {
+          mes = "Agosto";
+          break;
+        }
+        case "09": {
+          mes = "Setembro";
+          break;
+        }
+        case "10": {
+          mes = "Outubro";
+          break;
+        }
+        case "11": {
+          mes = "Novembro";
+          break;
+        }
+        case "12": {
+          mes = "Dezembro";
+          break;
+        }
+  
+      }
+      let mesAno: string = mes + " - " + ano;
+      return mesAno;
+  
+    }*/
 
-    switch (mes) {
-      case "01": {
-        mes = "Janeiro";
-        break;
-      }
-      case "02": {
-        mes = "Fevereiro";
-        break;
-      }
-      case "03": {
-        mes = "Março";
-        break;
-      }
-      case "04": {
-        mes = "Abril";
-        break;
-      }
-      case "05": {
-        mes = "Maio";
-        break;
-      }
-      case "06": {
-        mes = "Junho";
-        break;
-      }
-      case "07": {
-        mes = "Julho";
-        break;
-      }
-      case "08": {
-        mes = "Agosto";
-        break;
-      }
-      case "09": {
-        mes = "Setembro";
-        break;
-      }
-      case "10": {
-        mes = "Outubro";
-        break;
-      }
-      case "11": {
-        mes = "Novembro";
-        break;
-      }
-      case "12": {
-        mes = "Dezembro";
-        break;
-      }
-
-    }
-    let mesAno: string = mes + " - " + ano;
-    return mesAno;
-
-  }*/
-
-  buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string) {    
+  buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string) {
     this.detalhamentoGastosCentroCusto.getAllDetalhamentoGastosCentroMesAno(mesAno, desCC).subscribe(item => {
       this.detalhamentoGastosCC = [];
       if (item && item.length > 0) {
