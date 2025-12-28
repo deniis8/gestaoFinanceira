@@ -180,16 +180,8 @@ export class GraficosComponent implements OnInit {
         <td>${item.descricaoLancamento}</td>
         <td>${item.descricaoCentroCusto}</td>
         <td>
-          <button 
-            class="btn btn-sm btn-outline-primary"
-            onclick="window.location.href='/lancamento/edit/${item.id}'">
-            ✏️
-          </button>
-          <button 
-            class="btn btn-sm btn-outline-danger"
-            onclick="window.location.href='/lancamento/excluir/${item.id}'">
-            🗑️
-          </button>
+          <button class="btn btn-sm btn-outline-primary">✏️</button>
+          <button class="btn btn-sm btn-outline-danger">🗑️</button>
         </td>
       </tr>
     `;
@@ -200,9 +192,10 @@ export class GraficosComponent implements OnInit {
 
     <div
       style="
-        max-height: 400px;
+        height: 60vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
       "
     >
       <table class="table table-striped table-bordered table-sm mb-0">
@@ -223,6 +216,7 @@ export class GraficosComponent implements OnInit {
   `;
   }
 
+
   private formatarData(data: string | Date): string {
     const d = new Date(data);
     return d.toLocaleDateString('pt-BR') + ' ' +
@@ -232,15 +226,21 @@ export class GraficosComponent implements OnInit {
   abrirTabela() {
     Swal.fire({
       width: '100%',
-      html: `
-
-    ${this.gerarTabelaDetalhamentoHTML()}
-  `,
+      heightAuto: false,          // 🔥 ESSENCIAL
+      allowOutsideClick: true,
+      allowEscapeKey: true,
+      html: this.gerarTabelaDetalhamentoHTML(),
       showConfirmButton: true,
-      confirmButtonText: 'Fechar'
+      confirmButtonText: 'Fechar',
+      didOpen: () => {
+        const container = document.querySelector('.swal2-html-container') as HTMLElement | null;
+        if (container) {
+          container.style.overflow = 'hidden';
+        }
+      }
     });
-
   }
+
 
   /*
     trataMesAnoAtual() {
