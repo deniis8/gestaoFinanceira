@@ -22,8 +22,6 @@ export class GraficosComponent implements OnInit {
   public gGMDataSobraMes: any[] = [];
   public gGMCordoQuadrante: any[] = [];
   public gGMDataValorRecebidoMes: any[] = [];
-  private gGMMesAnoAuxiliar?: string = "";
-  //public gGMChart: any;
 
   //Variáveis gráfico Gastos por Centro de Custo
   private chartInfoCC: any;
@@ -33,6 +31,7 @@ export class GraficosComponent implements OnInit {
   private gGCCmesAnoAtual: any[] = [];
 
   //Detalhamento GastosCentroCusto
+  popupAberto = false;
   detalhamentoGastosCC: any[] = [];
 
   form!: FormGroup;
@@ -117,7 +116,6 @@ export class GraficosComponent implements OnInit {
   }[] = [];
 
   buscarInformacoesCentroCusto(mesAno?: string) {
-    this.gGMMesAnoAuxiliar = mesAno;
     this.loadingCentrosCusto = true;
 
     this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
@@ -167,80 +165,11 @@ export class GraficosComponent implements OnInit {
     return 'ok';
   }
 
-
-  private gerarTabelaDetalhamentoHTML(): string {
-
-    let linhas = '';
-
-    for (const item of this.detalhamentoGastosCC) {
-      linhas += `
-      <tr style="font-size:10px">
-        <td>${this.formatarData(item.dataHora)}</td>
-        <td>R$ ${item.valor.toFixed(2).replace('.', ',')}</td>
-        <td>${item.descricaoLancamento}</td>
-        <td>${item.descricaoCentroCusto}</td>
-        <td>
-          <button class="btn btn-sm btn-outline-primary">✏️</button>
-          <button class="btn btn-sm btn-outline-danger">🗑️</button>
-        </td>
-      </tr>
-    `;
-    }
-
-    return `
-    <strong>Detalhes</strong>
-
-    <div
-      style="
-        height: 60vh;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        touch-action: pan-y;
-      "
-    >
-      <table class="table table-striped table-bordered table-sm mb-0">
-        <thead class="table-dark">
-          <tr style="font-size:10px">
-            <th>Data Hora</th>
-            <th>Valor</th>
-            <th>Descrição</th>
-            <th>C. Custo</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${linhas}
-        </tbody>
-      </table>
-    </div>
-  `;
-  }
-
-
   private formatarData(data: string | Date): string {
     const d = new Date(data);
     return d.toLocaleDateString('pt-BR') + ' ' +
       d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   }
-
-  abrirTabela() {
-    Swal.fire({
-      width: '100%',
-      heightAuto: false, 
-      allowOutsideClick: true,
-      allowEscapeKey: true,
-      html: this.gerarTabelaDetalhamentoHTML(),
-      showConfirmButton: true,
-      confirmButtonText: 'Fechar',
-      didOpen: () => {
-        const container = document.querySelector('.swal2-html-container') as HTMLElement | null;
-        if (container) {
-          container.style.overflow = 'hidden';
-        }
-      }
-    });
-  }
-
 
   /*
     trataMesAnoAtual() {
@@ -307,9 +236,9 @@ export class GraficosComponent implements OnInit {
   buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string) {
     this.detalhamentoGastosCentroCusto.getAllDetalhamentoGastosCentroMesAno(mesAno, desCC).subscribe(item => {
       this.detalhamentoGastosCC = [];
-      if (item && item.length > 0) {
-        this.detalhamentoGastosCC = item ?? [];
-        this.abrirTabela();
+      if (item && item.length > 0) {        
+        this.detalhamentoGastosCC = item;
+        this.popupAberto = true; //abre o pop-up
       }
     });
   }

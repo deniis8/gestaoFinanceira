@@ -1,0 +1,55 @@
+<div class="overlay" *ngIf="aberto">
+    <div class="popup">
+
+        <div class="popup-header">
+            <h3 class="titulo-h3">Detalhamento por Centro de Custo</h3>
+            <button class="btn-fechar" (click)="fecharPopup()">×</button>
+        </div>
+
+        <div class="popup-body">
+
+            <div *ngIf="detalhamentoGastosCC.length > 0; else noRegistros">
+                <table class="table table-striped table-bordered align-middle shadow-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Data Hora</th>
+                            <th>Valor</th>
+                            <th>Descrição</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let item of detalhamentoGastosCC">
+                            <td>{{ item.dataHora | date: 'dd/MM/yyyy HH:mm' }}</td>
+                            <td>{{ item.valor | formatValor }}</td>
+                            <td>{{ item.descricaoLancamento }}</td>
+
+                            <td>
+                                <div class="btn-group">
+                                    <button routerLink="/lancamento/edit/{{item.id}}" type="button"
+                                        class="btn btn-outline-primary btn-sm botao-editar">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button routerLink="/lancamento/excluir/{{item.id}}" type="button"
+                                        class="btn btn-outline-danger btn-sm botao-remover">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <ng-template #noRegistros>
+                <p class="text-center mt-3">
+                    Não existem registros para este centro de custo.
+                </p>
+            </ng-template>
+
+        </div>
+
+    </div>
+</div>
