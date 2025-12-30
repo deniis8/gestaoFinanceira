@@ -45,6 +45,7 @@ import { TabelaLancamentoComponent } from './components/tabela-lancamento/tabela
 import { NgChartsModule } from 'ng2-charts';
 import { DonutChartComponent } from './components/donut-chart/donut-chart.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { PopUpCentroCustoComponent } from "src/app/components/pop-up-centro-custo/pop-up-centro-custo.component";
 
 @NgModule({
     declarations: [
@@ -70,26 +71,28 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
         NovoLancamentoFixoComponent,
         TabelaLancamentoFixoComponent,
         TabelaLancamentoComponent,
-        DonutChartComponent
+        DonutChartComponent,
+        PopUpCentroCustoComponent
     ],
     bootstrap: [AppComponent], imports: [
-        AppRoutingModule,
-        FormsModule,
-        ReactiveFormsModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatSidenavModule,
-        MatListModule,
-        MatIconModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatDatepickerModule,
-        MatFormFieldModule,
-        MatNativeDateModule,
-        MatInputModule,
-        NgChartsModule,
-    NgxSkeletonLoaderModule], providers: [
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatNativeDateModule,
+    MatInputModule,
+    NgChartsModule,
+    NgxSkeletonLoaderModule    
+], providers: [
             { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
             provideHttpClient(withInterceptorsFromDi())
         ]
