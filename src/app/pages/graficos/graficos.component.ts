@@ -154,7 +154,7 @@ export class GraficosComponent implements OnInit {
 
   getPercentual(item: any): number {
     if (!item.limite) return 0;
-    return Math.min((item.gasto / item.limite) * 100, 120);
+    return Math.min((item.gasto / item.limite) * 100);
   }
 
   getClasse(item: any): string {
