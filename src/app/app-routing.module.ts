@@ -14,6 +14,7 @@ import { TabelaLancamentoFixoComponent } from './pages/lancamento-fixo/tabela-la
 import { EditLancamentoFixoComponent } from './pages/lancamento-fixo/edit-lancamento-fixo/edit-lancamento-fixo.component';
 import { ExcluirLancamentoFixoComponent } from './pages/lancamento-fixo/excluir-lancamento-fixo/excluir-lancamento-fixo.component';
 import { NovoLancamentoFixoComponent } from './pages/lancamento-fixo/novo-lancamento-fixo/novo-lancamento-fixo.component';
+import { ConfiguracoesIaComponent } from './pages/configuracoes-ia/configuracoes-ia.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -29,7 +30,8 @@ const routes: Routes = [
   {path: 'centro-custo', component: TabelaCentroCustoComponent},
   {path: 'centro-custo/edit/:id', component: EditCentroCustoComponent},
   {path: 'centro-custo/excluir/:id', component: ExcluirCentroCustoComponent},
-  {path: 'centro-custo/novo', component: NovoCentroCustoComponent}
+  {path: 'centro-custo/novo', component: NovoCentroCustoComponent},
+  {path: 'configuracoes-ia', component: ConfiguracoesIaComponent}
 ];
 
 @NgModule({

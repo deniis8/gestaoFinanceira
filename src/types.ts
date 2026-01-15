@@ -85,3 +85,11 @@ export interface CentroCusto{
     deletado?: string;
     valorLimite: number;
 }
+
+export interface ConfiguracoesIA{
+    id?: number,
+	filtroDataDe: Date,
+	filtroDataAte: Date,
+	prompt: string,
+    idUsuario: number
+}

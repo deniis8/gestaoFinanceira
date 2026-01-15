@@ -1,0 +1,23 @@
+<div>
+    <div class="form-group">
+        <label for="dataHora">Data De:</label>
+        <input type="date" placeholder="" formControlName= "dataDe" required>
+        <!--<div *ngIf="dataHora.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="dataHora.errors?.['required']">A data é obrigatória.</p>
+        </div>-->
+    </div>
+    <div class="form-group">
+        <label for="dataHora">Data Até:</label>
+        <input type="date" placeholder="" formControlName= "dataAte" required>
+        <!--<div *ngIf="dataHora.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="dataHora.errors?.['required']">A data é obrigatória.</p>
+        </div>-->
+    </div>
+    <div class="form-group">
+        <label for="description">Prompt:</label>
+        <textarea placeholder="Descrição do Prompt" formControlName="prompt" required></textarea>
+        <!--<div *ngIf="descricao.invalid && formDir.submitted" class="validation-error">
+            <p *ngIf="descricao.errors?.['required']">A descrição é obrigatória.</p>
+        </div>-->
+    </div> 
+</div>
