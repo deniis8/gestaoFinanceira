@@ -93,3 +93,14 @@ export interface ConfiguracoesIA{
 	prompt: string,
     idUsuario: number
 }
+
+export interface AnaliseFinanceiraIaRequest {
+  idUsuario: number;
+  dataDe: string;   // yyyy-MM-dd
+  dataAte: string;  // yyyy-MM-dd
+  textoAuxiliar: string;
+}
+
+export interface AnaliseFinanceiraIaResponse {
+  analiseIA: string;
+}

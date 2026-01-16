@@ -1,0 +1,12 @@
+<div class="overlay" (click)="fechar.emit()">
+  <div class="popup" (click)="$event.stopPropagation()">
+
+    <div class="popup-header">
+      <span>💡 Insight da IA</span>
+      <button class="close-btn" (click)="fechar.emit()">✕</button>
+    </div>
+
+    <div class="popup-content" [innerHTML]="htmlIa"></div>
+
+  </div>
+</div>

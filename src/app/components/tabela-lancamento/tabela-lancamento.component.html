@@ -3,6 +3,35 @@
   [despesasGraficoDonut]="despesasGraficoDonut" 
   [receitasGraficoDonut]="receitasGraficoDonut">
 </app-saldos>
+
+<!-- BOTÃO -->
+<div class="ai-insight-card" (click)="abrirInsight($event)">
+
+  <div class="ai-insight-content">
+    <div class="ai-text">
+      <div class="ai-title">Obter Insight de IA</div>
+      <div class="ai-subtitle">
+        Clique para gerar um insight financeiro
+      </div>
+    </div>
+
+    <div class="ai-icon">
+      <span *ngIf="!isLoadingInsight">💡</span>
+      <span *ngIf="isLoadingInsight" class="spinner"></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- POPUP FORA DO BOTÃO -->
+<app-pop-up-ia
+  *ngIf="isPopupAberto"
+  [htmlIa]="htmlIa"
+  (fechar)="fecharPopup()">
+</app-pop-up-ia>
+
+
+
 <br>
 <div>
   <!-- Container para os campos de data -->

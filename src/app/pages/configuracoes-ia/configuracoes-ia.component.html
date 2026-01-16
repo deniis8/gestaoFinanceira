@@ -1,23 +1,27 @@
-<div>
+<form (ngSubmit)="submit()" [formGroup]="configuracoesIAForm">
+    <h1 class="h1">Configurações IA</h1>
     <div class="form-group">
-        <label for="dataHora">Data De:</label>
-        <input type="date" placeholder="" formControlName= "dataDe" required>
-        <!--<div *ngIf="dataHora.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="dataHora.errors?.['required']">A data é obrigatória.</p>
-        </div>-->
+        <label for="filtroDataDe">Data De:</label>
+        <input type="date" placeholder="" formControlName="filtroDataDe">
+        <div *ngIf="filtroDataDe.invalid && configuracoesIAForm.touched" class="validation-error">
+            <p *ngIf="filtroDataDe.errors?.['required']">A data é obrigatória.</p>
+        </div>
     </div>
     <div class="form-group">
-        <label for="dataHora">Data Até:</label>
-        <input type="date" placeholder="" formControlName= "dataAte" required>
-        <!--<div *ngIf="dataHora.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="dataHora.errors?.['required']">A data é obrigatória.</p>
-        </div>-->
+        <label for="filtroDataAte">Data Até:</label>
+        <input type="date" placeholder="" formControlName="filtroDataAte">
+        <div *ngIf="filtroDataAte.invalid && configuracoesIAForm.touched" class="validation-error">
+            <p *ngIf="filtroDataAte.errors?.['required']">A data é obrigatória.</p>
+        </div>
     </div>
     <div class="form-group">
-        <label for="description">Prompt:</label>
-        <textarea placeholder="Descrição do Prompt" formControlName="prompt" required></textarea>
-        <!--<div *ngIf="descricao.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="descricao.errors?.['required']">A descrição é obrigatória.</p>
-        </div>-->
-    </div> 
-</div>
+        <label for="prompt">Prompt:</label>
+        <textarea class="textarea" placeholder="Descrição do Prompt" formControlName="prompt"></textarea>
+        <div *ngIf="prompt.invalid && configuracoesIAForm.touched" class="validation-error">
+            <p *ngIf="prompt.errors?.['required']">A descrição é obrigatória.</p>
+        </div>
+    </div>
+    <button type="submit" class="btn-salvar" [disabled]="configuracoesIAForm.invalid">
+        Salvar
+    </button>
+</form>
