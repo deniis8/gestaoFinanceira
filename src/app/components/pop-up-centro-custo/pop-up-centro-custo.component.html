@@ -27,12 +27,13 @@
 
                             <td>
                                 <div class="btn-group">
-                                    <button routerLink="/lancamento/edit/{{item.id}}" type="button"
-                                        class="btn btn-outline-primary btn-sm botao-editar">
+                                    <button type="button" class="btn btn-outline-primary btn-sm botao-editar"
+                                        (click)="abrirEdicao(item.id)">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button routerLink="/lancamento/excluir/{{item.id}}" type="button"
-                                        class="btn btn-outline-danger btn-sm botao-remover">
+
+                                    <button type="button" class="btn btn-outline-danger btn-sm botao-remover"
+                                        (click)="abrirExclusao(item.id)">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>

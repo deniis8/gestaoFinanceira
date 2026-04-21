@@ -239,6 +239,7 @@ export class GraficosComponent implements OnInit {
       if (item && item.length > 0) {        
         this.detalhamentoGastosCC = item;
         this.popupAberto = true; //abre o pop-up
+        document.body.classList.add('no-scroll');
       }
     });
   }

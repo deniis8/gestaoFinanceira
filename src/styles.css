@@ -6,6 +6,9 @@
     color: #444;
 }
 
+body.no-scroll {
+  overflow: hidden;
+}
 
 .form-group {
     display: flex;

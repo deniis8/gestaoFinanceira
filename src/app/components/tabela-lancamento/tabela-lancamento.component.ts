@@ -161,6 +161,8 @@ export class TabelaLancamentoComponent {
           console.error('Erro ao gerar análise IA', error);
         }
       });
+
+      document.body.classList.add('no-scroll');
   }
 
 
@@ -173,5 +175,6 @@ export class TabelaLancamentoComponent {
 
   fecharPopup() {
     this.isPopupAberto = false;
+    document.body.classList.remove('no-scroll');
   }
 }
