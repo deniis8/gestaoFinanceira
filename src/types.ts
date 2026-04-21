@@ -85,3 +85,22 @@ export interface CentroCusto{
     deletado?: string;
     valorLimite: number;
 }
+
+export interface ConfiguracoesIA{
+    id?: number,
+	filtroDataDe: Date,
+	filtroDataAte: Date,
+	prompt: string,
+    idUsuario: number
+}
+
+export interface AnaliseFinanceiraIaRequest {
+  idUsuario: number;
+  dataDe: string;   // yyyy-MM-dd
+  dataAte: string;  // yyyy-MM-dd
+  textoAuxiliar: string;
+}
+
+export interface AnaliseFinanceiraIaResponse {
+  analiseIA: string;
+}

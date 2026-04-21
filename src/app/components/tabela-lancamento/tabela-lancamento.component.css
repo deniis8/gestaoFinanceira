@@ -1,3 +1,98 @@
+.ai-insight-card {
+  margin-top: 12px;
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    120deg,
+    #1dd1a1,
+    #54a0ff,
+    #5f27cd,
+    #00d2d3
+  );
+  background-size: 300% 300%;
+  animation: gradientMove 6s ease infinite;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ai-insight-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.25);
+}
+
+.ai-insight-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+
+.ai-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ai-subtitle {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.ai-icon {
+  font-size: 34px;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8))
+          drop-shadow(0 0 12px rgba(255, 255, 255, 0.6));
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+.spinner {
+  display: block;         
+  width: 32px;
+  height: 32px;
+  box-sizing: border-box; 
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.ai-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: all;
+}
+
+.loading-text{
+  color: white;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+
 /*
 Data de e Data até
 */
@@ -154,5 +249,3 @@ mat-form-field {
 /*
 Fim - Botão Inserir
 */
-
-
