@@ -13,7 +13,7 @@ import { AnaliseFinanceiraIaResponse, CentroCusto, Lancamento } from 'src/types'
   standalone: false
 })
 export class TabelaLancamentoComponent {
-  lancamentos: Lancamento[] = [];
+  //lancamentos: Lancamento[] = [];
   centroCustos: CentroCusto[] = [];
   dataDe: string = this.getDataDiasAtras(30);
   dataAte: string = this.getHoje();
@@ -35,10 +35,12 @@ export class TabelaLancamentoComponent {
   @Input() saldoValoresSelecionados: number = 0;
   @Input() despesasGraficoDonut: number = 0;
   @Input() receitasGraficoDonut: number = 0;
+  @Input() lancamentos: Lancamento[] = [];
   private idsInvalidos = new Set([19, 51]);
 
   htmlIa?: SafeHtml;
   isPopupAberto = false;
+  isCopiaAberto = false;
   isLoadingInsight = false;
 
   constructor(private lancamentoService: LancamentoService,
@@ -175,6 +177,17 @@ export class TabelaLancamentoComponent {
 
   fecharPopup() {
     this.isPopupAberto = false;
+    document.body.classList.remove('no-scroll');
+  }
+
+  abrirCopiarLancamentos() {
+    console.log("Abrindo popup de copiar lançamentos");
+    this.isCopiaAberto = true;
+    document.body.classList.add('no-scroll');
+  }
+
+  fecharCopiarLancamentos() {
+    this.isCopiaAberto = false;
     document.body.classList.remove('no-scroll');
   }
 }

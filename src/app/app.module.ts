@@ -48,6 +48,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { PopUpCentroCustoComponent } from "src/app/components/pop-up-centro-custo/pop-up-centro-custo.component";
 import { ConfiguracoesIaComponent } from './pages/configuracoes-ia/configuracoes-ia.component';
 import { PopUpIaComponent } from './components/pop-up-ia/pop-up-ia.component';
+import { CopiarLancamentosComponent } from './components/copiar-lancamentos/copiar-lancamentos.component';
 
 @NgModule({
     declarations: [
@@ -76,7 +77,8 @@ import { PopUpIaComponent } from './components/pop-up-ia/pop-up-ia.component';
         DonutChartComponent,
         PopUpCentroCustoComponent,
         ConfiguracoesIaComponent,
-        PopUpIaComponent
+        PopUpIaComponent,
+        CopiarLancamentosComponent
     ],
     bootstrap: [AppComponent], imports: [
     AppRoutingModule,

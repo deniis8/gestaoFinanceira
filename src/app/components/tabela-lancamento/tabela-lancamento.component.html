@@ -85,8 +85,8 @@
       <option *ngFor="let centroCusto of centroCustos" [value]="centroCusto.id">
         {{ centroCusto.descriCCusto }}
       </option>
-    </select>
-  </div>
+    </select>    
+  </div>    
 </div>
 
 <br>
@@ -138,6 +138,16 @@
     <button mat-fab color="primary" class="fab" routerLink="/lancamento/novo/">
       <mat-icon>add</mat-icon>
     </button>
+
+    <button mat-fab color="primary" class="btn-copiar" (click)="abrirCopiarLancamentos()">
+      <mat-icon>content_copy</mat-icon>
+    </button>
+
+    <app-copiar-lancamentos
+      *ngIf="isCopiaAberto"
+      [lancamentos]="lancamentos"
+      (fechar)="fecharCopiarLancamentos()">
+    </app-copiar-lancamentos>
 
   </div>
 </div>

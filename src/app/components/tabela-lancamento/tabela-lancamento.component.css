@@ -232,8 +232,17 @@ Botão Inserir
   bottom: 20px;
   right: 20px;
   z-index: 1000;
-  background-color: rgb(90, 165, 90);
+  background-color: rgb(90, 165, 90,0.8);
 }
+
+.btn-copiar {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  background-color: rgb(166, 177, 194, 0.8);
+}
+
 
 tr.status-verde td {
   background-color: #bbecc7 !important;
