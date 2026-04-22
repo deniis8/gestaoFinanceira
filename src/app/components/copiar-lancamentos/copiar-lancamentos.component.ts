@@ -86,12 +86,106 @@ export class CopiarLancamentosComponent {
       maximumFractionDigits: 2 
     })}`;
 
-    // Copiar para área de transferência
-    navigator.clipboard.writeText(textoParaCopiar).then(() => {
+    // Tentar copiar usando diferentes métodos
+    this.copiarParaClipboard(textoParaCopiar).then(() => {
       this.fecharPopup();
     }).catch(err => {
       console.error('Erro ao copiar para área de transferência:', err);
+      this.mostrarTextoParaCopiar(textoParaCopiar);
     });
+  }
+
+  private async copiarParaClipboard(texto: string): Promise<void> {
+    // Método 1: Usar navigator.clipboard (moderno)
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(texto);
+      return;
+    }
+
+    // Método 2: Fallback com document.execCommand
+    const textArea = document.createElement('textarea');
+    textArea.value = texto;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+      const successful = document.execCommand('copy');
+      if (!successful) {
+        throw new Error('Falha no execCommand');
+      }
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  }
+
+  private mostrarTextoParaCopiar(texto: string): void {
+    // Criar um modal ou alert com o texto para copiar manualmente
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    `;
+
+    const content = document.createElement('div');
+    content.style.cssText = `
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 70vh;
+      overflow-y: auto;
+    `;
+
+    content.innerHTML = `
+      <h3>Copie o texto abaixo:</h3>
+      <textarea style="width: 100%; height: 200px; margin: 10px 0; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace;" readonly>${texto}</textarea>
+      <div style="text-align: right;">
+        <button id="fechar-modal" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Fechar</button>
+      </div>
+    `;
+
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+
+    // Focar automaticamente no textarea
+    const textarea = content.querySelector('textarea') as HTMLTextAreaElement;
+    textarea.focus();
+    textarea.select();
+
+    // Função para fechar o modal
+    const fecharModal = () => {
+      if (document.body.contains(modal)) {
+        document.body.removeChild(modal);
+      }
+      this.fecharPopup();
+    };
+
+    // Evento para fechar com botão
+    const fecharBtn = content.querySelector('#fechar-modal') as HTMLButtonElement;
+    fecharBtn.onclick = fecharModal;
+
+    // Evento para fechar com ESC
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        fecharModal();
+        document.removeEventListener('keydown', handleKeyDown);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
   }
 
   fecharPopup() {
