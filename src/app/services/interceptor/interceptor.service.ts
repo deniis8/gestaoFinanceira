@@ -4,6 +4,7 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/login.service';
+import Swal from 'sweetalert2';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -24,6 +25,12 @@ export class AuthInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 && !req.url.includes('auth/login') && !req.url.includes('auth/refresh')) {
           return this.handle401Error(req, next);
+        } else if (error.status !== 401) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: `Erro na requisição: ${error.status}`
+          });
         }
         return throwError(() => error);
       })
