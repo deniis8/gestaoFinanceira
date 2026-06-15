@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfiguracoesIaService } from 'src/app/services/configuracoes-ia/configuracoes-ia.service';
+import { MensagensService } from 'src/app/services/mensagens/mensagens.service';
 import { ConfiguracoesIA } from 'src/types';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-configuracoes-ia',
@@ -16,7 +16,7 @@ export class ConfiguracoesIaComponent {
   public listaConfiguracoesIA: ConfiguracoesIA[] = [];
   @Output() onSubmit = new EventEmitter<ConfiguracoesIA>();
 
-  constructor(private configuracoesIAService: ConfiguracoesIaService) { }
+  constructor(private configuracoesIAService: ConfiguracoesIaService, private mensagensService: MensagensService) { }
 
   ngOnInit(): void {
     this.buscarConfiguracaoIA();
@@ -86,16 +86,11 @@ export class ConfiguracoesIaComponent {
     this.configuracoesIAService.putConfiguracaoIA(payload, idRegistro)
       .subscribe({
         next: () => {
-          Swal.fire({
-            icon: 'success',
-            text: 'Informações atualizadas com sucesso :)',
-          });
+          this.mensagensService.mensagem('success', undefined, 'Configurações de IA atualizadas com sucesso!', undefined);
         },
+        
         error: (error) => {
-          Swal.fire({
-            icon: 'error',
-            text: `O seguinte erro foi apresentado: ${error}`,
-          });
+          this.mensagensService.mensagem('error', undefined, 'O seguinte erro foi apresentado: ${error}', undefined);
         }
       });
   }

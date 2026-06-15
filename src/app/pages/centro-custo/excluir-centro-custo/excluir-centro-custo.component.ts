@@ -4,8 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
 import { LancamentoService } from 'src/app/services/lancamento/lancamento.service';
 import { LoginService } from 'src/app/services/login/login.service';
+import { MensagensService } from 'src/app/services/mensagens/mensagens.service';
 import { CentroCusto } from 'src/types';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-excluir-centro-custo',
@@ -19,7 +19,12 @@ export class ExcluirCentroCustoComponent implements OnInit {
   btnText: string = 'Remover';
   quantidade: Number = 0;
 
-  constructor(private centroCustoService: CentroCustoService, private lancamentoService: LancamentoService, private route: ActivatedRoute, private router: Router, private loginService: LoginService) {
+  constructor(private centroCustoService: CentroCustoService,
+    private lancamentoService: LancamentoService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private loginService: LoginService,
+    private mensagensService: MensagensService) {
 
   }
 
@@ -43,20 +48,19 @@ export class ExcluirCentroCustoComponent implements OnInit {
     const item = await firstValueFrom(this.lancamentoService.getExisteCentroCusto(idUsuario ?? '', idCentroCusto));
     this.quantidade = item.quantidade;
 
-    if(this.quantidade.valueOf() == 0){
+    if (this.quantidade.valueOf() == 0) {
       await this.centroCustoService.excluirCentroCusto(idCentroCusto).subscribe((result: any) => {
         this.router.navigate(['/centro-custo']);
       },
         (error) => {
           console.log("Erro");
         })
-    }else{
-      Swal.fire({
-        icon: 'warning',
-        title: 'Atenção',
-        text: `Esse centro de custo não pode ser excluído, pois ${this.quantidade === 1 ? 'existe ' : 'existem '} ${this.quantidade} ${this.quantidade === 1 ? 'lançamento ' : 'lançamentos '} ${this.quantidade === 1 ? 'atribuído' : 'atribuídos'} a ele.`,
-    });
-    }    
+    } else {
+      this.mensagensService.mensagem('warning',
+        'Atenção',
+        `Esse centro de custo não pode ser excluído, pois ${this.quantidade === 1 ? 'existe ' : 'existem '} ${this.quantidade} ${this.quantidade === 1 ? 'lançamento ' : 'lançamentos '} ${this.quantidade === 1 ? 'atribuído' : 'atribuídos'} a ele.`,
+        undefined);
+    }
   }
 
 }

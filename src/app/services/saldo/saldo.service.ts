@@ -5,7 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LoginService } from '../login/login.service';
 import { Saldo } from 'src/types';
-import Swal from 'sweetalert2';
+import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +13,13 @@ import Swal from 'sweetalert2';
 export class SaldoService {
   private baseApiUrl = environment.baseApiUrl;
 
-  constructor(private http: HttpClient, private loginService: LoginService) { }
+  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
 
   getSaldos(): Observable<Saldo>{
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<Saldo>(`${this.baseApiUrl}api/saldosinvestimentos/usuario/${idUsuario}`).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao buscar saldos: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar saldos: ${error.status}`, undefined);
         return throwError(error);
       })
     );

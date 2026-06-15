@@ -4,7 +4,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoginService } from '../login/login.service';
 import { Lancamento } from 'src/types';
-import Swal from 'sweetalert2';
+import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +12,13 @@ import Swal from 'sweetalert2';
 export class LancamentoService {
   private baseApiUrl = environment.baseApiUrl;
 
-  constructor(private http: HttpClient, private loginService: LoginService) { }
+  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
 
   getAllLancamentos(): Observable<Lancamento[]> {
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/usuario/${idUsuario}`).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao buscar Lançamentos: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar Lançamentos: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -31,11 +27,7 @@ export class LancamentoService {
   getLancamentoPorId(id: Number): Observable<Lancamento> {
     return this.http.get<Lancamento>(`${this.baseApiUrl}api/lancamentos/${id}`).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao buscar lançamento: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamento: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -47,11 +39,7 @@ export class LancamentoService {
     console.log(url);
     return this.http.get<Lancamento[]>(url).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao buscar Lançamentos: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar Lançamentos: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -59,7 +47,7 @@ export class LancamentoService {
 
   postLancamento(formData: FormData): Observable<any> {
     var dataLancamento = new Date(formData.getAll("dataHora").toString() + "Z");
-    var data = { 
+    var data = {
       dataHora: dataLancamento,
       valor: Number(formData.getAll("valor")),
       descricao: formData.getAll("descricao").toString().trim(),
@@ -69,30 +57,22 @@ export class LancamentoService {
     };
 
     console.log(data);
-    
+
     return this.http.post<any>(`${this.baseApiUrl}api/lancamentos`, data).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao criar lançamento: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao criar lançamento: ${error.status}`, undefined);
         return throwError(error);
       })
     );
   }
 
   excluirLancamento(id: Number): Observable<any> {
-    var data = { 
+    var data = {
       deletado: '*'
     };
     return this.http.put(`${this.baseApiUrl}api/lancamentos/del/${id}`, data).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao excluir lançamento: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao excluir lançamento: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -101,7 +81,7 @@ export class LancamentoService {
   putLancamento(id: Number, formData: FormData): Observable<any> {
     var dataLancamento = new Date(formData.getAll("dataHora").toString() + "Z");
     console.log(Number(formData.getAll("valor")));
-    var data = { 
+    var data = {
       dataHora: dataLancamento,
       valor: Number(formData.getAll("valor")),
       descricao: formData.getAll("descricao").toString().trim(),
@@ -112,24 +92,16 @@ export class LancamentoService {
 
     return this.http.put<any>(`${this.baseApiUrl}api/lancamentos/${id}`, data).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao atualizar lançamento: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao atualizar lançamento: ${error.status}`, undefined);
         return throwError(error);
       })
     );
   }
 
-  getExisteCentroCusto(idUsuario: string, idCentroCusto: Number): Observable<any>{
+  getExisteCentroCusto(idUsuario: string, idCentroCusto: Number): Observable<any> {
     return this.http.get<any>(`${this.baseApiUrl}api/lancamentos/usuario/${idUsuario}/idcentrocusto/${idCentroCusto}`).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao verificar centro de custo: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao verificar centro de custo: ${error.status}`, undefined);
         return throwError(error);
       })
     );

@@ -4,7 +4,7 @@ import { LoginService } from '../login/login.service';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LancamentoFixo } from 'src/types';
-import Swal from 'sweetalert2';
+import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +12,13 @@ import Swal from 'sweetalert2';
 export class LancamentoFixoService {
   
   private baseApiUrl = environment.baseApiUrl;
-  constructor(private http: HttpClient, private loginService: LoginService) { }
+  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
 
   getAllLancamentosFixos(): Observable<LancamentoFixo[]> {
       const idUsuario = this.loginService.getIdUsuario();
       return this.http.get<LancamentoFixo[]>(`${this.baseApiUrl}api/lancamentosfixos/usuario/${idUsuario}`).pipe(
         catchError(error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: `Erro ao buscar lançamentos fixos: ${error.status}`
-          });
+          this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamentos fixos: ${error.status}`, undefined);
           return throwError(error);
         })
       );
@@ -31,11 +27,7 @@ export class LancamentoFixoService {
     getLancamentoFixoPorId(id: Number): Observable<LancamentoFixo> {
       return this.http.get<LancamentoFixo>(`${this.baseApiUrl}api/lancamentosfixos/${id}`).pipe(
         catchError(error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: `Erro ao buscar lançamento fixo: ${error.status}`
-          });
+          this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamento fixo: ${error.status}`, undefined);
           return throwError(error);
         })
       );
@@ -55,11 +47,7 @@ export class LancamentoFixoService {
       
       return this.http.post<any>(`${this.baseApiUrl}api/lancamentosfixos`, data).pipe(
         catchError(error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: `Erro ao criar lançamento fixo: ${error.status}`
-          });
+          this.mensagensService.mensagem('error', 'Erro', `Erro ao criar lançamento fixo: ${error.status}`, undefined);
           return throwError(error);
         })
       );
@@ -71,11 +59,7 @@ export class LancamentoFixoService {
       };
       return this.http.put(`${this.baseApiUrl}api/lancamentosfixos/del/${id}`, data).pipe(
         catchError(error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: `Erro ao excluir lançamento fixo: ${error.status}`
-          });
+          this.mensagensService.mensagem('error', 'Erro', `Erro ao excluir lançamento fixo: ${error.status}`, undefined);
           return throwError(error);
         })
       );
@@ -93,11 +77,7 @@ export class LancamentoFixoService {
   
       return this.http.put<any>(`${this.baseApiUrl}api/lancamentosfixos/${id}`, data).pipe(
         catchError(error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: `Erro ao atualizar lançamento fixo: ${error.status}`
-          });
+          this.mensagensService.mensagem('error', 'Erro', `Erro ao atualizar lançamento fixo: ${error.status}`, undefined);
           return throwError(error);
         })
       );
