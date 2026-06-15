@@ -4,14 +4,14 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { LoginService } from '../login/login.service';
-import Swal from 'sweetalert2';
+import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-  constructor(private loginService: LoginService, private router: Router) {}
+  constructor(private loginService: LoginService, private router: Router, private mensagensService: MensagensService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const authToken = this.loginService.getAuthToken();
@@ -26,11 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401 && !req.url.includes('auth/login') && !req.url.includes('auth/refresh')) {
           return this.handle401Error(req, next);
         } else if (error.status !== 401) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: `Erro na requisição: ${error.status}`
-          });
+          this.mensagensService.mensagem('error', 'Erro', `Erro na requisição: ${error.status}`, undefined);
         }
         return throwError(() => error);
       })

@@ -4,7 +4,6 @@ import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/g
 import { GastosMensaisService } from 'src/app/services/gastos-mensais/gastos-mensais.service';
 import { getColorForSobra } from '../../utils/colors';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-graficos',

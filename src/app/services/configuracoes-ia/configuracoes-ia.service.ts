@@ -4,7 +4,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AnaliseFinanceiraIaResponse, ConfiguracoesIA } from 'src/types';
 import { LoginService } from '../login/login.service';
-import Swal from 'sweetalert2';
+import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +13,13 @@ export class ConfiguracoesIaService {
 
   private baseApiUrl = environment.baseApiUrl;
 
-  constructor(private http: HttpClient, private loginService: LoginService) { }
+  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
 
   getConfiguracaoIA(): Observable<ConfiguracoesIA> {
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<ConfiguracoesIA>(`${this.baseApiUrl}api/configuracoesia/usuario/${idUsuario}`).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao buscar configurações IA: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar configurações IA: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -39,11 +35,7 @@ export class ConfiguracoesIaService {
       }
     ).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao atualizar configurações IA: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao atualizar configurações IA: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -67,11 +59,7 @@ export class ConfiguracoesIaService {
       body
     ).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao analisar finanças com IA: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao analisar finanças com IA: ${error.status}`, undefined);
         return throwError(error);
       })
     );

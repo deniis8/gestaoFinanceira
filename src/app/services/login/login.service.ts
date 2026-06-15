@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, switchMap, tap, catchError, throwError } from 'rxjs';
+import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import Swal from 'sweetalert2';
+import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 export class LoginService {
   private baseApiUrl = environment.baseApiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private mensagensService: MensagensService) { }
 
   postLogin(loginData: { email: string, senha: string }): Observable<any> {
     console.log(loginData);
@@ -20,11 +20,7 @@ export class LoginService {
         this.storeTokens(response);
       }),
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro no login: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro no login: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -59,11 +55,7 @@ export class LoginService {
       { withCredentials: true } // Permite enviar os cookies automaticamente, se necessário
     ).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao renovar token: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao renovar token: ${error.status}`, undefined);
         return throwError(error);
       })
     );

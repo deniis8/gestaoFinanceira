@@ -1,10 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoginService } from '../login/login.service';
 import { CentroCusto } from 'src/types';
-import Swal from 'sweetalert2';
+import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +13,13 @@ export class CentroCustoService {
 
   private baseApiUrl = environment.baseApiUrl;
   
-  constructor(private http: HttpClient, private loginService: LoginService) { }
+  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
   
   getAllCentroCustos(): Observable<CentroCusto[]>{
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<CentroCusto[]>(`${this.baseApiUrl}api/centrocustos/usuario/${idUsuario}`).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao buscar centros de custo: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar centros de custo: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -32,11 +28,7 @@ export class CentroCustoService {
   getIdCentroCustos(id: Number): Observable<CentroCusto>{
     return this.http.get<CentroCusto>(`${this.baseApiUrl}api/centrocustos/${id}`).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao buscar centro de custo: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar centro de custo: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -52,11 +44,7 @@ export class CentroCustoService {
     console.log(data);   
     return this.http.post<any>(`${this.baseApiUrl}api/centrocustos`, data).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao criar centro de custo: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao criar centro de custo: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -70,11 +58,7 @@ export class CentroCustoService {
 
     return this.http.put<any>(`${this.baseApiUrl}api/centrocustos/${id}`, data).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao atualizar centro de custo: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao atualizar centro de custo: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -86,11 +70,7 @@ export class CentroCustoService {
     };
     return this.http.put(`${this.baseApiUrl}api/centrocustos/del/${id}`, data).pipe(
       catchError(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Erro',
-          text: `Erro ao excluir centro de custo: ${error.status}`
-        });
+        this.mensagensService.mensagem('error', 'Erro', `Erro ao excluir centro de custo: ${error.status}`, undefined);
         return throwError(error);
       })
     );

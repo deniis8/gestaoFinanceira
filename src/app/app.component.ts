@@ -1,6 +1,7 @@
 import { Router, NavigationEnd } from '@angular/router';
 import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { LoginService } from './services/login/login.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,7 @@ export class AppComponent {
   title = 'gestaoFinanceira';
   showHeaderFooter = true; // Define se o header e footer devem ser exibidos
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private loginService: LoginService) {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.showHeaderFooter = event.url !== '/login'; // Atualiza com base na URL
@@ -38,8 +39,6 @@ export class AppComponent {
   }
 
   selectSair(): void {
-    sessionStorage.removeItem('authToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('idUsuario');
+    this.loginService.logout();
   }
 }
