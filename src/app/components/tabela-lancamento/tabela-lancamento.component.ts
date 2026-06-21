@@ -15,7 +15,7 @@ import { AnaliseFinanceiraIaResponse, CentroCusto, Lancamento } from 'src/types'
 export class TabelaLancamentoComponent {
   //lancamentos: Lancamento[] = [];
   centroCustos: CentroCusto[] = [];
-  dataDe: string = this.getDataDiasAtras(30);
+  dataDe: string = ""; //this.getDataDiasAtras(30);
   dataAte: string = this.getHoje();
 
   isAPagarChecked = true;
@@ -51,8 +51,17 @@ export class TabelaLancamentoComponent {
 
   ngOnInit(): void {
     this.filtroStatus = this.agrupaStatus();
-    this.lancamentoService.getLancamentoDataDeAte(this.dataDe, this.dataAte, this.filtroStatus, this.filtroCentroCusto).subscribe((lancamentos) => {
-      if (lancamentos != null) {
+    //this.lancamentoService.getLancamentoDataDeAte(this.dataDe, this.dataAte, this.filtroStatus, this.filtroCentroCusto).subscribe((lancamentos) => {
+    this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => {
+      if (lancamentos != null && lancamentos.length > 0) {
+
+        const data = new Date(
+          lancamentos[lancamentos.length - 1].dataHora
+        );
+
+        this.dataDe = data.toISOString().split('T')[0];
+
+        console.log("Data de início definida para: " + this.dataDe);
         for (let i = 0; i < lancamentos.length; i++) {
           this.lancamentos.push(lancamentos[i]);
           this.saldoValoresSelecionados += lancamentos[i].valor;
@@ -164,7 +173,7 @@ export class TabelaLancamentoComponent {
         }
       });
 
-      document.body.classList.add('no-scroll');
+    document.body.classList.add('no-scroll');
   }
 
 
