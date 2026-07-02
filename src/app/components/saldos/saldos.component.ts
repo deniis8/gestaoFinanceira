@@ -9,9 +9,13 @@ import { Saldo } from 'src/types';
     standalone: false
 })
 export class SaldosComponent {
-  @Input() saldoValoresSelecionados: number = 0;
+  @Input() valorAPagar: number = 0;
+  @Input() valorPago: number = 0;
+  @Input() valorAReceber: number = 0;
+  @Input() valorRecebido: number = 0;
   @Input() despesasGraficoDonut!: number;
   @Input() receitasGraficoDonut!: number;
+  @Input() isLoading: boolean = true;
   saldo: Saldo | undefined;
 
   constructor(private saldoService: SaldoService) {
@@ -20,7 +24,6 @@ export class SaldosComponent {
   ngOnInit(): void {
     this.saldoService.getSaldos().subscribe((item) => {
       this.saldo = item;
-      console.log(this.saldo);
-    })
+    });
   }
 }

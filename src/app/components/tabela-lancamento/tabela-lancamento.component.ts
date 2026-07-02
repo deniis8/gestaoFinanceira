@@ -13,7 +13,6 @@ import { AnaliseFinanceiraIaResponse, CentroCusto, Lancamento } from 'src/types'
   standalone: false
 })
 export class TabelaLancamentoComponent {
-  //lancamentos: Lancamento[] = [];
   centroCustos: CentroCusto[] = [];
   dataDe: string = ""; //this.getDataDiasAtras(30);
   dataAte: string = this.getHoje();
@@ -32,10 +31,14 @@ export class TabelaLancamentoComponent {
 
   filtroCentroCusto = 0;
 
-  @Input() saldoValoresSelecionados: number = 0;
+  @Input() valorAPagar: number = 0;
+  @Input() valorPago: number = 0;
+  @Input() valorAReceber: number = 0;
+  @Input() valorRecebido: number = 0;
   @Input() despesasGraficoDonut: number = 0;
   @Input() receitasGraficoDonut: number = 0;
   @Input() lancamentos: Lancamento[] = [];
+  @Input() isLoading: boolean = true;
   private idsInvalidos = new Set([19, 51]);
 
   htmlIa?: SafeHtml;
@@ -51,7 +54,6 @@ export class TabelaLancamentoComponent {
 
   ngOnInit(): void {
     this.filtroStatus = this.agrupaStatus();
-    //this.lancamentoService.getLancamentoDataDeAte(this.dataDe, this.dataAte, this.filtroStatus, this.filtroCentroCusto).subscribe((lancamentos) => {
     this.lancamentoService.getAllLancamentos().subscribe((lancamentos) => {
       if (lancamentos != null && lancamentos.length > 0) {
 
@@ -64,7 +66,10 @@ export class TabelaLancamentoComponent {
         console.log("Data de início definida para: " + this.dataDe);
         for (let i = 0; i < lancamentos.length; i++) {
           this.lancamentos.push(lancamentos[i]);
-          this.saldoValoresSelecionados += lancamentos[i].valor;
+          this.valorAPagar += lancamentos[i].status === "A Pagar" ? lancamentos[i].valor : 0;
+          this.valorPago += lancamentos[i].status === "Pago" ? lancamentos[i].valor : 0;
+          this.valorAReceber += lancamentos[i].status === "A Receber" ? lancamentos[i].valor : 0;
+          this.valorRecebido += lancamentos[i].status === "Recebido" ? lancamentos[i].valor : 0;
           if (this.lancamentos[i].status === "Pago" && !this.idsInvalidos.has(this.lancamentos[i].idCCusto)) {
             this.despesasGraficoDonut += lancamentos[i].valor;
           }
@@ -72,6 +77,7 @@ export class TabelaLancamentoComponent {
             this.receitasGraficoDonut += lancamentos[i].valor;
           }
         }
+        this.isLoading = false;
       }
     });
 
@@ -96,7 +102,10 @@ export class TabelaLancamentoComponent {
 
   filtroData(): void {
 
-    this.saldoValoresSelecionados = 0;
+    this.valorAPagar = 0;
+    this.valorPago = 0;
+    this.valorAReceber = 0;
+    this.valorRecebido = 0;
     this.despesasGraficoDonut = 0;
     this.receitasGraficoDonut = 0;
     this.filtroStatus = this.agrupaStatus();
@@ -107,7 +116,10 @@ export class TabelaLancamentoComponent {
         this.lancamentos = item;
         if (this.lancamentos != null) {
           for (let i = 0; i < this.lancamentos.length; i++) {
-            this.saldoValoresSelecionados += this.lancamentos[i].valor;
+            this.valorAPagar += this.lancamentos[i].status === "A Pagar" ? this.lancamentos[i].valor : 0;
+            this.valorPago += this.lancamentos[i].status === "Pago" ? this.lancamentos[i].valor : 0;
+            this.valorAReceber += this.lancamentos[i].status === "A Receber" ? this.lancamentos[i].valor : 0;
+            this.valorRecebido += this.lancamentos[i].status === "Recebido" ? this.lancamentos[i].valor : 0;
 
             if (this.lancamentos[i].status === "Pago" && !this.idsInvalidos.has(this.lancamentos[i].idCCusto)) {
               this.despesasGraficoDonut += this.lancamentos[i].valor;
@@ -116,6 +128,7 @@ export class TabelaLancamentoComponent {
               this.receitasGraficoDonut += this.lancamentos[i].valor;
             }
           }
+          this.isLoading = false;
         }
       });
     }

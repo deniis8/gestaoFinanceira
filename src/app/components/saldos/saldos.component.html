@@ -1,30 +1,73 @@
-<div class="container-saldos">
+<div class="container-saldos" *ngIf="isLoading; else saldosContent">
   <div class="container-saldos-superior">
-    <div class="quadrantes-saldos">
-      <p class="titulo-saldos">Saldo</p>
-      <strong class="resultado-saldos">R$ {{ saldo?.saldo | formatValor }}</strong>
-    </div>
-
-    <div class="quadrantes-saldos">
-      <p class="titulo-saldos">Invest. Fixo</p>
-      <strong class="resultado-saldos">R$ {{ saldo?.investimentoFixo | formatValor }}</strong>
-    </div>
-
-    <div class="quadrantes-saldos">
-      <p class="titulo-saldos">Invest. Variável</p>
-      <strong class="resultado-saldos">R$ {{ saldo?.investimentoVariavel | formatValor }}</strong>
+    <div class="quadrantes-saldos skeleton-card" *ngFor="let item of [1, 2, 3]">
+      <div class="skeleton-line skeleton-line-title"></div>
+      <div class="skeleton-line skeleton-line-value"></div>
     </div>
   </div>
 
   <div class="container-saldos-inferior">
-    <div class="quadrante-saldos-saldo-filtro">
-      <p class="titulo-saldos">Valor do filtro</p>
-      <strong class="resultado-saldos">R$ {{ saldoValoresSelecionados | formatValor }}</strong>
+    <div class="quadrante-saldos-saldo-filtro skeleton-card" *ngFor="let item of [1, 2, 3, 4]">
+      <div class="skeleton-line skeleton-line-title"></div>
+      <div class="skeleton-line skeleton-line-value"></div>
+    </div>
+    <div class="quadrante-saldos-grafico skeleton-chart">
+      <div class="skeleton-ring"></div>
+    </div>
+  </div>
+</div>
+
+<ng-template #saldosContent>
+  <div class="container-saldos">
+    <div class="container-saldos-superior">
+      <div class="quadrantes-saldos">
+        <p class="titulo-saldos">Saldo</p>
+        <strong class="resultado-saldos">R$ {{ saldo?.saldo | formatValor }}</strong>
+      </div>
+
+      <div class="quadrantes-saldos">
+        <p class="titulo-saldos">Invest. Fixo</p>
+        <strong class="resultado-saldos">R$ {{ saldo?.investimentoFixo | formatValor }}</strong>
+      </div>
+
+      <div class="quadrantes-saldos">
+        <p class="titulo-saldos">Invest. Variável</p>
+        <strong class="resultado-saldos">R$ {{ saldo?.investimentoVariavel | formatValor }}</strong>
+      </div>
     </div>
 
-    <app-donut-chart class="quadrante-saldos-grafico" [despesasGraficoDonut]="despesasGraficoDonut"
-      [receitasGraficoDonut]="receitasGraficoDonut">
-    </app-donut-chart>
-  </div>
+    <div class="container-saldos-inferior">
+      <div class="quadrante-saldos-saldo-filtro">
+        <div class="sessao-saldo-filtro">
+          <p class="filtro-titulo-saldos">A pagar</p>
+          <strong class="filtro-resultado-saldos">R$ {{ valorAPagar | formatValor }}</strong>
+        </div>
+      </div>
 
-</div>
+      <div class="quadrante-saldos-saldo-filtro">
+        <div class="sessao-saldo-filtro">
+          <p class="filtro-titulo-saldos">Pago</p>
+          <strong class="filtro-resultado-saldos">R$ {{ valorPago | formatValor }}</strong>
+        </div>
+      </div>
+
+      <div class="quadrante-saldos-saldo-filtro">
+        <div class="sessao-saldo-filtro">
+          <p class="filtro-titulo-saldos">A receber</p>
+          <strong class="filtro-resultado-saldos">R$ {{ valorAReceber | formatValor }}</strong>
+        </div>
+      </div>
+
+      <div class="quadrante-saldos-saldo-filtro">
+        <div class="sessao-saldo-filtro">
+          <p class="filtro-titulo-saldos">Recebido</p>
+          <strong class="filtro-resultado-saldos">R$ {{ valorRecebido | formatValor }}</strong>
+        </div>
+      </div>
+
+      <app-donut-chart class="quadrante-saldos-grafico" [despesasGraficoDonut]="despesasGraficoDonut"
+        [receitasGraficoDonut]="receitasGraficoDonut">
+      </app-donut-chart>
+    </div>
+  </div>
+</ng-template>

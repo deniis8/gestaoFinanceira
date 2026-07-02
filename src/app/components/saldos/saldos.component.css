@@ -35,20 +35,32 @@
 
 .quadrante-saldos-saldo-filtro {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 60px;
+  min-width: 0;
+  min-height: 60px;
   border-radius: 8px;
   background-color: #E6E7EB;
   padding: 10px;
+  flex: 1;
+}
+
+.sessao-saldo-filtro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 100%;
+  text-align: center;
 }
 
 .quadrantes-saldos p,
 .quadrantes-saldos strong,
 .quadrante-saldos-saldo-filtro p,
-.quadrante-saldos-saldo-filtro strong {
+.quadrante-saldos-saldo-filtro strong,
+.sessao-saldo-filtro p,
+.sessao-saldo-filtro strong {
   margin: 0;
   padding: 0;
   padding-top: 6px;
@@ -59,6 +71,14 @@
   font-size: 14px;
 }
 
+.filtro-titulo-saldos {
+  font-size: 11px;
+}
+
+.filtro-resultado-saldos {
+  font-size: 12px;
+}
+
 .resultado-saldos {
   font-size: 15px;
 }
@@ -66,4 +86,78 @@
 .quadrante-saldos-grafico {
   background-color: rgba(215, 216, 220, 0.81);
   border-radius: 8px;
+}
+
+.skeleton-card,
+.skeleton-chart {
+  position: relative;
+  overflow: hidden;
+  background-color: #d9dbe2;
+}
+
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 74px;
+  min-width: 50px;
+  padding: 12px;
+}
+
+.skeleton-chart {
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skeleton-line {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c8cad3, #e3e5eb, #c8cad3);
+  animation: skeleton-shimmer 1.2s infinite;
+}
+
+.skeleton-line-title {
+  width: 65%;
+  height: 12px;
+}
+
+.skeleton-line-value {
+  width: 85%;
+  height: 12px;
+}
+
+.skeleton-ring {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  border: 10px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  animation: skeleton-spin 1s linear infinite;
+}
+
+.skeleton-card::before,
+.skeleton-chart::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transform: translateX(-100%);
+  animation: skeleton-shimmer 1.2s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes skeleton-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
