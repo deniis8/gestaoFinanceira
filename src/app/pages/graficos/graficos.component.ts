@@ -38,6 +38,7 @@ export class GraficosComponent implements OnInit {
 
   loadingGastosMensais = true;
   loadingCentrosCusto = true;
+  mesAnoSelecionado: string | null = null;
 
   constructor(private saldoService: GastosMensaisService,
     private gastosCentroCustoService: GastosCentroCustoService,
@@ -76,6 +77,7 @@ export class GraficosComponent implements OnInit {
     this.gGMCordoQuadrante = [];
     this.gGMDataValorRecebidoMes = [];
     this.centrosCustoVisual = [];
+    this.mesAnoSelecionado = null;
 
     // chamar API filtrada
     this.buscarInformacoesGastosMensais(dataDe, dataAte);
@@ -84,6 +86,11 @@ export class GraficosComponent implements OnInit {
 
   temRegistro(index: number): boolean {
     return !!this.gGMCordoQuadrante[index];
+  }
+
+  selecionarMes(mesAno: string): void {
+    this.mesAnoSelecionado = mesAno;
+    this.buscarInformacoesCentroCusto(mesAno);
   }
 
   buscarInformacoesGastosMensais(dataDe: string, dataAte: string) {
@@ -103,6 +110,7 @@ export class GraficosComponent implements OnInit {
       }
       this.loadingGastosMensais = false;
       const ultimoMes = this.gGMMesAno[this.gGMMesAno.length - 1];
+      this.mesAnoSelecionado = ultimoMes;
       this.buscarInformacoesCentroCusto(ultimoMes);
     });
   }

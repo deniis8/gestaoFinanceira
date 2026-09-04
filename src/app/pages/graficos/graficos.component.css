@@ -78,6 +78,18 @@ Gráfico Calendário
     cursor: pointer;
 }
 
+.quadrante:hover {
+    border: 2px solid #4e78b8;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.quadrante-selecionado {
+  border: 2px solid #4e78b8;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
 .nome-mes {
     display: flex;
     align-items: center;

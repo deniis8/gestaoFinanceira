@@ -51,8 +51,9 @@
               <ng-container *ngIf="temRegistro(l * 4 + c); else semRegistro">
 
                   <div class="quadrante"
+                       [class.quadrante-selecionado]="gGMMesAno[l * 4 + c] === mesAnoSelecionado"
                        [style.backgroundColor]="gGMCordoQuadrante[l * 4 + c]"
-                       (click)="buscarInformacoesCentroCusto(gGMMesAno[l * 4 + c])">
+                       (click)="selecionarMes(gGMMesAno[l * 4 + c])">
 
                       <strong class="nome-mes">
                           {{ gGMLabelMes[l * 4 + c] }}
