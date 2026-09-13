@@ -20,14 +20,14 @@ export class GastosMensaisService {
     if (dataDe && dataAte) {
       return this.http.get<GastosMensais[]>(`${this.baseApiUrl}api/gastosmensais?idUsuario=${idUsuario}&dataDe=${dataDe}&dataAte=${dataAte}`).pipe(
         catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar gastos mensais: ${error.status}`, undefined);
+          //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar gastos mensais: ${error.status}`, undefined);
           return throwError(error);
         })
       );
     } else {
       return this.http.get<GastosMensais[]>(`${this.baseApiUrl}api/gastosmensais?idUsuario=${idUsuario}`).pipe(
         catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar gastos mensais: ${error.status}`, undefined);
+          //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar gastos mensais: ${error.status}`, undefined);
           return throwError(error);
         })
       );

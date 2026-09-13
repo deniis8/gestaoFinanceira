@@ -18,7 +18,7 @@ export class LancamentoFixoService {
       const idUsuario = this.loginService.getIdUsuario();
       return this.http.get<LancamentoFixo[]>(`${this.baseApiUrl}api/lancamentosfixos/usuario/${idUsuario}`).pipe(
         catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamentos fixos: ${error.status}`, undefined);
+          //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamentos fixos: ${error.status}`, undefined);
           return throwError(error);
         })
       );
@@ -27,7 +27,7 @@ export class LancamentoFixoService {
     getLancamentoFixoPorId(id: Number): Observable<LancamentoFixo> {
       return this.http.get<LancamentoFixo>(`${this.baseApiUrl}api/lancamentosfixos/${id}`).pipe(
         catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamento fixo: ${error.status}`, undefined);
+          //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamento fixo: ${error.status}`, undefined);
           return throwError(error);
         })
       );

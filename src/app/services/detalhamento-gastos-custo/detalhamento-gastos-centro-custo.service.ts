@@ -19,7 +19,7 @@ export class DetalhamentoGastosCentroCustoService {
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<DetalhamentoGastosCentroCusto[]>(`${this.baseApiUrl}api/detalhamentogastoscentrocustos/descricaoCC?idUsuario=${idUsuario}&mesAno=${mesAno}&descCC=${descCC}`).pipe(
       catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar detalhamento de gastos: ${error.status}`, undefined);
+        //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar detalhamento de gastos: ${error.status}`, undefined);
         return throwError(error);
       })
     );

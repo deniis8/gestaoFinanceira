@@ -18,7 +18,7 @@ export class LancamentoService {
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/usuario/${idUsuario}`).pipe(
       catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar Lançamentos: ${error.status}`, undefined);
+        //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar Lançamentos: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -27,7 +27,7 @@ export class LancamentoService {
   getLancamentoPorId(id: Number): Observable<Lancamento> {
     return this.http.get<Lancamento>(`${this.baseApiUrl}api/lancamentos/${id}`).pipe(
       catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamento: ${error.status}`, undefined);
+        //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamento: ${error.status}`, undefined);
         return throwError(error);
       })
     );
@@ -39,7 +39,7 @@ export class LancamentoService {
     console.log(url);
     return this.http.get<Lancamento[]>(url).pipe(
       catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar Lançamentos: ${error.status}`, undefined);
+        //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar Lançamentos: ${error.status}`, undefined);
         return throwError(error);
       })
     );

@@ -19,7 +19,7 @@ export class SaldoService {
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<Saldo>(`${this.baseApiUrl}api/saldosinvestimentos/usuario/${idUsuario}`).pipe(
       catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar saldos: ${error.status}`, undefined);
+        //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar saldos: ${error.status}`, undefined);
         return throwError(error);
       })
     );

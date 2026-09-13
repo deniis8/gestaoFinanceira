@@ -45,7 +45,7 @@ export class LoginComponent {
           });
 
           this.isLoading = false;
-          this.router.navigate(['/home']);
+          this.router.navigate(['/']);
         } else {
           this.loginError = 'E-mail ou senha inválidos.'; // Mensagem para erro inesperado
           this.isLoading = false;

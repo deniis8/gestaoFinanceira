@@ -19,7 +19,7 @@ export class CentroCustoService {
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<CentroCusto[]>(`${this.baseApiUrl}api/centrocustos/usuario/${idUsuario}`).pipe(
       catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar centros de custo: ${error.status}`, undefined);
+        //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar centros de custo: ${error.status}`, undefined);
         return throwError(error);
       })
     );

@@ -39,7 +39,7 @@ export class NovoLancamentoComponent implements OnInit{
     console.log(formData.getAll("idCCusto"));
     console.log(formData.getAll("idUsuario"));
     await this.lancamentoService.postLancamento(formData).subscribe((result: any) => {
-      this.router.navigate(['/home']);
+      this.router.navigate(['/']);
     },
       (error) => {
         console.log("Erro");

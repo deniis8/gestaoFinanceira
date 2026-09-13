@@ -19,7 +19,7 @@ export class ConfiguracoesIaService {
     const idUsuario = this.loginService.getIdUsuario();
     return this.http.get<ConfiguracoesIA>(`${this.baseApiUrl}api/configuracoesia/usuario/${idUsuario}`).pipe(
       catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar configurações IA: ${error.status}`, undefined);
+        //this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar configurações IA: ${error.status}`, undefined);
         return throwError(error);
       })
     );
