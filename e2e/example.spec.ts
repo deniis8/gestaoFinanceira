@@ -1,0 +1,34 @@
+import { test, expect } from '@playwright/test';
+
+test('test', async ({ page }) => {
+  await page.goto('http://localhost:4200/');
+  await page.getByRole('button').click();
+  await page.getByRole('link', { name: 'Sair' }).click();
+  await page.getByRole('textbox', { name: 'E-mail' }).click();
+  await page.getByRole('textbox', { name: 'E-mail' }).fill('email');
+  await page.getByRole('textbox', { name: 'E-mail' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Senha' }).fill('senha');
+  await page.getByRole('button', { name: 'Entrar' }).click();
+  await page.getByRole('button').nth(1).click();
+  await page.locator('button').click();
+  await page.getByRole('link', { name: 'Lançamentos', exact: true }).click();
+  await page.getByRole('button').filter({ hasText: 'menu' }).click();
+  await page.getByRole('link', { name: 'Gráficos' }).click();
+  await page.getByText('= R$ 1035.6').click();
+  await page.getByText('- R$ 10070.79').click();
+  await page.getByText('Agosto + R$ 7981.98 - R$ 8066').click();
+  await page.getByText('Abril + R$ 11330.21 - R$').click();
+  await page.getByText('= R$ -1278.27').click();
+  await page.getByText('= R$ -868.57').click();
+  await page.getByText('= R$ -8217.94').click();
+  await page.getByRole('button').filter({ hasText: 'menu' }).click();
+  await page.getByRole('link', { name: 'Centros de Custo' }).click();
+  await page.getByRole('button').filter({ hasText: 'menu' }).click();
+  await page.getByRole('link', { name: 'Lançamentos Fixos' }).click();
+  await page.getByRole('button').filter({ hasText: 'menu' }).click();
+  await page.getByRole('link', { name: 'Configurações IA' }).click();
+  await page.getByRole('button').filter({ hasText: 'menu' }).click();
+  await page.getByRole('link', { name: 'Lançamentos', exact: true }).click();
+  await page.getByRole('button').filter({ hasText: 'menu' }).click();
+  await page.getByRole('link', { name: 'Sair' }).click();
+});
