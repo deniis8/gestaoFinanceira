@@ -1,258 +1,205 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, catchError, map, of, switchMap, tap } from 'rxjs';
+
+import { PopUpCentroCustoComponent } from 'src/app/components/pop-up-centro-custo/pop-up-centro-custo.component';
+import { MESES_ABREV } from 'src/app/core/constantes';
+import { FormatValorPipe } from 'src/app/pipes/format-valor.pipe';
 import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-custo/detalhamento-gastos-centro-custo.service';
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/gastos-centro-custo.service';
 import { GastosMensaisService } from 'src/app/services/gastos-mensais/gastos-mensais.service';
-import { getColorForSobra } from '../../utils/colors';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LancamentoService } from 'src/app/services/lancamento/lancamento.service';
+import { MensagensService } from 'src/app/services/mensagens/mensagens.service';
+import { getColorForSobra } from 'src/app/utils/colors';
+import { formatarValor } from 'src/app/utils/moeda';
+import { DetalhamentoGastosCentroCusto, GastosCentroCusto, GastosMensais } from 'src/types';
+
+interface MesResumo {
+  mes: string;
+  abreviacao: string;
+  ano: number;
+  /** Texto que a API espera para buscar o mês: "Setembro - 2025". */
+  mesAno: string;
+  gasto: number;
+  recebido: number;
+  sobra: number;
+  cor: string;
+}
+
+type ClasseLimite = 'ok' | 'alerta' | 'estourado';
+
+interface CentroVisual {
+  descricao: string;
+  gasto: number;
+  limite: number;
+  mesAno: string;
+  valorMesAnterior: number;
+  percentual: number;
+  /** Percentual arredondado, para exibir. */
+  pct: number;
+  classe: ClasseLimite;
+}
+
+interface DetalheAberto {
+  titulo: string;
+  mesAno: string;
+  itens: DetalhamentoGastosCentroCusto[];
+}
 
 @Component({
   selector: 'app-graficos',
+  imports: [FormatValorPipe, PopUpCentroCustoComponent],
   templateUrl: './graficos.component.html',
-  styleUrls: ['./graficos.component.css'],
-  standalone: false
+  styleUrl: './graficos.component.css'
 })
 export class GraficosComponent implements OnInit {
-  [x: string]: any;
+  private gastosMensais = inject(GastosMensaisService);
+  private gastosCentroCusto = inject(GastosCentroCustoService);
+  private detalhamento = inject(DetalhamentoGastosCentroCustoService);
+  private lancamentoService = inject(LancamentoService);
+  private mensagens = inject(MensagensService);
+  private destroyRef = inject(DestroyRef);
 
-  //Variáveis grafico Gastos Mensais
-  public gGMLabelMes: any[] = [];
-  public gGMMesAno: any[] = [];
-  public gGMDataValor: any[] = [];
-  public gGMDataSobraMes: any[] = [];
-  public gGMCordoQuadrante: any[] = [];
-  public gGMDataValorRecebidoMes: any[] = [];
+  /** null = todo o histórico, como a API devolve sem datas. */
+  anoSelecionado = signal<number | null>(null);
+  anosDisponiveis = signal<number[]>([]);
 
-  //Variáveis gráfico Gastos por Centro de Custo
-  private chartInfoCC: any;
-  private gGCCValor: any[] = [];
-  private gGCCValorLimite: any[] = [];
-  private gGCCDescricao: any[] = [];
-  private gGCCmesAnoAtual: any[] = [];
+  meses = signal<MesResumo[]>([]);
+  mesSelecionado = signal<string | null>(null);
+  centros = signal<CentroVisual[]>([]);
+  carregandoMeses = signal(true);
+  carregandoCentros = signal(true);
+  detalhe = signal<DetalheAberto | null>(null);
 
-  //Detalhamento GastosCentroCusto
-  popupAberto = false;
-  detalhamentoGastosCC: any[] = [];
+  mesAtual = computed(() => this.meses().find(m => m.mesAno === this.mesSelecionado()) ?? null);
 
-  form!: FormGroup;
-  anos: number[] = [];
+  private pedidoMeses$ = new Subject<string | null>();
+  private pedidoCentros$ = new Subject<string>();
 
-  loadingGastosMensais = true;
-  loadingCentrosCusto = true;
-  mesAnoSelecionado: string | null = null;
+  constructor() {
+    this.pedidoMeses$.pipe(
+      tap(() => this.carregandoMeses.set(true)),
+      switchMap(manterMes => {
+        const ano = this.anoSelecionado();
+        return this.gastosMensais.getGastosMensais(ano ? `${ano}-01-01` : undefined, ano ? `${ano}-12-31` : undefined).pipe(
+          catchError(() => of(null)),
+          map(itens => ({ itens, manterMes }))
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(({ itens, manterMes }) => {
+      const meses = (itens ?? []).map(item => this.paraResumo(item));
+      this.meses.set(meses);
+      this.carregandoMeses.set(false);
 
-  constructor(private saldoService: GastosMensaisService,
-    private gastosCentroCustoService: GastosCentroCustoService,
-    private detalhamentoGastosCentroCusto: DetalhamentoGastosCentroCustoService,
-    private fb: FormBuilder) {
+      if (this.anoSelecionado() === null && itens && this.anosDisponiveis().length === 0) {
+        this.anosDisponiveis.set([...new Set(meses.map(m => m.ano))].sort((a, b) => b - a));
+      }
+
+      if (meses.length === 0) {
+        this.centros.set([]);
+        this.carregandoCentros.set(false);
+        return;
+      }
+
+      const alvo = manterMes && meses.some(m => m.mesAno === manterMes) ? manterMes : meses[meses.length - 1].mesAno;
+      this.selecionarMes(alvo);
+    });
+
+    this.pedidoCentros$.pipe(
+      tap(() => this.carregandoCentros.set(true)),
+      switchMap(mesAno => this.gastosCentroCusto.getAllGastosCentroMesAno(mesAno).pipe(catchError(() => of(null)))),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(itens => {
+      this.centros.set((itens ?? []).map(item => this.paraCentro(item)));
+      this.carregandoCentros.set(false);
+    });
   }
 
   ngOnInit(): void {
-    //Cria o formulário
-    this.form = this.fb.group({
-      ano: [null, Validators.required]
-    });
-
-    //this.gGMMesAnoAuxiliar = this.trataMesAnoAtual();
-    this.buscarInformacoesGastosMensais("", "");
-
+    this.pedidoMeses$.next(null);
   }
 
-  get ano() {
-    return this.form.get('ano')!;
-  }
-
-  anoSelecionado(data: Date, datepicker: any) {
-    const ano = data.getFullYear();
-    this.form.get('ano')?.setValue(new Date(ano, 0, 1));
-    datepicker.close();
-
-    const dataDe = `${ano}-01-01`;
-    const dataAte = `${ano}-12-31`;
-
-    // limpar gráficos
-    this.gGMLabelMes = [];
-    this.gGMMesAno = [];
-    this.gGMDataValor = [];
-    this.gGMDataSobraMes = [];
-    this.gGMCordoQuadrante = [];
-    this.gGMDataValorRecebidoMes = [];
-    this.centrosCustoVisual = [];
-    this.mesAnoSelecionado = null;
-
-    // chamar API filtrada
-    this.buscarInformacoesGastosMensais(dataDe, dataAte);
-
-  }
-
-  temRegistro(index: number): boolean {
-    return !!this.gGMCordoQuadrante[index];
+  selecionarAno(ano: number | null): void {
+    if (ano === this.anoSelecionado()) {
+      return;
+    }
+    this.anoSelecionado.set(ano);
+    this.meses.set([]);
+    this.centros.set([]);
+    this.mesSelecionado.set(null);
+    this.pedidoMeses$.next(null);
   }
 
   selecionarMes(mesAno: string): void {
-    this.mesAnoSelecionado = mesAno;
-    this.buscarInformacoesCentroCusto(mesAno);
+    this.mesSelecionado.set(mesAno);
+    this.pedidoCentros$.next(mesAno);
   }
 
-  buscarInformacoesGastosMensais(dataDe: string, dataAte: string) {
-    this.loadingGastosMensais = true;
-    this.saldoService.getGastosMensais(dataDe, dataAte).subscribe(item => {
-      if (!item || item.length === 0) {
-        this.loadingGastosMensais = false;
-        return;
-      }
-      for (let i = 0; i < item.length; i++) {
-        this.gGMLabelMes.push(item[i].mes);
-        this.gGMMesAno.push(item[i].mes + " - " + item[i].ano);
-        this.gGMDataValor.push(item[i].valor);
-        this.gGMDataSobraMes.push(item[i].sobraMes);
-        this.gGMCordoQuadrante.push(this.getColor(item[i].sobraMes));
-        this.gGMDataValorRecebidoMes.push(item[i].valorRecebidoMes);
-      }
-      this.loadingGastosMensais = false;
-      const ultimoMes = this.gGMMesAno[this.gGMMesAno.length - 1];
-      this.mesAnoSelecionado = ultimoMes;
-      this.buscarInformacoesCentroCusto(ultimoMes);
+  abrirDetalhe(centro: CentroVisual): void {
+    this.detalhamento.getAllDetalhamentoGastosCentroMesAno(centro.mesAno, centro.descricao).subscribe({
+      next: itens => {
+        if (itens?.length > 0) {
+          this.detalhe.set({ titulo: centro.descricao, mesAno: centro.mesAno, itens });
+        } else {
+          this.mensagens.aviso(`Não há lançamentos em ${centro.descricao} neste mês.`);
+        }
+      },
+      error: () => undefined
     });
   }
 
-  centrosCustoVisual: {
-    gasto: number;
-    limite: number;
-    mesEAno: string;
-    descricaoCentroCusto: string
-  }[] = [];
-
-  buscarInformacoesCentroCusto(mesAno?: string) {
-    this.loadingCentrosCusto = true;
-
-    this.gastosCentroCustoService.getAllGastosCentroMesAno(mesAno).subscribe(item => {
-      this.chartInfoCC = item;
-      this.gGCCValor = [];
-      this.gGCCValorLimite = [];
-      this.gGCCDescricao = [];
-      this.gGCCmesAnoAtual = [];
-
-      //NOVO: limpa a lista visual
-      this.centrosCustoVisual = [];
-      if (this.chartInfoCC != null) {
-        for (let i = 0; i < this.chartInfoCC.length; i++) {
-
-          const registro = this.chartInfoCC[i];
-
-          this.gGCCValor.push(this.chartInfoCC[i].valor);
-          this.gGCCValorLimite.push(this.chartInfoCC[i].valorLimite);
-          this.gGCCDescricao.push(this.chartInfoCC[i].descricao);
-          this.gGCCmesAnoAtual.push(this.chartInfoCC[i].mesAno);
-
-          this.centrosCustoVisual.push({
-            gasto: registro.valor,
-            limite: registro.valorLimite,
-            mesEAno: registro.mesAno,
-            descricaoCentroCusto: registro.descricao
-          });
-
-          console.log(this.centrosCustoVisual);
-        }
-        this.loadingCentrosCusto = false;
-      }
+  async excluirDoDetalhe(item: DetalhamentoGastosCentroCusto): Promise<void> {
+    const confirmado = await this.mensagens.confirmar({
+      titulo: 'Excluir lançamento?',
+      texto: `“${item.descricaoLancamento}”, de R$ ${formatarValor(item.valor)}, será excluído.`,
+      confirmar: 'Excluir',
+      perigo: true
     });
+    if (!confirmado) {
+      return;
+    }
 
-  }
-
-  getPercentual(item: any): number {
-    if (!item.limite) return 0;
-    return Math.min((item.gasto / item.limite) * 100);
-  }
-
-  getClasse(item: any): string {
-    const percentual = this.getPercentual(item);
-
-    if (percentual > 100) return 'estourado';
-    if (percentual >= 80) return 'alerta';
-    return 'ok';
-  }
-
-  private formatarData(data: string | Date): string {
-    const d = new Date(data);
-    return d.toLocaleDateString('pt-BR') + ' ' +
-      d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-  }
-
-  /*
-    trataMesAnoAtual() {
-      let dataAtual = new Date().toLocaleDateString('pt-BR');
-      let mes: string = dataAtual.toString().substring(3, 5);
-      let ano: string = dataAtual.toString().substring(6, 10);
-  
-      switch (mes) {
-        case "01": {
-          mes = "Janeiro";
-          break;
-        }
-        case "02": {
-          mes = "Fevereiro";
-          break;
-        }
-        case "03": {
-          mes = "Março";
-          break;
-        }
-        case "04": {
-          mes = "Abril";
-          break;
-        }
-        case "05": {
-          mes = "Maio";
-          break;
-        }
-        case "06": {
-          mes = "Junho";
-          break;
-        }
-        case "07": {
-          mes = "Julho";
-          break;
-        }
-        case "08": {
-          mes = "Agosto";
-          break;
-        }
-        case "09": {
-          mes = "Setembro";
-          break;
-        }
-        case "10": {
-          mes = "Outubro";
-          break;
-        }
-        case "11": {
-          mes = "Novembro";
-          break;
-        }
-        case "12": {
-          mes = "Dezembro";
-          break;
-        }
-  
-      }
-      let mesAno: string = mes + " - " + ano;
-      return mesAno;
-  
-    }*/
-
-  buscarDetalhamentoGastosCentroCusto(mesAno?: string, desCC?: string) {
-    this.detalhamentoGastosCentroCusto.getAllDetalhamentoGastosCentroMesAno(mesAno, desCC).subscribe(item => {
-      this.detalhamentoGastosCC = [];
-      if (item && item.length > 0) {        
-        this.detalhamentoGastosCC = item;
-        this.popupAberto = true; //abre o pop-up
-        document.body.classList.add('no-scroll');
-      }
+    this.lancamentoService.excluirLancamento(item.id).subscribe({
+      next: () => {
+        this.mensagens.sucesso('Lançamento excluído.');
+        this.detalhe.update(atual => {
+          if (!atual) { return atual; }
+          const itens = atual.itens.filter(i => i.id !== item.id);
+          return itens.length > 0 ? { ...atual, itens } : null;
+        });
+        this.pedidoMeses$.next(this.mesSelecionado());
+      },
+      error: () => undefined
     });
   }
 
-  getColor(valor: number) {
-    return getColorForSobra(valor);
+  private paraResumo(item: GastosMensais): MesResumo {
+    return {
+      mes: item.mes,
+      abreviacao: MESES_ABREV[item.mes] ?? item.mes.slice(0, 3),
+      ano: item.ano,
+      mesAno: `${item.mes} - ${item.ano}`,
+      gasto: item.valor,
+      recebido: item.valorRecebidoMes,
+      sobra: item.sobraMes,
+      cor: getColorForSobra(item.sobraMes)
+    };
   }
 
+  private paraCentro(item: GastosCentroCusto): CentroVisual {
+    const percentual = item.valorLimite ? (item.valor / item.valorLimite) * 100 : 0;
+    const classe: ClasseLimite = percentual > 100 ? 'estourado' : percentual >= 80 ? 'alerta' : 'ok';
+
+    return {
+      descricao: item.descricao,
+      gasto: item.valor,
+      limite: item.valorLimite,
+      mesAno: item.mesAno,
+      valorMesAnterior: item.valorMesAnterior,
+      percentual,
+      pct: Math.round(percentual),
+      classe
+    };
+  }
 }

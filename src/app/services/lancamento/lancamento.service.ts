@@ -1,109 +1,90 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { avisarFalha } from 'src/app/core/http';
+import { Lancamento, LancamentoPayload } from 'src/types';
 import { LoginService } from '../login/login.service';
-import { Lancamento } from 'src/types';
 import { MensagensService } from '../mensagens/mensagens.service';
+
+export interface FiltroLancamentos {
+  dataDe: string;
+  dataAte: string;
+  /** Os status marcados; a API recebe todos concatenados em um único texto. */
+  status: string[];
+  idCentroCusto: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class LancamentoService {
-  private baseApiUrl = environment.baseApiUrl;
+  private http = inject(HttpClient);
+  private login = inject(LoginService);
+  private mensagens = inject(MensagensService);
+  private api = `${environment.baseApiUrl}api/lancamentos`;
 
-  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
-
+  /** Lançamentos do ciclo atual (a API decide a data inicial). */
   getAllLancamentos(): Observable<Lancamento[]> {
-    const idUsuario = this.loginService.getIdUsuario();
-    return this.http.get<Lancamento[]>(`${this.baseApiUrl}api/lancamentos/usuario/${idUsuario}`).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar Lançamentos: ${error.status}`, undefined);
-        return throwError(error);
-      })
+    return this.http.get<Lancamento[]>(`${this.api}/usuario/${this.login.getIdUsuario()}`).pipe(
+      avisarFalha(this.mensagens, 'carregar os lançamentos')
     );
   }
 
-  getLancamentoPorId(id: Number): Observable<Lancamento> {
-    return this.http.get<Lancamento>(`${this.baseApiUrl}api/lancamentos/${id}`).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamento: ${error.status}`, undefined);
-        return throwError(error);
-      })
+  getLancamentoPorId(id: number): Observable<Lancamento> {
+    return this.http.get<Lancamento>(`${this.api}/${id}`).pipe(
+      avisarFalha(this.mensagens, 'carregar o lançamento')
     );
   }
 
-  getLancamentoDataDeAte(dataDe: string, dataAte: string, status: string, idCentroCusto: Number): Observable<Lancamento[]> {
-    const idUsuario = this.loginService.getIdUsuario();
-    const url = `${this.baseApiUrl}api/lancamentos/dataDeAte?idUsuario=${idUsuario}&dataDe=${dataDe}&dataAte=${dataAte}&status=${status}&idCentroCusto=${idCentroCusto}`;
-    console.log(url);
-    return this.http.get<Lancamento[]>(url).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar Lançamentos: ${error.status}`, undefined);
-        return throwError(error);
-      })
+  getLancamentoDataDeAte(filtro: FiltroLancamentos): Observable<Lancamento[]> {
+    const params = new HttpParams()
+      .set('idUsuario', String(this.login.getIdUsuario()))
+      .set('dataDe', filtro.dataDe)
+      .set('dataAte', filtro.dataAte)
+      .set('status', filtro.status.join(''))
+      .set('idCentroCusto', String(filtro.idCentroCusto));
+
+    return this.http.get<Lancamento[]>(`${this.api}/dataDeAte`, { params }).pipe(
+      avisarFalha(this.mensagens, 'filtrar os lançamentos')
     );
   }
 
-  postLancamento(formData: FormData): Observable<any> {
-    var dataLancamento = new Date(formData.getAll("dataHora").toString() + "Z");
-    var data = {
-      dataHora: dataLancamento,
-      valor: Number(formData.getAll("valor")),
-      descricao: formData.getAll("descricao").toString().trim(),
-      status: formData.getAll("status").toString(),
-      idCCusto: Number(formData.getAll("idCCusto")),
-      idUsuario: Number(formData.getAll("idUsuario"))
+  postLancamento(dados: LancamentoPayload): Observable<unknown> {
+    return this.http.post(this.api, this.corpo(dados)).pipe(
+      avisarFalha(this.mensagens, 'registrar o lançamento')
+    );
+  }
+
+  putLancamento(id: number, dados: LancamentoPayload): Observable<unknown> {
+    return this.http.put(`${this.api}/${id}`, this.corpo(dados)).pipe(
+      avisarFalha(this.mensagens, 'atualizar o lançamento')
+    );
+  }
+
+  excluirLancamento(id: number): Observable<unknown> {
+    return this.http.put(`${this.api}/del/${id}`, { deletado: '*' }).pipe(
+      avisarFalha(this.mensagens, 'excluir o lançamento')
+    );
+  }
+
+  /** Quantos lançamentos usam o centro de custo (usado para bloquear a exclusão). */
+  getExisteCentroCusto(idCentroCusto: number): Observable<{ quantidade: number }> {
+    return this.http.get<{ quantidade: number }>(
+      `${this.api}/usuario/${this.login.getIdUsuario()}/idcentrocusto/${idCentroCusto}`
+    ).pipe(
+      avisarFalha(this.mensagens, 'verificar o centro de custo')
+    );
+  }
+
+  private corpo(dados: LancamentoPayload) {
+    return {
+      dataHora: new Date(dados.dataHora + 'Z'),
+      valor: dados.valor,
+      descricao: dados.descricao.trim(),
+      status: dados.status,
+      idCCusto: dados.idCCusto,
+      idUsuario: Number(this.login.getIdUsuario())
     };
-
-    console.log(data);
-
-    return this.http.post<any>(`${this.baseApiUrl}api/lancamentos`, data).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao criar lançamento: ${error.status}`, undefined);
-        return throwError(error);
-      })
-    );
-  }
-
-  excluirLancamento(id: Number): Observable<any> {
-    var data = {
-      deletado: '*'
-    };
-    return this.http.put(`${this.baseApiUrl}api/lancamentos/del/${id}`, data).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao excluir lançamento: ${error.status}`, undefined);
-        return throwError(error);
-      })
-    );
-  }
-
-  putLancamento(id: Number, formData: FormData): Observable<any> {
-    var dataLancamento = new Date(formData.getAll("dataHora").toString() + "Z");
-    console.log(Number(formData.getAll("valor")));
-    var data = {
-      dataHora: dataLancamento,
-      valor: Number(formData.getAll("valor")),
-      descricao: formData.getAll("descricao").toString().trim(),
-      status: formData.getAll("status").toString(),
-      idCCusto: Number(formData.getAll("idCCusto")),
-      idUsuario: Number(formData.getAll("idUsuario"))
-    };
-
-    return this.http.put<any>(`${this.baseApiUrl}api/lancamentos/${id}`, data).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao atualizar lançamento: ${error.status}`, undefined);
-        return throwError(error);
-      })
-    );
-  }
-
-  getExisteCentroCusto(idUsuario: string, idCentroCusto: Number): Observable<any> {
-    return this.http.get<any>(`${this.baseApiUrl}api/lancamentos/usuario/${idUsuario}/idcentrocusto/${idCentroCusto}`).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao verificar centro de custo: ${error.status}`, undefined);
-        return throwError(error);
-      })
-    );
   }
 }

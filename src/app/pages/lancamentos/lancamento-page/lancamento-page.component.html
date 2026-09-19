@@ -1,0 +1,30 @@
+<div class="page">
+  <header class="form-head">
+    <button type="button" class="btn btn-quiet btn-icon" aria-label="Voltar" (click)="voltar()">
+      <app-icon nome="voltar" />
+    </button>
+    <h1 class="titulo-pagina">{{ edicao() ? 'Editar lançamento' : 'Novo lançamento' }}</h1>
+  </header>
+
+  @if (!edicao() || lancamento()) {
+    <app-lancamento-form
+      [lancamentoData]="lancamento()"
+      [btnText]="edicao() ? 'Salvar alterações' : 'Registrar'"
+      [enviando]="enviando()"
+      (salvar)="salvar($event)"
+      (cancelar)="voltar()" />
+  } @else if (falhou()) {
+    <div class="vazio">
+      <strong>Não foi possível abrir este lançamento</strong>
+      Ele pode ter sido excluído ou o servidor não respondeu.
+      <br>
+      <button type="button" class="btn btn-outline" (click)="voltar()">Voltar</button>
+    </div>
+  } @else {
+    <div class="formulario" aria-hidden="true">
+      <span class="sk" style="height: 3.5rem; width: 60%"></span>
+      <span class="sk" style="height: 2.875rem; width: 100%; margin-top: 1.5rem"></span>
+      <span class="sk" style="height: 5rem; width: 100%; margin-top: 1rem"></span>
+    </div>
+  }
+</div>

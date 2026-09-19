@@ -1,0 +1,78 @@
+dialog {
+  /* gaveta no celular */
+  margin: auto 0 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: min(88dvh, 100%);
+  border: 0;
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-float);
+  overflow: hidden;
+  animation: subir 0.28s var(--ease);
+}
+
+dialog::backdrop {
+  background: var(--overlay);
+  animation: aparecer 0.2s ease-out;
+}
+
+.painel {
+  display: flex;
+  flex-direction: column;
+  max-height: min(88dvh, 100%);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-3) var(--s-3) var(--s-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 18;
+  font-size: var(--t-xl);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.corpo {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--s-4);
+}
+
+.rodape {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4) calc(var(--s-3) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--rule);
+}
+.rodape:empty { display: none; }
+
+@media (min-width: 640px) {
+  dialog {
+    margin: auto;
+    width: min(44rem, calc(100% - 3rem));
+    max-height: min(84dvh, 46rem);
+    border-radius: var(--r-sheet);
+    animation: entrar 0.24s var(--ease);
+  }
+  dialog.pequeno { width: min(28rem, calc(100% - 3rem)); }
+  .painel { max-height: min(84dvh, 46rem); }
+  .rodape { padding-bottom: var(--s-3); }
+}
+
+@keyframes subir { from { transform: translateY(2.5rem); opacity: 0; } }
+@keyframes entrar { from { transform: translateY(0.75rem) scale(0.98); opacity: 0; } }
+@keyframes aparecer { from { opacity: 0; } }

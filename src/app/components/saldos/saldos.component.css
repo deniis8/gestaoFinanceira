@@ -1,165 +1,150 @@
-.container-saldos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
+:host { display: block; }
 
-.container-saldos-superior {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-}
+/* ---------- a nota ---------- */
 
-.container-saldos-inferior{
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-}
-
-.quadrantes-saldos {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;  
-  border-radius: 8px;
-  background-color: #E6E7EB;
-  padding: 10px;
-}
-
-.quadrante-saldos-saldo-filtro {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-  min-height: 60px;
-  border-radius: 8px;
-  background-color: #E6E7EB;
-  padding: 10px;
-  flex: 1;
-}
-
-.sessao-saldo-filtro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  min-height: 100%;
-  text-align: center;
-}
-
-.quadrantes-saldos p,
-.quadrantes-saldos strong,
-.quadrante-saldos-saldo-filtro p,
-.quadrante-saldos-saldo-filtro strong,
-.sessao-saldo-filtro p,
-.sessao-saldo-filtro strong {
-  margin: 0;
-  padding: 0;
-  padding-top: 6px;
-  line-height: 1;
-}
-
-.titulo-saldos {
-  font-size: 14px;
-}
-
-.filtro-titulo-saldos {
-  font-size: 11px;
-}
-
-.filtro-resultado-saldos {
-  font-size: 12px;
-}
-
-.resultado-saldos {
-  font-size: 15px;
-}
-
-.quadrante-saldos-grafico {
-  display: flex;
-  align-items: center;
-  background-color: rgba(215, 216, 220, 0.81);
-  border-radius: 8px;
-}
-
-.skeleton-card,
-.skeleton-chart {
+.nota {
   position: relative;
   overflow: hidden;
-  background-color: #d9dbe2;
+  padding: var(--s-5) var(--s-5) var(--s-4);
+  border-radius: 18px;
+  background: var(--nota-bg);
+  color: var(--nota-ink);
+  isolation: isolate;
 }
-
-.skeleton-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 74px;
-  min-width: 50px;
-  padding: 12px;
-}
-
-.skeleton-chart {
-  min-width: 40px;
-  min-height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.skeleton-line {
-  height: 10px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #c8cad3, #e3e5eb, #c8cad3);
-  animation: skeleton-shimmer 1.2s infinite;
-}
-
-.skeleton-line-title {
-  width: 65%;
-  height: 12px;
-}
-
-.skeleton-line-value {
-  width: 85%;
-  height: 12px;
-}
-
-.skeleton-ring {
-  width: 86px;
-  height: 86px;
-  border-radius: 50%;
-  border: 10px solid rgba(255, 255, 255, 0.45);
-  border-top-color: #ffffff;
-  animation: skeleton-spin 1s linear infinite;
-}
-
-.skeleton-card::before,
-.skeleton-chart::before {
+.nota::after { /* moldura fina, como a das cédulas */
   content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-  transform: translateX(-100%);
-  animation: skeleton-shimmer 1.2s infinite;
+  inset: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--nota-line) 40%, transparent);
+  border-radius: 12px;
+  pointer-events: none;
 }
 
-@keyframes skeleton-shimmer {
-  100% {
-    transform: translateX(100%);
-  }
+.roseta {
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  right: -14%;
+  width: 17rem;
+  max-width: none;
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  color: var(--nota-line);
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(to left, #000 35%, transparent 92%);
+  mask-image: linear-gradient(to left, #000 35%, transparent 92%);
 }
 
-@keyframes skeleton-spin {
-  to {
-    transform: rotate(360deg);
-  }
+.rotulo {
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--nota-soft);
+}
+
+.saldo {
+  margin-top: var(--s-1);
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 18;
+  font-size: clamp(2.5rem, 11vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.saldo .rs {
+  font-family: var(--font-text);
+  font-size: 0.4em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--nota-soft);
+  margin-right: 0.35em;
+  vertical-align: 0.55em;
+}
+.saldo.negativo { color: #FFB9C0; }
+
+.investimentos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+  margin: var(--s-5) 0 var(--s-1);
+  padding-top: var(--s-3);
+  border-top: 1px solid color-mix(in srgb, var(--nota-line) 35%, transparent);
+}
+.investimentos dt { font-size: var(--t-xs); color: var(--nota-soft); }
+.investimentos dd { margin: 0; font-size: var(--t-md); font-weight: 600; }
+.investimentos .rs { color: var(--nota-soft); }
+
+.falha { margin-top: var(--s-3); color: var(--nota-soft); font-size: var(--t-sm); }
+.tentar {
+  margin-top: var(--s-2);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--nota-ink);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.nota .sk { background: linear-gradient(90deg, #ffffff14 30%, #ffffff29 50%, #ffffff14 70%); background-size: 300% 100%; }
+.sk-saldo { width: 70%; height: 2.75rem; margin-top: var(--s-2); }
+.sk-inv { width: 7rem; height: 2rem; }
+
+/* ---------- resumo do período ---------- */
+
+.periodo { padding-top: var(--s-5); }
+
+.totais {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4) var(--s-5);
+}
+
+.total { --c: var(--ink-3); padding-left: var(--s-3); border-left: 3px solid var(--c); }
+.total.pendente { --c: var(--pending); }
+.total.saida { --c: var(--expense); }
+.total.entrada { --c: var(--income); }
+.total dt { font-size: var(--t-sm); color: var(--ink-2); }
+.total dd { margin: 0; font-size: var(--t-lg); font-weight: 600; }
+
+.balanco { margin-top: var(--s-5); }
+.balanco-cabeca {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.balanco-cabeca strong { display: block; font-size: var(--t-md); }
+.balanco-cabeca span:last-child { text-align: right; }
+
+.barra {
+  display: flex;
+  gap: 3px;
+  height: 0.6rem;
+  margin: var(--s-2) 0 var(--s-3);
+  border-radius: 999px;
+  background: var(--sunken);
+  overflow: hidden;
+}
+.barra .receitas { background: var(--income); border-radius: 999px 0 0 999px; transition: width 0.5s var(--ease); }
+.barra .gastos { flex: 1; background: var(--expense); border-radius: 0 999px 999px 0; }
+
+.sobra { display: flex; justify-content: space-between; align-items: baseline; font-size: var(--t-sm); color: var(--ink-2); }
+.sobra strong { font-size: var(--t-lg); }
+
+.sk-rotulo { width: 55%; height: 0.8rem; margin-bottom: var(--s-2); }
+.sk-valor { width: 80%; height: 1.1rem; }
+.sk-barra { height: 0.6rem; margin-top: var(--s-5); border-radius: 999px; }
+
+/* celular: resumo mais compacto para o extrato aparecer mais cedo */
+@media (max-width: 959px) {
+  .nota { padding: var(--s-4) var(--s-4) var(--s-3); }
+  .investimentos { margin-top: var(--s-4); }
+  .periodo { padding-top: var(--s-4); }
+  .totais { gap: var(--s-3) var(--s-4); }
+  .total dt { font-size: var(--t-xs); }
+  .total dd { font-size: var(--t-md); }
+  .balanco { margin-top: var(--s-4); }
 }

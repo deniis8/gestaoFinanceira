@@ -1,127 +1,49 @@
-/* Container principal - cria margem à esquerda e à direita, e centraliza o conteúdo */
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  /* Alinha o conteúdo ao centro */
-  align-items: flex-start;
-  padding: 10px;
-  margin: 0 auto;
-  /* Centraliza o container */
-  max-width: 1200px;
-  /* Limita a largura do container */
-}
+:host { display: block; }
 
-/* Contêiner de data */
-.date-container,
-.checkbox-columns {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
+.totais {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-4);
+  margin-bottom: var(--s-4);
+  padding-bottom: var(--s-4);
+  border-bottom: 1px solid var(--rule-strong);
 }
+.total { --c: var(--ink-3); padding-left: var(--s-3); border-left: 3px solid var(--c); }
+.total.pendente { --c: var(--pending); }
+.total.entrada { --c: var(--income); }
+.total dt { font-size: var(--t-sm); color: var(--ink-2); }
+.total dd { margin: 0; font-size: var(--t-lg); font-weight: 600; }
 
-/* Ajuste para os campos de data */
-.date-picker {
-  margin-bottom: 10px;
-}
+.linha { min-height: 3.75rem; }
+.linha-texto { display: flex; flex-direction: column; min-width: 0; }
+.linha-valor .sinal { font-weight: 500; margin-right: 0.1em; }
+.excluir { color: var(--expense); }
 
-/* Estilo das colunas de checkboxes */
-.checkbox-columns {
+.dia-mes {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 2.75rem;
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 18;
+  font-size: var(--t-xl);
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.dia-mes small { margin-bottom: 0.15rem; font-family: var(--font-text); font-size: var(--t-xs); font-weight: 500; color: var(--ink-3); }
+
+.linha-acoes { padding-left: calc(2.75rem + var(--s-3)); }
+
+.esqueleto-linha {
+  display: grid;
+  grid-template-columns: 2.75rem 1fr auto;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--rule);
 }
 
-.checkbox-column {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
+@media (max-width: 420px) {
+  .rotulo-longo { display: none; }
 }
-
-.checkbox-item {
-  margin-bottom: 10px;
-}
-
-/* Estilo do campo de seleção de Centro Custo */
-#status {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  background-color: #fff;
-}
-
-/* Estilo do conteúdo para telas maiores que 600px */
-@media (min-width: 600px) {
-  .container {
-    flex-wrap: nowrap;
-    /* Ajusta o layout para telas maiores */
-  }
-
-  /* Data container ocupando 45% da largura */
-  .date-container {
-    width: 45%;
-    flex-direction: column;
-  }
-
-  /* Checkbox columns ocupando 50% da largura */
-  .checkbox-columns {
-    width: 50%;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .checkbox-column {
-    width: 45%;
-  }
-}
-
-/* Estilos responsivos para telas menores */
-@media (max-width: 599px) {
-
-  .date-container,
-  .checkbox-columns {
-    width: 100%;
-    /* Ocupa toda a largura em telas menores */
-  }
-
-  /* Ajuste de margens para componentes menores */
-  .checkbox-column,
-  .date-picker {
-    margin: 0 auto;
-    width: 90%;
-    /* Garantir que os campos não fiquem muito largos */
-  }
-}
-
-.fab {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
-  background-color: rgb(90, 165, 90);
-}
-
-th{
-  font-size: 11px;
-  background-color: rgb(73, 73, 73);
-}
-td{
-  font-size: 11px;  
-  color: rgb(73, 73, 73);
-}
-
-/*
-Botões
-*/
-.botao-editar {
-  background-color: #e7e7fd;
-}
-
-.botao-remover {
-  background-color: #fda6a6;
-}
-
-/*
-Botões
-*/

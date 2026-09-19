@@ -1,113 +1,98 @@
-.container-principal{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 320px;
+:host { display: block; }
+
+.login {
+  display: grid;
+  grid-template-rows: minmax(15rem, 36dvh) 1fr;
+  min-height: 100dvh;
 }
 
-.container-login{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 300px;
-    background-color: #faf9f9;
-    height: 320px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #969696;
-    border-radius: 8px;
+/* ---------- a nota ---------- */
+
+.arte {
+  position: relative;
+  overflow: hidden;
+  padding: var(--s-5) var(--gutter);
+  background: var(--nota-bg);
+  color: var(--nota-ink);
+}
+.arte::after { /* moldura da cédula */
+  content: "";
+  position: absolute;
+  inset: 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--nota-line) 45%, transparent);
+  border-radius: 6px;
+  pointer-events: none;
 }
 
-.form-group {
-    display: flex;
-    margin-bottom: 15px;
-    text-align: left;
-    min-width: 270px;
+.roseta {
+  position: absolute;
+  top: 50%;
+  right: -8%;
+  width: min(24rem, 100vw);
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  color: var(--nota-line);
+  opacity: 0.6;
 }
 
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
+.marca {
+  position: relative;
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 18;
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.015em;
 }
 
-input[type="email"],
-input[type="password"] {
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+.frase {
+  position: absolute;
+  left: var(--gutter);
+  right: 30%;
+  bottom: var(--s-5);
+  color: var(--nota-soft);
+  font-size: var(--t-md);
 }
 
-input:focus {
-    border-color: #007bff;
-    outline: none;
+/* ---------- formulário ---------- */
+
+.painel {
+  position: relative;
+  margin-top: calc(var(--s-5) * -1);
+  padding: var(--s-6) var(--gutter) calc(var(--s-6) + env(safe-area-inset-bottom, 0px));
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  background: var(--paper);
 }
 
-/* Mensagem de erro */
-small {
-    color: red;
-    font-size: 0.875em;
-    margin-top: 5px;
-    display: block;
+form { width: 100%; max-width: 24rem; margin-inline: auto; }
+h1 { margin-bottom: var(--s-5); }
+
+.campo-senha { position: relative; }
+.campo-senha input { padding-right: 3rem; }
+.campo-senha button {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  transform: translateY(-50%);
 }
 
-/* Botão de login */
-button {
-    background-color: #28a745;
-    width: 100%;
-    color: white;
-    padding: 10px 70px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    margin-top: 20px;
-}
+.erro-geral { margin-top: var(--s-4); }
+.btn-block { margin-top: var(--s-5); }
 
-button:hover {
-    background-color: #218838;
-}
-
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Responsividade */
-@media (max-width: 600px) {
-    .container-login {
-        padding: 15px;
-    }
-
-    label, input, button {
-        font-size: 1em;
-    }
-}
-
-.error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
+@media (min-width: 900px) {
+  .login {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    grid-template-rows: none;
   }
-  
-  /*Loading*/
-  .spinner {
-  width: 18px;
-  height: 18px;
-  border: 3px solid #ccc;
-  border-top: 3px solid #fff;
-  border-radius: 50%;
-  display: inline-block;
-  animation: spin 0.8s linear infinite;
-  vertical-align: middle;
-  margin-right: 8px;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+  .arte { padding: var(--s-7) var(--s-7); }
+  .arte::after { inset: 1.25rem; }
+  .roseta { right: 0; left: 0; margin: auto; width: min(44rem, 88%); }
+  .frase { left: var(--s-7); right: auto; bottom: var(--s-7); max-width: 18rem; font-size: var(--t-lg); }
+  .painel {
+    display: grid;
+    align-items: center;
+    margin: 0;
+    border-radius: 0;
+    padding: var(--s-7);
   }
 }

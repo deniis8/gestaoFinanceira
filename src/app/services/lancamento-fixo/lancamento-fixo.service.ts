@@ -1,86 +1,59 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { LoginService } from '../login/login.service';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { LancamentoFixo } from 'src/types';
+import { avisarFalha } from 'src/app/core/http';
+import { LancamentoFixo, LancamentoFixoPayload } from 'src/types';
+import { LoginService } from '../login/login.service';
 import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LancamentoFixoService {
-  
-  private baseApiUrl = environment.baseApiUrl;
-  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
+  private http = inject(HttpClient);
+  private login = inject(LoginService);
+  private mensagens = inject(MensagensService);
+  private api = `${environment.baseApiUrl}api/lancamentosfixos`;
 
   getAllLancamentosFixos(): Observable<LancamentoFixo[]> {
-      const idUsuario = this.loginService.getIdUsuario();
-      return this.http.get<LancamentoFixo[]>(`${this.baseApiUrl}api/lancamentosfixos/usuario/${idUsuario}`).pipe(
-        catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamentos fixos: ${error.status}`, undefined);
-          return throwError(error);
-        })
-      );
-    }
-  
-    getLancamentoFixoPorId(id: Number): Observable<LancamentoFixo> {
-      return this.http.get<LancamentoFixo>(`${this.baseApiUrl}api/lancamentosfixos/${id}`).pipe(
-        catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar lançamento fixo: ${error.status}`, undefined);
-          return throwError(error);
-        })
-      );
-    }
-  
-    postLancamentoFixo(formData: FormData): Observable<any> {
-      var data = { 
-        diaMes: Number(formData.getAll("diaMes")),
-        valor: Number(formData.getAll("valor")),
-        descricao: formData.getAll("descricao").toString().trim(),
-        status: formData.getAll("status").toString(),
-        idCCusto: Number(formData.getAll("idCCusto")),
-        idUsuario: Number(formData.getAll("idUsuario"))
-      };
-  
-      console.log(data);
-      
-      return this.http.post<any>(`${this.baseApiUrl}api/lancamentosfixos`, data).pipe(
-        catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao criar lançamento fixo: ${error.status}`, undefined);
-          return throwError(error);
-        })
-      );
-    }
-  
-    excluirLancamentoFixo(id: Number): Observable<any> {
-      var data = { 
-        deletado: '*'
-      };
-      return this.http.put(`${this.baseApiUrl}api/lancamentosfixos/del/${id}`, data).pipe(
-        catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao excluir lançamento fixo: ${error.status}`, undefined);
-          return throwError(error);
-        })
-      );
-    }
-  
-    putLancamentoFixo(id: Number, formData: FormData): Observable<any> {
-      var data = { 
-        diaMes: Number(formData.getAll("diaMes")),
-        valor: Number(formData.getAll("valor")),
-        descricao: formData.getAll("descricao").toString().trim(),
-        status: formData.getAll("status").toString(),
-        idCCusto: Number(formData.getAll("idCCusto")),
-        idUsuario: Number(formData.getAll("idUsuario"))
-      };
-  
-      return this.http.put<any>(`${this.baseApiUrl}api/lancamentosfixos/${id}`, data).pipe(
-        catchError(error => {
-          this.mensagensService.mensagem('error', 'Erro', `Erro ao atualizar lançamento fixo: ${error.status}`, undefined);
-          return throwError(error);
-        })
-      );
-    }
+    return this.http.get<LancamentoFixo[]>(`${this.api}/usuario/${this.login.getIdUsuario()}`).pipe(
+      avisarFalha(this.mensagens, 'carregar os lançamentos fixos')
+    );
+  }
 
+  getLancamentoFixoPorId(id: number): Observable<LancamentoFixo> {
+    return this.http.get<LancamentoFixo>(`${this.api}/${id}`).pipe(
+      avisarFalha(this.mensagens, 'carregar o lançamento fixo')
+    );
+  }
+
+  postLancamentoFixo(dados: LancamentoFixoPayload): Observable<unknown> {
+    return this.http.post(this.api, this.corpo(dados)).pipe(
+      avisarFalha(this.mensagens, 'criar o lançamento fixo')
+    );
+  }
+
+  putLancamentoFixo(id: number, dados: LancamentoFixoPayload): Observable<unknown> {
+    return this.http.put(`${this.api}/${id}`, this.corpo(dados)).pipe(
+      avisarFalha(this.mensagens, 'atualizar o lançamento fixo')
+    );
+  }
+
+  excluirLancamentoFixo(id: number): Observable<unknown> {
+    return this.http.put(`${this.api}/del/${id}`, { deletado: '*' }).pipe(
+      avisarFalha(this.mensagens, 'excluir o lançamento fixo')
+    );
+  }
+
+  private corpo(dados: LancamentoFixoPayload) {
+    return {
+      diaMes: dados.diaMes,
+      valor: dados.valor,
+      descricao: dados.descricao.trim(),
+      status: dados.status,
+      idCCusto: dados.idCCusto,
+      idUsuario: Number(this.login.getIdUsuario())
+    };
+  }
 }

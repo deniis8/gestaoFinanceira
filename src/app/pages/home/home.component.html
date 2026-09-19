@@ -1,1 +1,214 @@
-<app-tabela-lancamento></app-tabela-lancamento>
+<div class="page page-wide">
+  <h1 class="sr-only">Lançamentos</h1>
+
+  <div class="home">
+    <!-- nota, resumo, insight e filtros -->
+    <aside class="lateral">
+      <app-saldos
+        [valorAPagar]="totais().aPagar"
+        [valorPago]="totais().pago"
+        [valorAReceber]="totais().aReceber"
+        [valorRecebido]="totais().recebido"
+        [despesasGraficoDonut]="totais().despesas"
+        [receitasGraficoDonut]="totais().receitas"
+        [isLoading]="carregando()" />
+
+      <button type="button" class="insight" [disabled]="carregandoInsight()" (click)="gerarInsight()">
+        <span class="insight-icone">
+          @if (carregandoInsight()) { <span class="spinner"></span> } @else { <app-icon nome="brilho" /> }
+        </span>
+        <span class="insight-texto">
+          <strong>{{ carregandoInsight() ? 'Analisando seus números' : 'Gerar insight com IA' }}</strong>
+          <small>{{ carregandoInsight() ? 'Isso leva alguns segundos.' : 'Uma leitura do período configurado.' }}</small>
+        </span>
+      </button>
+
+      <section class="filtros" aria-labelledby="filtros-titulo">
+        <button type="button" class="filtros-toggle" aria-controls="filtros-corpo"
+                [attr.aria-expanded]="filtrosAbertos()" (click)="filtrosAbertos.set(!filtrosAbertos())">
+          <app-icon nome="filtro" />
+          <span class="filtros-nome">
+            <span id="filtros-titulo" class="titulo-secao">Filtros</span>
+            <span class="filtros-resumo">
+              <span>{{ resumoDatas() }}</span>
+              <span>{{ resumoStatus() }}</span>
+            </span>
+          </span>
+          <app-icon class="seta" nome="baixo" />
+        </button>
+
+        <div id="filtros-corpo" class="filtros-corpo" [class.aberto]="filtrosAbertos()">
+          <div class="datas">
+            <div class="field" [class.invalido]="periodoInvalido()">
+              <label for="data-de">De</label>
+              <input id="data-de" type="date" [ngModel]="dataDe()" (ngModelChange)="mudarDataDe($event)" />
+            </div>
+            <div class="field" [class.invalido]="periodoInvalido()">
+              <label for="data-ate">Até</label>
+              <input id="data-ate" type="date" [ngModel]="dataAte()" (ngModelChange)="mudarDataAte($event)" />
+            </div>
+          </div>
+          @if (periodoInvalido()) {
+            <p class="field-erro">A data inicial não pode ser depois da final.</p>
+          }
+
+          <div class="field">
+            <span class="field-rotulo" id="rotulo-status">Status</span>
+            <div class="chips" role="group" aria-labelledby="rotulo-status">
+              @for (opcao of opcoesStatus; track opcao.valor) {
+                <button type="button" class="chip" [style.--c]="opcao.cor"
+                        [attr.aria-pressed]="statusMarcados().has(opcao.valor)"
+                        (click)="alternarStatus(opcao.valor)">{{ opcao.rotulo }}</button>
+              }
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="centro-custo">Centro de custo</label>
+            <select id="centro-custo" [ngModel]="idCentroCusto()" (ngModelChange)="mudarCentroCusto($event)">
+              <option [ngValue]="0">Todos</option>
+              @for (centro of centroCustos(); track centro.id) {
+                <option [ngValue]="centro.id">{{ centro.descriCCusto }}</option>
+              }
+            </select>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- extrato -->
+    <section class="extrato" aria-labelledby="extrato-titulo">
+      <header class="extrato-cabeca">
+        <div>
+          <h2 id="extrato-titulo" class="titulo-pagina">Extrato</h2>
+          <p class="texto-2 texto-sm">
+            @if (carregando()) { Carregando… } @else { {{ lancamentos().length }} {{ lancamentos().length === 1 ? 'lançamento' : 'lançamentos' }} }
+          </p>
+        </div>
+
+        @if (modoCopia()) {
+          <button type="button" class="btn btn-quiet" (click)="alternarModoCopia()">Cancelar</button>
+        } @else {
+          <button type="button" class="btn btn-outline" [disabled]="lancamentos().length === 0" (click)="alternarModoCopia()">
+            <app-icon nome="copiar" /> Copiar
+          </button>
+        }
+      </header>
+
+      @if (modoCopia()) {
+        <label class="selecionar-todos">
+          <input type="checkbox" [checked]="todosSelecionados()" (change)="selecionarTodos()" />
+          Selecionar todos
+        </label>
+      }
+
+      @if (carregando()) {
+        <div class="esqueleto" aria-hidden="true">
+          @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+            <div class="esqueleto-linha">
+              <span class="sk" style="width: 0.7rem; height: 0.7rem; border-radius: 50%"></span>
+              <span class="esqueleto-texto"><span class="sk" style="height: 0.95rem; width: 62%"></span><span class="sk" style="height: 0.7rem; width: 38%"></span></span>
+              <span class="sk" style="height: 1rem; width: 5rem"></span>
+            </div>
+          }
+        </div>
+      } @else if (lancamentos().length === 0) {
+        <div class="vazio">
+          @if (falhou()) {
+            <strong>Não foi possível carregar o extrato</strong>
+            Confira a conexão com o servidor e tente de novo.
+            <br>
+            <button type="button" class="btn btn-outline" (click)="carregarCiclo()">Tentar de novo</button>
+          } @else if (periodoInvalido()) {
+            <strong>Confira as datas</strong>
+            A data inicial está depois da final.
+          } @else if (statusSelecionados().length === 0) {
+            <strong>Nenhum status marcado</strong>
+            Marque ao menos um status para ver os lançamentos.
+          } @else {
+            <strong>Nenhum lançamento por aqui</strong>
+            Ajuste o período ou os filtros, ou registre um novo lançamento.
+            <br>
+            <a class="btn btn-primary" routerLink="/lancamento/novo"><app-icon nome="mais" /> Novo lançamento</a>
+          }
+        </div>
+      } @else {
+        @for (grupo of grupos(); track grupo.chave) {
+          <section class="dia">
+            <h3 class="dia-titulo">{{ grupo.rotulo }}</h3>
+            <ul class="linhas">
+              @for (lancamento of grupo.itens; track lancamento.id) {
+                <li>
+                  <button type="button" class="linha" [class.selecionada]="modoCopia() && selecionados().has(lancamento.id!)"
+                          [attr.aria-expanded]="modoCopia() ? null : expandido() === lancamento.id"
+                          [attr.aria-pressed]="modoCopia() ? selecionados().has(lancamento.id!) : null"
+                          (click)="aoTocar(lancamento)">
+                    @if (modoCopia()) {
+                      <span class="caixa" [class.marcada]="selecionados().has(lancamento.id!)">
+                        @if (selecionados().has(lancamento.id!)) { <app-icon nome="ok" [espessura]="2.6" /> }
+                      </span>
+                    } @else {
+                      <span class="linha-marca" [class.cheia]="!pendente(lancamento)" [style.--c]="corDaMarca(lancamento)"></span>
+                    }
+
+                    <span class="linha-texto">
+                      <span class="linha-titulo">{{ lancamento.descricao }}</span>
+                      <span class="linha-meta">
+                        <span>{{ lancamento.descriCCusto }}</span>
+                        <time [attr.datetime]="lancamento.dataHora">{{ lancamento.dataHora | date: 'HH:mm' }}</time>
+                        @if (pendente(lancamento)) {
+                          <span class="tag tag-pendente">{{ rotuloStatus(lancamento.status) }}</span>
+                        }
+                        @if (emprestimo(lancamento)) {
+                          <span class="tag tag-perigo">Empréstimo</span>
+                        }
+                      </span>
+                    </span>
+
+                    <span class="linha-valor money" [class.is-saida]="saida(lancamento)" [class.is-entrada]="!saida(lancamento)">
+                      <span class="sinal">{{ saida(lancamento) ? '−' : '+' }}</span> {{ lancamento.valor | formatValor }}
+                    </span>
+                  </button>
+
+                  @if (!modoCopia() && expandido() === lancamento.id) {
+                    <div class="linha-acoes">
+                      <a class="btn btn-outline btn-sm" [routerLink]="['/lancamento/edit', lancamento.id]">
+                        <app-icon nome="editar" /> Editar
+                      </a>
+                      <button type="button" class="btn btn-outline btn-sm excluir" (click)="excluir(lancamento)">
+                        <app-icon nome="lixeira" /> Excluir
+                      </button>
+                    </div>
+                  }
+                </li>
+              }
+            </ul>
+          </section>
+        }
+      }
+
+      @if (modoCopia()) {
+        <div class="barra-copia">
+          <span class="barra-copia-info">
+            <span><strong>{{ selecionados().size }}</strong> {{ selecionados().size === 1 ? 'selecionado' : 'selecionados' }}</span>
+            @if (selecionados().size > 0) { <span class="money">Total R$ {{ totalSelecionado() | formatValor }}</span> }
+          </span>
+          <button type="button" class="btn btn-primary" [disabled]="selecionados().size === 0" (click)="copiarSelecionados()">
+            <app-icon nome="copiar" /> Copiar texto
+          </button>
+        </div>
+      }
+    </section>
+  </div>
+</div>
+
+@if (insight() !== null) {
+  <app-pop-up-ia [analise]="insight()!" (fechar)="insight.set(null)" />
+}
+
+@if (textoManual() !== null) {
+  <app-sheet titulo="Copie o texto" (fechar)="textoManual.set(null)">
+    <p class="texto-2 texto-sm">O navegador bloqueou a cópia automática. Selecione o texto abaixo e copie.</p>
+    <textarea class="texto-manual" readonly rows="12" [value]="textoManual()" (focus)="$any($event.target).select()"></textarea>
+  </app-sheet>
+}

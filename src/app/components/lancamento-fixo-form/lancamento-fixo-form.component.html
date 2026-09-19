@@ -1,53 +1,65 @@
-<form (ngSubmit)="submit()" [formGroup]="lancamentoFixoForm" #formDir="ngForm">
-    
-    <div class="form-group">
-        <input type="hidden" formControlName="id" />
-    </div>
-    <div class="form-group">
-        <label for="dia">Dia do Mês:</label>
-        <select id="dia" formControlName="diaMes" required>
-            <option value="" disabled selected>Selecione o dia</option>
-            <option *ngFor="let dia of dias" [value]="dia">{{ dia }}</option>
-        </select>
-        <div *ngIf="diaMes.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="diaMes.errors?.['required']">O dia é obrigatório.</p>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="valor">Valor:</label>
-        <input type="text" inputmode="numeric" placeholder="Coloque o valor do Lançamento" formControlName="valor" required (input)="formatValor()">
-        <div *ngIf="valor.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="valor.errors?.['required']">O valor é obrigatória.</p>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="description">Descrição:</label>
-        <textarea placeholder="Descrição do Lancamento" formControlName="descricao" required></textarea>
-        <div *ngIf="descricao.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="descricao.errors?.['required']">A descrição é obrigatória.</p>
-        </div>
-    </div>   
-    
-    <div class="form-group">
-        <label for="status">Status:</label>
-        <select formControlName="status" required>
-            <option value="A Receber">A Receber</option>
-            <option value="A Pagar">A Pagar</option>
-        </select>
-    </div>
+<form class="formulario" [formGroup]="lancamentoFixoForm" (ngSubmit)="submit()" novalidate>
 
-    <div class="form-group">
-        <label for="status">Centro Custo:</label>
-        <select formControlName="idCCusto" required>
-            <option *ngFor="let centroCusto of centroCustos" value={{centroCusto.id}}>{{centroCusto.descriCCusto}}</option>
-        </select>
+  <div class="field" [class.invalido]="mostrarErro('valor')">
+    <label for="valor">Valor</label>
+    <div class="campo-valor">
+      <span class="rs" aria-hidden="true">R$</span>
+      <input id="valor" type="text" appMoeda formControlName="valor" placeholder="0,00"
+             [attr.aria-invalid]="mostrarErro('valor')" [attr.aria-describedby]="mostrarErro('valor') ? 'valor-erro' : null" />
     </div>
-    
-    <div *ngIf="idCCusto.invalid && formDir.submitted" class="validation-error">
-        <p *ngIf="idCCusto.errors?.['required']">O centro de custo é obrigatória.</p>
-    </div>
-    
+    @if (mostrarErro('valor')) { <p class="field-erro" id="valor-erro">Informe o valor.</p> }
+  </div>
 
-    <input type="submit" value="{{btnText}}">    
+  <div class="field" [class.invalido]="mostrarErro('status')">
+    <span class="field-rotulo" id="rotulo-status">Tipo</span>
+    <div class="opcoes-status" role="radiogroup" aria-labelledby="rotulo-status">
+      @for (opcao of opcoesStatus; track opcao.valor) {
+        <label class="opcao" [class.saida]="opcao.tipo === 'saida'" [class.entrada]="opcao.tipo === 'entrada'">
+          <input type="radio" formControlName="status" [value]="opcao.valor" />
+          <span>{{ opcao.rotulo }}</span>
+        </label>
+      }
+    </div>
+    @if (mostrarErro('status')) { <p class="field-erro">Escolha se é a pagar ou a receber.</p> }
+  </div>
+
+  <div class="field" [class.invalido]="mostrarErro('diaMes')">
+    <label for="dia">Dia do mês</label>
+    <select id="dia" formControlName="diaMes"
+            [attr.aria-invalid]="mostrarErro('diaMes')" [attr.aria-describedby]="mostrarErro('diaMes') ? 'dia-erro' : null">
+      <option [ngValue]="null" disabled>Escolha o dia</option>
+      @for (dia of dias; track dia) {
+        <option [ngValue]="dia">{{ dia }}</option>
+      }
+    </select>
+    @if (mostrarErro('diaMes')) { <p class="field-erro" id="dia-erro">Escolha o dia do mês.</p> }
+  </div>
+
+  <div class="field" [class.invalido]="mostrarErro('descricao')">
+    <label for="descricao">Descrição</label>
+    <textarea id="descricao" formControlName="descricao" rows="2" maxlength="100"
+              placeholder="Ex.: aluguel"
+              [attr.aria-invalid]="mostrarErro('descricao')"
+              [attr.aria-describedby]="mostrarErro('descricao') ? 'descricao-erro' : null"></textarea>
+    @if (mostrarErro('descricao')) { <p class="field-erro" id="descricao-erro">Descreva o lançamento.</p> }
+  </div>
+
+  <div class="field" [class.invalido]="mostrarErro('idCCusto')">
+    <label for="centro-custo">Centro de custo</label>
+    <select id="centro-custo" formControlName="idCCusto"
+            [attr.aria-invalid]="mostrarErro('idCCusto')" [attr.aria-describedby]="mostrarErro('idCCusto') ? 'centro-erro' : null">
+      <option [ngValue]="null" disabled>Escolha um centro de custo</option>
+      @for (centro of centroCustos(); track centro.id) {
+        <option [ngValue]="centro.id">{{ centro.descriCCusto }}</option>
+      }
+    </select>
+    @if (mostrarErro('idCCusto')) { <p class="field-erro" id="centro-erro">Escolha o centro de custo.</p> }
+  </div>
+
+  <div class="form-acoes">
+    <button type="button" class="btn btn-outline" (click)="cancelar.emit()">Cancelar</button>
+    <button type="submit" class="btn btn-primary" [disabled]="enviando()">
+      @if (enviando()) { <span class="spinner"></span> Salvando } @else { {{ btnText() }} }
+    </button>
+  </div>
 </form>

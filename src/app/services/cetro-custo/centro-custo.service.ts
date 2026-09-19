@@ -1,79 +1,54 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { avisarFalha } from 'src/app/core/http';
+import { CentroCusto, CentroCustoPayload } from 'src/types';
 import { LoginService } from '../login/login.service';
-import { CentroCusto } from 'src/types';
 import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CentroCustoService {
+  private http = inject(HttpClient);
+  private login = inject(LoginService);
+  private mensagens = inject(MensagensService);
+  private api = `${environment.baseApiUrl}api/centrocustos`;
 
-  private baseApiUrl = environment.baseApiUrl;
-  
-  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
-  
-  getAllCentroCustos(): Observable<CentroCusto[]>{
-    const idUsuario = this.loginService.getIdUsuario();
-    return this.http.get<CentroCusto[]>(`${this.baseApiUrl}api/centrocustos/usuario/${idUsuario}`).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar centros de custo: ${error.status}`, undefined);
-        return throwError(error);
-      })
+  getAllCentroCustos(): Observable<CentroCusto[]> {
+    return this.http.get<CentroCusto[]>(`${this.api}/usuario/${this.login.getIdUsuario()}`).pipe(
+      avisarFalha(this.mensagens, 'carregar os centros de custo')
     );
   }
 
-  getIdCentroCustos(id: Number): Observable<CentroCusto>{
-    return this.http.get<CentroCusto>(`${this.baseApiUrl}api/centrocustos/${id}`).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar centro de custo: ${error.status}`, undefined);
-        return throwError(error);
-      })
+  getIdCentroCustos(id: number): Observable<CentroCusto> {
+    return this.http.get<CentroCusto>(`${this.api}/${id}`).pipe(
+      avisarFalha(this.mensagens, 'carregar o centro de custo')
     );
   }
 
-  postCentroCusto(formData: FormData): Observable<any> {
-    var data = { 
-      descriCCusto: formData.getAll("descriCCusto").toString().trim(),
-      valorLimite: Number(formData.getAll("valorLimite")),
-      idUsuario: Number(formData.getAll("idUsuario"))
-    }; 
-    console.log("Data: "); 
-    console.log(data);   
-    return this.http.post<any>(`${this.baseApiUrl}api/centrocustos`, data).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao criar centro de custo: ${error.status}`, undefined);
-        return throwError(error);
-      })
-    );
-  }
-
-  putCentroCustos(id: Number, formData: FormData): Observable<any> {
-    var data = { 
-      descriCCusto: formData.getAll("descriCCusto").toString().trim(),
-      valorLimite: Number(formData.getAll("valorLimite"))
+  postCentroCusto(dados: CentroCustoPayload): Observable<unknown> {
+    const corpo = {
+      descriCCusto: dados.descriCCusto.trim(),
+      valorLimite: dados.valorLimite,
+      idUsuario: Number(this.login.getIdUsuario())
     };
-
-    return this.http.put<any>(`${this.baseApiUrl}api/centrocustos/${id}`, data).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao atualizar centro de custo: ${error.status}`, undefined);
-        return throwError(error);
-      })
+    return this.http.post(this.api, corpo).pipe(
+      avisarFalha(this.mensagens, 'criar o centro de custo')
     );
   }
 
-  excluirCentroCusto(id: Number): Observable<any> {
-    var data = { 
-      deletado: '*'
-    };
-    return this.http.put(`${this.baseApiUrl}api/centrocustos/del/${id}`, data).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao excluir centro de custo: ${error.status}`, undefined);
-        return throwError(error);
-      })
+  putCentroCustos(id: number, dados: CentroCustoPayload): Observable<unknown> {
+    const corpo = { descriCCusto: dados.descriCCusto.trim(), valorLimite: dados.valorLimite };
+    return this.http.put(`${this.api}/${id}`, corpo).pipe(
+      avisarFalha(this.mensagens, 'atualizar o centro de custo')
     );
-  } 
+  }
 
+  excluirCentroCusto(id: number): Observable<unknown> {
+    return this.http.put(`${this.api}/del/${id}`, { deletado: '*' }).pipe(
+      avisarFalha(this.mensagens, 'excluir o centro de custo')
+    );
+  }
 }

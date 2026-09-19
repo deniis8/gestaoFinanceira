@@ -1,116 +1,82 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, inject, input, output, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { STATUS } from 'src/app/core/constantes';
 import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
-import { LancamentoFixo, CentroCusto } from 'src/types';
+import { MoedaDirective } from 'src/app/shared/moeda/moeda.directive';
+import { campoParaNumero, numeroParaCampo } from 'src/app/utils/moeda';
+import { CentroCusto, LancamentoFixo, LancamentoFixoPayload } from 'src/types';
+
+type Campo = 'diaMes' | 'valor' | 'descricao' | 'status' | 'idCCusto';
 
 @Component({
   selector: 'app-lancamento-fixo-form',
-  templateUrl: './lancamento-fixo-form.component.html',
-  styleUrl: './lancamento-fixo-form.component.css',
-  standalone: false
+  imports: [ReactiveFormsModule, MoedaDirective],
+  templateUrl: './lancamento-fixo-form.component.html'
 })
-export class LancamentoFixoFormComponent  implements OnInit {
-  @Output() onSubmit = new EventEmitter<LancamentoFixo>();
-  @Input() btnText!: string;
-  @Input() lancamentoFixoData: LancamentoFixo | null = null;
-  lancamentoFixoForm!: FormGroup;
-  centroCustos: CentroCusto[] = [];
-  dias: number[] = Array.from({ length: 31 }, (_, i) => i + 1);
+export class LancamentoFixoFormComponent implements OnInit {
+  private centroCustoService = inject(CentroCustoService);
 
-  constructor(private centroCustoService: CentroCustoService) { }
+  lancamentoFixoData = input<LancamentoFixo | null>(null);
+  btnText = input.required<string>();
+  enviando = input(false);
+  cancelar = output<void>();
+  salvar = output<LancamentoFixoPayload>();
+
+  /** Lançamento fixo só nasce como "a pagar" ou "a receber". */
+  readonly opcoesStatus = [
+    { valor: STATUS.aPagar, rotulo: 'A pagar', tipo: 'saida' },
+    { valor: STATUS.aReceber, rotulo: 'A receber', tipo: 'entrada' },
+  ];
+  readonly dias = Array.from({ length: 31 }, (_, i) => i + 1);
+
+  centroCustos = signal<CentroCusto[]>([]);
+  tentouEnviar = signal(false);
+
+  lancamentoFixoForm = new FormGroup({
+    diaMes: new FormControl<number | null>(null, [Validators.required]),
+    valor: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    descricao: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    status: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    idCCusto: new FormControl<number | null>(null, [Validators.required]),
+  });
 
   ngOnInit(): void {
-    this.lancamentoFixoForm = new FormGroup({
-      id: new FormControl(this.lancamentoFixoData ? this.lancamentoFixoData.id : ''),
-      diaMes: new FormControl(this.lancamentoFixoData?.diaMes, [Validators.required]),
-      valor: new FormControl(this.lancamentoFixoData ? this.formatValorInicial(this.lancamentoFixoData.valor) : '', [Validators.required]),
-      descricao: new FormControl(this.lancamentoFixoData ? this.lancamentoFixoData.descricao : '', [Validators.required]),
-      status: new FormControl(this.lancamentoFixoData ? this.lancamentoFixoData.status : '', [Validators.required]),
-      idCCusto: new FormControl(this.lancamentoFixoData ? this.lancamentoFixoData.idCCusto : '', [Validators.required]),
+    const dados = this.lancamentoFixoData();
+
+    this.lancamentoFixoForm.reset({
+      diaMes: dados?.diaMes ?? null,
+      valor: dados ? numeroParaCampo(dados.valor) : '',
+      descricao: dados?.descricao ?? '',
+      status: dados?.status ?? '',
+      idCCusto: dados?.idCCusto ?? null,
     });
 
-    this.centroCustoService.getAllCentroCustos().subscribe((centroCustos) => (this.centroCustos = centroCustos));
+    this.centroCustoService.getAllCentroCustos().subscribe({
+      next: lista => this.centroCustos.set(lista ?? []),
+      error: () => undefined
+    });
   }
 
-  // Formata o valor inicial quando carregado da API
-  formatValorInicial(valor: number | string): string {
-    let valorStr = valor.toString().replace('.', ','); // Troca ponto por vírgula
-    let partes = valorStr.split(',');
-    let inteiro = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Adiciona separador de milhar
-    let decimal = partes[1] ? partes[1].padEnd(2, '0') : '00'; // Garante dois dígitos nos centavos
-    return `${inteiro},${decimal}`;
-  }
-
-  formatValor(): void {
-    let valor = this.valor.value.replace(/\D/g, ''); // Remove tudo que não for número
-  
-    if (valor.length === 0) {
-      this.lancamentoFixoForm.controls['valor'].setValue('', { emitEvent: false });
-      return;
-    }
-  
-    // Remove zeros à esquerda
-    valor = valor.replace(/^0+(?!$)/, '');
-  
-    // Se tiver menos de 3 dígitos, apenas adiciona a vírgula corretamente
-    if (valor.length <= 2) {
-      this.lancamentoFixoForm.controls['valor'].setValue(`0,${valor.padStart(2, '0')}`, { emitEvent: false });
-      return;
-    }
-  
-    // Separa os centavos (últimos 2 dígitos)
-    let inteiro = valor.slice(0, -2);
-    let decimal = valor.slice(-2);
-  
-    // Aplica separadores de milhar
-    inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  
-    // Monta o valor final
-    let valorFormatado = `${inteiro},${decimal}`;
-  
-    // Atualiza o campo sem disparar eventos infinitos
-    this.lancamentoFixoForm.controls['valor'].setValue(valorFormatado, { emitEvent: false });
-  }
-
-  get diaMes() {
-    return this.lancamentoFixoForm.get('diaMes')!;
-  }
-
-  get valor() {
-    return this.lancamentoFixoForm.get('valor')!;
-  }
-
-  get descricao() {
-    return this.lancamentoFixoForm.get('descricao')!;
-  }
-
-  get status() {
-    return this.lancamentoFixoForm.get('status')!;
-  }
-
-  get idCCusto() {
-    return this.lancamentoFixoForm.get('idCCusto')!;
-  }
-
-  get idUsuario() {
-    return this.lancamentoFixoForm.get('idUsuario')!;
+  mostrarErro(nome: Campo): boolean {
+    const controle = this.lancamentoFixoForm.controls[nome];
+    return controle.invalid && (controle.touched || this.tentouEnviar());
   }
 
   submit(): void {
+    this.tentouEnviar.set(true);
     if (this.lancamentoFixoForm.invalid) {
+      this.lancamentoFixoForm.markAllAsTouched();
       return;
     }
-  
-    let valorFormatado = String(this.valor.value)
-      .replace(/\./g, '') // Remove pontos dos milhares
-      .replace(',', '.'); // Troca vírgula por ponto para decimal
-  
-    let lancamentoFormatado = {
-      ...this.lancamentoFixoForm.value,
-      valor: valorFormatado
-    };
-  
-    this.onSubmit.emit(lancamentoFormatado);
+
+    const valores = this.lancamentoFixoForm.getRawValue();
+    this.salvar.emit({
+      diaMes: Number(valores.diaMes),
+      valor: campoParaNumero(valores.valor),
+      descricao: valores.descricao,
+      status: valores.status,
+      idCCusto: Number(valores.idCCusto)
+    });
   }
-  
 }

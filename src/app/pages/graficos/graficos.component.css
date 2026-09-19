@@ -1,198 +1,128 @@
-.chart-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+:host { display: block; }
+
+.graficos { display: grid; gap: var(--s-6); }
+
+.meses > .chips, .meses > .titulo-secao { margin-bottom: var(--s-3); }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.chip-ano::before { display: none; }
+
+/* ---------- grade de meses ---------- */
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-2);
 }
 
-.chart-container-gcc {
-    width: 1000px;
-}
-
-.chart-container-gmcc {
-    width: 1500px;
-}
-
-canvas {
-    width: 100%;
-    height: auto;
-}
-
-th {
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    background-color: #302f2f;
-}
-
-td {
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    color: #616161;
-}
-
-.botao-editar {
-    background-color: #e7e7fd;
-}
-
-.botao-remover {
-    background-color: #fda6a6;
-}
-
-/*
-Gráfico Calendário
-*/
-@media (max-width: 600px) {
-    .campo-ano {
-        display: flex;
-        width: auto;
-    }
-}
-
-.grafico-calendario {
-    display: block;
-    width: auto;
-    height: auto;
-    align-items: center;
-    justify-content: center;
-    border-color: #c7c7c7;
-    border-radius: 8px;
-}
-
-.calendario-linha {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    gap: 1px;
-}
-
-.quadrante {
-    display: block;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100px;
-    border-color: #727272;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-.quadrante:hover {
-    border: 2px solid #4e78b8;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-}
-
-.quadrante-selecionado {
-  border: 2px solid #4e78b8;
-  border-top-right-radius: 10px;
-  border-top-left-radius: 10px;
-}
-
-.nome-mes {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    height: 15px;
-    border-top-right-radius: 8px;
-    border-top-left-radius: 8px;
-    background-color: #000000;
-    color: #ffffff;
-    font-size: 12px;
-    gap: 2px;
-}
-
-.valores {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    margin: 3px;
-    /* remove espaçamento vertical */
-    padding: 0;
-    /* opcional, deixa tudo bem juntinho */
-}
-
-.quadrante-vazio {
-  background-color: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.sem-dados {
-  font-size: 24px;
-  font-weight: bold;
-  color: #999;
-}
-
-/*
-Novo gráfico
-*/
-
-.cc-card {
-  padding: 12px;
-  border-radius: 8px;
-  background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  margin-bottom: 12px;
-}
-
-.cc-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-.cc-nome {
-  font-weight: 600;
-}
-
-.cc-valor {
-  color: #666;
-}
-
-.cc-bar-container {
+.tile {
+  --tom: var(--ink-3);
   position: relative;
-  height: 10px;
-  background: #eaeaea;
-  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s-2);
+  width: 100%;
+  min-height: 5.25rem;
+  padding: var(--s-3) var(--s-3) var(--s-2);
+  border: 1px solid var(--rule-strong);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tom) 13%, var(--surface));
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.tile::before { /* a cor da sobra, em faixa */
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--tom);
+}
+.tile:hover { border-color: var(--ink-3); }
+.tile[aria-pressed="true"] {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.tile-mes { font-weight: 600; font-size: var(--t-md); }
+.tile-mes small { margin-left: 0.35em; font-size: var(--t-xs); font-weight: 500; color: var(--ink-3); }
+.tile-sobra { font-size: var(--t-md); font-weight: 600; }
+
+.tile-sk { min-height: 5.25rem; border-radius: 12px; }
+
+/* ---------- mês selecionado ---------- */
+
+.resumo-mes { padding-bottom: var(--s-5); border-bottom: 1px solid var(--rule-strong); }
+
+.trio {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+.trio dt { font-size: var(--t-sm); color: var(--ink-2); }
+.trio dd { margin: 0; font-size: var(--t-md); font-weight: 600; }
+
+/* ---------- centros de custo ---------- */
+
+.centros { margin-top: var(--s-5); }
+.centros > .titulo-secao { margin-bottom: var(--s-1); }
+
+.centro {
+  --barra: var(--income);
+  display: block;
+  width: 100%;
+  padding: var(--s-4) 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+.centro[data-classe="alerta"] { --barra: var(--pending); }
+.centro[data-classe="estourado"] { --barra: var(--expense); }
+
+.centro-topo { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); }
+.centro-nome { font-weight: 500; overflow-wrap: anywhere; }
+.centro:hover .centro-nome { text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+.centro-valores { display: flex; flex-direction: column; align-items: flex-end; font-size: var(--t-sm); }
+.centro-valores strong { font-size: var(--t-md); }
+
+.barra {
+  display: block;
+  height: 0.5rem;
+  margin: var(--s-2) 0;
+  border-radius: 999px;
+  background: var(--sunken);
   overflow: hidden;
 }
-
-.cc-bar {
+.barra-cheia {
+  display: block;
   height: 100%;
-  border-radius: 5px;
-  transition: width 0.3s ease;
+  border-radius: 999px;
+  background: var(--barra);
+  transition: width 0.5s var(--ease);
 }
 
-.cc-bar.ok {
-  background-color: #4caf50;
+.centro-base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-1) var(--s-3);
+  font-size: var(--t-sm);
 }
 
-.cc-bar.alerta {
-  background-color: #ffc107;
+@media (min-width: 560px) {
+  .grade { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-.cc-bar.estourado {
-  background-color: #f44336;
+@media (min-width: 960px) {
+  .graficos {
+    grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--s-7);
+  }
+  .grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .meses { position: sticky; top: var(--s-5); }
+  .centros { margin-top: var(--s-4); }
 }
-
-.cc-limite {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: #555;
-}
-
-.cc-percentual {
-  font-size: 12px;
-  color: #777;
-  text-align: right;
-  margin-top: 4px;
-}
-

@@ -1,82 +1,165 @@
-/* Ajuste do conteúdo da página */
-.content-container {
-  width: 100%;
-  margin: 0 auto;
-  padding: 5px;
-  background-color: white;
-  padding-top: 80px; /* Espaço para o título não ser coberto */
-}
+:host { display: block; }
 
-/* Estilo para a barra de ferramentas (mat-toolbar) */
-mat-toolbar {
-  position: fixed; /* Fixa a barra no topo */
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000; /* Garante que a barra fique acima de outros elementos */
-  background-color:rgb(200, 200, 200); /* Cor de fundo da barra */
-  color: black; /* Cor do texto e ícones */
-  display: flex;
-  justify-content: flex-start; /* Alinha o conteúdo à esquerda */
-  align-items: center;
-  padding: 0px;
-  height: 60px; /* Altura da barra */
-}
+.shell { min-height: 100dvh; }
 
-/* Estilo para o menu lateral */
-mat-sidenav {
-  background-color: rgb(210, 210, 210);
-  padding: 10px;
-  position: fixed; /* Fixa o menu lateral */
-  top: 0px;
-  left: 0;
-  height: 100vh; /* Garante que o menu ocupe toda a altura da tela */
-  width: 250px; /* Largura do menu lateral */
-  z-index: 1000; /* Menu fixo sobre o conteúdo */
-  transition: transform 0.3s ease-in-out; /* Animação para abrir/fechar */
-}
+.lateral { display: none; }
 
-/* Ajustes do conteúdo do menu lateral */
-mat-nav-list {
+.conteudo {
+  min-width: 0;
+  padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+}
+.foco .conteudo, .sem-menu .conteudo { padding-bottom: 0; }
+
+/* ---------- barra de abas (celular) ---------- */
+
+.abas {
+  position: fixed;
+  z-index: 50;
+  left: 0; right: 0; bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  border-top: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.foco .abas { display: none; }
+
+.abas a, .abas button {
+  position: relative;
   display: flex;
   flex-direction: column;
-}
-
-mat-nav-list a {
-  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-3);
+  font-size: 0.6875rem;
+  font-weight: 500;
   text-decoration: none;
-  color: black;
+  cursor: pointer;
+}
+.abas .ativo { color: var(--ink); font-weight: 600; }
+.abas .ativo::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  width: 1.75rem;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--action);
 }
 
-mat-nav-list a:hover {
-  background-color: #FFF;
+.abas .novo .botao {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-top: -1.5rem;
+  border: 4px solid var(--paper);
+  border-radius: 50%;
+  background: var(--action);
+  color: var(--on-action);
+  box-shadow: var(--shadow-float);
+  transition: transform 0.12s;
 }
+.abas .novo:active .botao { transform: scale(0.94); }
 
-mat-list-item {
+/* ---------- gaveta "Mais" ---------- */
+
+.opcoes { display: flex; flex-direction: column; }
+.opcoes li + li { border-top: 1px solid var(--rule); }
+.opcoes a, .opcoes button {
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-mat-icon {
-  font-size: 24px;
-  vertical-align: middle;
-}
-
-/* Ajuste para os itens do menu ao serem selecionados */
-.selected {
-  background-color: #FFF; /* Cor de fundo ao selecionar */
-  color: white; /* Alterando a cor do texto */
-}
-
-
-/* Remover borda e fundo no botão */
-button:focus {
-  outline: none;
-}
-
-button {
-  border: none;
+  gap: var(--s-3);
+  width: 100%;
+  min-height: 3.25rem;
+  padding: 0;
+  border: 0;
   background: none;
+  color: var(--ink);
+  font-size: var(--t-lg);
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
   cursor: pointer;
+}
+.opcoes app-icon { color: var(--ink-3); }
+
+/* ---------- menu lateral (desktop) ---------- */
+
+@media (min-width: 960px) {
+  .shell:not(.sem-menu) {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+  }
+
+  .lateral {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    padding: var(--s-5) var(--s-4);
+    border-right: 1px solid var(--rule);
+  }
+
+  .marca {
+    margin-bottom: var(--s-5);
+    padding: 0 var(--s-2);
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 18;
+    font-size: var(--t-xl);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .novo-lancamento { margin-bottom: var(--s-5); }
+
+  nav ul { display: flex; flex-direction: column; gap: 2px; }
+
+  nav a, .sair {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0 var(--s-3);
+    border: 0;
+    border-radius: var(--r-control);
+    background: none;
+    color: var(--ink-2);
+    font-size: var(--t-md);
+    font-weight: 500;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+  }
+  nav a:hover, .sair:hover { background: var(--sunken); color: var(--ink); }
+  nav a.ativo { background: var(--sunken); color: var(--ink); font-weight: 600; }
+  nav a.ativo::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.65rem;
+    bottom: 0.65rem;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--action);
+  }
+
+  .sair { margin-top: auto; }
+
+  .abas { display: none; }
+  .conteudo { padding-bottom: 0; }
 }

@@ -1,27 +1,48 @@
-<form (ngSubmit)="submit()" [formGroup]="configuracoesIAForm">
-    <h1 class="h1">Configurações IA</h1>
-    <div class="form-group">
-        <label for="filtroDataDe">Data De:</label>
-        <input type="date" placeholder="" formControlName="filtroDataDe">
-        <div *ngIf="filtroDataDe.invalid && configuracoesIAForm.touched" class="validation-error">
-            <p *ngIf="filtroDataDe.errors?.['required']">A data é obrigatória.</p>
-        </div>
+<div class="page">
+  <header class="page-head">
+    <div>
+      <h1 class="titulo-pagina">Configurações da IA</h1>
+      <p class="lead">O período e as instruções usados ao gerar o insight na tela de lançamentos.</p>
     </div>
-    <div class="form-group">
-        <label for="filtroDataAte">Data Até:</label>
-        <input type="date" placeholder="" formControlName="filtroDataAte">
-        <div *ngIf="filtroDataAte.invalid && configuracoesIAForm.touched" class="validation-error">
-            <p *ngIf="filtroDataAte.errors?.['required']">A data é obrigatória.</p>
-        </div>
+  </header>
+
+  @if (carregando()) {
+    <div class="formulario" aria-hidden="true">
+      <span class="sk" style="height: 2.875rem; width: 100%"></span>
+      <span class="sk" style="height: 12rem; width: 100%; margin-top: 1.25rem"></span>
     </div>
-    <div class="form-group">
-        <label for="prompt">Prompt:</label>
-        <textarea class="textarea" placeholder="Descrição do Prompt" formControlName="prompt"></textarea>
-        <div *ngIf="prompt.invalid && configuracoesIAForm.touched" class="validation-error">
-            <p *ngIf="prompt.errors?.['required']">A descrição é obrigatória.</p>
+  } @else {
+    @if (semConfiguracao) {
+      <p class="aviso">Nenhuma configuração foi encontrada para o seu usuário, então não há o que editar por aqui.</p>
+    }
+
+    <form class="formulario" [formGroup]="configuracoesIAForm" (ngSubmit)="submit()" novalidate>
+      <div class="datas">
+        <div class="field" [class.invalido]="mostrarErro('filtroDataDe')">
+          <label for="data-de">De</label>
+          <input id="data-de" type="date" formControlName="filtroDataDe" [attr.aria-invalid]="mostrarErro('filtroDataDe')" />
+          @if (mostrarErro('filtroDataDe')) { <p class="field-erro">Informe a data inicial.</p> }
         </div>
-    </div>
-    <button type="submit" class="btn-salvar" [disabled]="configuracoesIAForm.invalid">
-        Salvar
-    </button>
-</form>
+        <div class="field" [class.invalido]="mostrarErro('filtroDataAte')">
+          <label for="data-ate">Até</label>
+          <input id="data-ate" type="date" formControlName="filtroDataAte" [attr.aria-invalid]="mostrarErro('filtroDataAte')" />
+          @if (mostrarErro('filtroDataAte')) { <p class="field-erro">Informe a data final.</p> }
+        </div>
+      </div>
+
+      <div class="field" [class.invalido]="mostrarErro('prompt')">
+        <label for="prompt">Instruções para a IA</label>
+        <textarea id="prompt" class="prompt" formControlName="prompt" maxlength="20000"
+                  placeholder="Explique o que a IA deve observar e como responder."
+                  [attr.aria-invalid]="mostrarErro('prompt')"></textarea>
+        @if (mostrarErro('prompt')) { <p class="field-erro">Escreva as instruções para a IA.</p> }
+      </div>
+
+      <div class="form-acoes">
+        <button type="submit" class="btn btn-primary" [disabled]="salvando() || semConfiguracao">
+          @if (salvando()) { <span class="spinner"></span> Salvando } @else { Salvar alterações }
+        </button>
+      </div>
+    </form>
+  }
+</div>
