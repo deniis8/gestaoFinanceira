@@ -1,6 +1,6 @@
 .toasts {
   position: fixed;
-  z-index: 2000;
+  z-index: 900;
   left: var(--s-3);
   right: var(--s-3);
   bottom: calc(var(--tabbar-h) + var(--s-3) + env(safe-area-inset-bottom, 0px));

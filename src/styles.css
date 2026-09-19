@@ -116,7 +116,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-html:has(dialog[open]) { overflow: hidden; }
+html.sheet-aberto, html.sheet-aberto body { overflow: hidden; }
 
 h1, h2, h3, p, ul, ol, figure { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
