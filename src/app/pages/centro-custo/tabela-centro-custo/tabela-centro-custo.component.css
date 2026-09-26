@@ -1,62 +1,18 @@
-/* Cabeçalho da tabela */
-.table th {
-    background-color: #343a40;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    font-family: Arial, sans-serif;
-  }
-  
-  /* Células da tabela */
-  .table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    font-size: 11px;
-    font-family: Arial, sans-serif;
-    color: #616161;
-  }
-  
-  /* Botões de ação dentro da tabela */
-  .table td .btn {
-    width: 40px;
-    height: 40px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    border: none;
-    color: white;
-    font-size: 18px;
-    transition: background-color 0.3s ease;
-  }
-  
-  /* Botões específicos */
-  .botao-editar {
-    background-color: #e7e7fd;
-  }
-  
-  .botao-remover {
-    background-color: #fda6a6;
-  }
-  
-  /* Título da página */
-  h2 {
-    font-size: 18px;
-  }
-  
-  /* Botão flutuante */
-  .fab {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    background-color: rgb(90, 165, 90);
-  }
-  
-  /* Responsividade */
-  @media (max-width: 599px) {
-    .table {
-      width: 100%;
-      font-size: 12px;
-    }
-  }
-  
+:host { display: block; }
+
+.linha { grid-template-columns: 1fr auto; min-height: 3.5rem; }
+.linha-acoes { padding-left: 0; }
+.linha-texto { display: flex; flex-direction: column; min-width: 0; }
+.excluir { color: var(--expense); }
+
+.esqueleto-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--s-4) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+@media (max-width: 420px) {
+  .rotulo-longo { display: none; }
+}

@@ -1,93 +1,56 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CentroCustoService } from 'src/app/services/cetro-custo/centro-custo.service';
-import { CentroCusto } from 'src/types';
+import { Component, OnInit, input, output, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { MoedaDirective } from 'src/app/shared/moeda/moeda.directive';
+import { campoParaNumero, numeroParaCampo } from 'src/app/utils/moeda';
+import { CentroCusto, CentroCustoPayload } from 'src/types';
+
+type Campo = 'descriCCusto' | 'valorLimite';
 
 @Component({
   selector: 'app-centro-custo-form',
-  templateUrl: './centro-custo-form.component.html',
-  styleUrl: './centro-custo-form.component.css',
-  standalone: false
+  imports: [ReactiveFormsModule, MoedaDirective],
+  templateUrl: './centro-custo-form.component.html'
 })
-export class CentroCustoFormComponent implements OnInit{
-  @Output() onSubmit = new EventEmitter<CentroCusto>();
-  @Input() btnText!: string;
-  @Input() centroCustoData: CentroCusto | null = null;
-  centroCustoForm!: FormGroup;
-  centroCustos: CentroCusto[] = [];
+export class CentroCustoFormComponent implements OnInit {
+  centroCustoData = input<CentroCusto | null>(null);
+  btnText = input.required<string>();
+  enviando = input(false);
+  cancelar = output<void>();
+  salvar = output<CentroCustoPayload>();
 
-  constructor(private centroCustoService: CentroCustoService ){}
+  tentouEnviar = signal(false);
+
+  centroCustoForm = new FormGroup({
+    descriCCusto: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    valorLimite: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+  });
 
   ngOnInit(): void {
-      this.centroCustoForm = new FormGroup({
-        id: new FormControl(this.centroCustoData ? this.centroCustoData.id : ''),
-        descriCCusto: new FormControl(this.centroCustoData ? this.centroCustoData.descriCCusto : '', [Validators.required]),
-        valorLimite: new FormControl(this.centroCustoData ? this.formatValorInicial(this.centroCustoData.valorLimite) : '', [Validators.required]),
-      });
+    const dados = this.centroCustoData();
+
+    this.centroCustoForm.reset({
+      descriCCusto: dados?.descriCCusto ?? '',
+      valorLimite: dados ? numeroParaCampo(dados.valorLimite) : '',
+    });
   }
 
-  get descriCCusto(){
-    return this.centroCustoForm.get('descriCCusto')!;
+  mostrarErro(nome: Campo): boolean {
+    const controle = this.centroCustoForm.controls[nome];
+    return controle.invalid && (controle.touched || this.tentouEnviar());
   }
 
-   get valorLimite(){
-    return this.centroCustoForm.get('valorLimite')!;
-  }
-
-  submit(){
-    if(this.centroCustoForm.invalid){
+  submit(): void {
+    this.tentouEnviar.set(true);
+    if (this.centroCustoForm.invalid) {
+      this.centroCustoForm.markAllAsTouched();
       return;
     }
 
-    let valorFormatado = String(this.valorLimite.value)
-      .replace(/\./g, '') // Remove pontos dos milhares
-      .replace(',', '.'); // Troca vírgula por ponto para decimal
-  
-    let valorLimiteFormatado = {
-      ...this.centroCustoForm.value,
-      valorLimite: valorFormatado
-    };
-
-    this.onSubmit.emit(valorLimiteFormatado);
-  }
-
-  // Formata o valor inicial quando carregado da API
-  formatValorInicial(valorLimite: number | string): string {
-    let valorStr = valorLimite.toString().replace('.', ','); // Troca ponto por vírgula
-    let partes = valorStr.split(',');
-    let inteiro = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Adiciona separador de milhar
-    let decimal = partes[1] ? partes[1].padEnd(2, '0') : '00'; // Garante dois dígitos nos centavos
-    return `${inteiro},${decimal}`;
-  }
-
-  formatValor(): void {
-    let valorLimite = this.valorLimite.value.replace(/\D/g, ''); // Remove tudo que não for número
-  
-    if (valorLimite.length === 0) {
-      this.centroCustoForm.controls['valorLimite'].setValue('', { emitEvent: false });
-      return;
-    }
-  
-    // Remove zeros à esquerda
-    valorLimite = valorLimite.replace(/^0+(?!$)/, '');
-  
-    // Se tiver menos de 3 dígitos, apenas adiciona a vírgula corretamente
-    if (valorLimite.length <= 2) {
-      this.centroCustoForm.controls['valorLimite'].setValue(`0,${valorLimite.padStart(2, '0')}`, { emitEvent: false });
-      return;
-    }
-  
-    // Separa os centavos (últimos 2 dígitos)
-    let inteiro = valorLimite.slice(0, -2);
-    let decimal = valorLimite.slice(-2);
-  
-    // Aplica separadores de milhar
-    inteiro = inteiro.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  
-    // Monta o valor final
-    let valorFormatado = `${inteiro},${decimal}`;
-    console.log(valorFormatado)
-    // Atualiza o campo sem disparar eventos infinitos
-    this.centroCustoForm.controls['valorLimite'].setValue(valorFormatado, { emitEvent: false });
+    const valores = this.centroCustoForm.getRawValue();
+    this.salvar.emit({
+      descriCCusto: valores.descriCCusto,
+      valorLimite: campoParaNumero(valores.valorLimite)
+    });
   }
 }

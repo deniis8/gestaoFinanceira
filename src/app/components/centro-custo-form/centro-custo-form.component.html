@@ -1,24 +1,33 @@
-<form (ngSubmit)="submit()" [formGroup]="centroCustoForm" #formDir="ngForm">
-    
-    <div class="form-group">
-        <input type="hidden" formControlName="id" />
-    </div>
+<form class="formulario" [formGroup]="centroCustoForm" (ngSubmit)="submit()" novalidate>
 
-    <div class="form-group">
-        <label for="description">Descrição:</label>
-        <textarea placeholder="Descrição do Centro de Custo" formControlName="descriCCusto" required></textarea>
-        <div *ngIf="descriCCusto.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="descriCCusto.errors?.['required']">A descrição é obrigatória.</p>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="valor">Valor Limite:</label>
-        <input type="text" inputmode="numeric" placeholder="Coloque o valor limite" formControlName="valorLimite" required (input)="formatValor()">
-        <div *ngIf="valorLimite.invalid && formDir.submitted" class="validation-error">
-            <p *ngIf="valorLimite.errors?.['required']">O valor limite é obrigatório.</p>
-        </div>
-    </div>
+  <div class="field" [class.invalido]="mostrarErro('descriCCusto')">
+    <label for="descricao">Nome</label>
+    <input id="descricao" type="text" formControlName="descriCCusto" maxlength="50" autocomplete="off"
+           placeholder="Ex.: Alimentação"
+           [attr.aria-invalid]="mostrarErro('descriCCusto')"
+           [attr.aria-describedby]="mostrarErro('descriCCusto') ? 'descricao-erro' : null" />
+    @if (mostrarErro('descriCCusto')) { <p class="field-erro" id="descricao-erro">Dê um nome ao centro de custo.</p> }
+  </div>
 
-    <input type="submit" value="{{btnText}}">    
+  <div class="field" [class.invalido]="mostrarErro('valorLimite')">
+    <label for="valor-limite">Limite mensal</label>
+    <div class="campo-valor">
+      <span class="rs" aria-hidden="true">R$</span>
+      <input id="valor-limite" type="text" appMoeda formControlName="valorLimite" placeholder="0,00"
+             [attr.aria-invalid]="mostrarErro('valorLimite')"
+             [attr.aria-describedby]="mostrarErro('valorLimite') ? 'limite-erro' : 'limite-dica'" />
+    </div>
+    @if (mostrarErro('valorLimite')) {
+      <p class="field-erro" id="limite-erro">Informe o limite mensal.</p>
+    } @else {
+      <p class="field-dica" id="limite-dica">Nos Gráficos, a barra do centro de custo se enche até esse valor.</p>
+    }
+  </div>
+
+  <div class="form-acoes">
+    <button type="button" class="btn btn-outline" (click)="cancelar.emit()">Cancelar</button>
+    <button type="submit" class="btn btn-primary" [disabled]="enviando()">
+      @if (enviando()) { <span class="spinner"></span> Salvando } @else { {{ btnText() }} }
+    </button>
+  </div>
 </form>

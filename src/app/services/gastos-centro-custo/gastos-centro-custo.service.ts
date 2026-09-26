@@ -1,27 +1,24 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Observable, catchError, throwError } from 'rxjs';
-import { LoginService } from '../login/login.service';
+import { avisarFalha } from 'src/app/core/http';
 import { GastosCentroCusto } from 'src/types';
+import { LoginService } from '../login/login.service';
 import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GastosCentroCustoService {
+  private http = inject(HttpClient);
+  private login = inject(LoginService);
+  private mensagens = inject(MensagensService);
 
-  private baseApiUrl = environment.baseApiUrl;
-  
-  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService  ) { }
-
-  getAllGastosCentroMesAno(mesAno?: string): Observable<GastosCentroCusto[]>{
-    const idUsuario = this.loginService.getIdUsuario();
-    return this.http.get<GastosCentroCusto[]>(`${this.baseApiUrl}api/gastoscentrocustos/usuario/${idUsuario}/mesano/${mesAno}`).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar gastos por centro de custo: ${error.status}`, undefined);
-        return throwError(error);
-      })
+  getAllGastosCentroMesAno(mesAno: string): Observable<GastosCentroCusto[]> {
+    const url = `${environment.baseApiUrl}api/gastoscentrocustos/usuario/${this.login.getIdUsuario()}/mesano/${encodeURIComponent(mesAno)}`;
+    return this.http.get<GastosCentroCusto[]>(url).pipe(
+      avisarFalha(this.mensagens, 'carregar os gastos por centro de custo')
     );
   }
 }

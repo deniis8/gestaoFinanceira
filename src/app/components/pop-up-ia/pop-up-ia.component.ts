@@ -1,15 +1,24 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SafeHtml } from '@angular/platform-browser';
+import { Component, ViewEncapsulation, computed, inject, input, output } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SheetComponent } from 'src/app/shared/sheet/sheet.component';
 
 @Component({
   selector: 'app-pop-up-ia',
-  templateUrl: './pop-up-ia.component.html',
-  styleUrl: './pop-up-ia.component.css',
-  standalone: false
+  imports: [SheetComponent],
+  encapsulation: ViewEncapsulation.None, // o HTML da IA não recebe os atributos de escopo
+  template: `
+    <app-sheet titulo="Insight da IA" (fechar)="fechar.emit()">
+      <div class="conteudo-ia" [innerHTML]="html()"></div>
+    </app-sheet>
+  `,
+  styleUrl: './pop-up-ia.component.css'
 })
-export class PopUpIaComponent { 
+export class PopUpIaComponent {
+  private sanitizer = inject(DomSanitizer);
 
-  @Input() htmlIa?: SafeHtml;
-  @Output() fechar = new EventEmitter<void>();
+  /** HTML devolvido pela API de análise financeira (conteúdo da própria API do usuário). */
+  analise = input.required<string>();
+  fechar = output<void>();
 
+  html = computed(() => this.sanitizer.bypassSecurityTrustHtml(this.analise()));
 }

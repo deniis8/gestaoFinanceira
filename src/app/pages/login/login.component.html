@@ -1,43 +1,54 @@
-<div class="container-principal">
-  <div class="container-login">
+<div class="login">
+  <section class="arte" aria-hidden="true">
+    <app-guilhoche class="roseta" />
+    <p class="marca">Gestão<br>Financeira</p>
+    <p class="frase">Tudo o que entrou e saiu, num só extrato.</p>
+  </section>
 
+  <section class="painel">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+      <h1 class="titulo-pagina">Entrar</h1>
 
-
-
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      
-      <div class="form-group">
+      <div class="field">
         <label for="email">E-mail</label>
-        <input id="email" formControlName="email" type="email" placeholder="Digite seu e-mail" />
-        <small *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-          E-mail inválido
-        </small>
+        <input id="email" type="email" formControlName="email" inputmode="email" autocomplete="username"
+               autocapitalize="none" spellcheck="false" placeholder="voce@exemplo.com"
+               [attr.aria-invalid]="email.invalid && email.touched"
+               [attr.aria-describedby]="email.invalid && email.touched ? 'email-erro' : null" />
+        @if (email.invalid && email.touched) {
+          <p class="field-erro" id="email-erro">Informe um e-mail válido.</p>
+        }
       </div>
 
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <input id="password" formControlName="senha" type="password" placeholder="Digite sua senha" />
-        <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          A senha deve ter pelo menos 6 caracteres
-        </small>
+      <div class="field">
+        <label for="senha">Senha</label>
+        <div class="campo-senha">
+          <input id="senha" [type]="mostrarSenha() ? 'text' : 'password'" formControlName="senha"
+                 autocomplete="current-password" placeholder="Sua senha"
+                 [attr.aria-invalid]="senha.invalid && senha.touched"
+                 [attr.aria-describedby]="senha.invalid && senha.touched ? 'senha-erro' : null" />
+          <button type="button" class="btn btn-quiet btn-icon btn-sm"
+                  [attr.aria-label]="mostrarSenha() ? 'Ocultar senha' : 'Mostrar senha'"
+                  [attr.aria-pressed]="mostrarSenha()" (click)="mostrarSenha.set(!mostrarSenha())">
+            <app-icon [nome]="mostrarSenha() ? 'olhoOculto' : 'olho'" />
+          </button>
+        </div>
+        @if (senha.invalid && senha.touched) {
+          <p class="field-erro" id="senha-erro">A senha deve ter pelo menos 6 caracteres.</p>
+        }
       </div>
 
-      <p *ngIf="loginError" class="error-message">{{ loginError }}</p>
+      @if (loginError(); as mensagem) {
+        <p class="field-erro erro-geral" role="alert">{{ mensagem }}</p>
+      }
 
-      <button class="btn btn-primary w-100" [disabled]="isLoading || loginForm.invalid">
-
-        <ng-container *ngIf="!isLoading; else loading">
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <span class="spinner"></span> Entrando
+        } @else {
           Entrar
-        </ng-container>
-
-        <ng-template #loading>
-          <span class="spinner"></span>
-          Entrando...
-        </ng-template>
+        }
       </button>
-
-
-
     </form>
-  </div>
+  </section>
 </div>

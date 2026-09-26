@@ -1,185 +1,145 @@
-<form [formGroup]="form">
-    <mat-form-field appearance="outline" class="campo-ano">
-        <mat-label>Ano</mat-label>
+<div class="page page-wide">
+  <header class="page-head">
+    <div>
+      <h1 class="titulo-pagina">Gráficos</h1>
+      <p class="lead">Quanto sobrou em cada mês e como cada centro de custo se comporta.</p>
+    </div>
+  </header>
 
-        <input matInput [matDatepicker]="picker" formControlName="ano" readonly>
+  <div class="graficos">
+    <!-- meses -->
+    <section class="meses" aria-labelledby="meses-titulo">
+      <h2 id="meses-titulo" class="titulo-secao">Meses</h2>
 
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      @if (anosDisponiveis().length > 1) {
+        <div class="chips" role="group" aria-label="Período">
+          <button type="button" class="chip chip-ano" [attr.aria-pressed]="anoSelecionado() === null" (click)="selecionarAno(null)">Todos</button>
+          @for (ano of anosDisponiveis(); track ano) {
+            <button type="button" class="chip chip-ano" [attr.aria-pressed]="anoSelecionado() === ano" (click)="selecionarAno(ano)">{{ ano }}</button>
+          }
+        </div>
+      }
 
-        <mat-datepicker #picker startView="multi-year" (yearSelected)="anoSelecionado($event, picker)">
-        </mat-datepicker>
+      @if (carregandoMeses()) {
+        <div class="grade" aria-hidden="true">
+          @for (item of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track item) {
+            <span class="sk tile-sk"></span>
+          }
+        </div>
+      } @else if (meses().length === 0) {
+        <div class="vazio">
+          <strong>Sem movimento neste período</strong>
+          Não há lançamentos pagos para montar os meses.
+        </div>
+      } @else {
+        <ul class="grade">
+          @for (mes of meses(); track mes.mesAno) {
+            <li>
+              <button type="button" class="tile" [style.--tom]="mes.cor"
+                      [attr.aria-pressed]="mes.mesAno === mesSelecionado()"
+                      [attr.aria-label]="mes.mes + ' de ' + mes.ano + ', sobra de R$ ' + (mes.sobra | formatValor)"
+                      (click)="selecionarMes(mes.mesAno)">
+                <span class="tile-mes">{{ mes.abreviacao }}<small>{{ mes.ano }}</small></span>
+                <span class="tile-sobra money">
+                  {{ mes.sobra < 0 ? '−' : '' }}<span class="rs">R$</span>{{ (mes.sobra < 0 ? -mes.sobra : mes.sobra) | formatValor }}
+                </span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </section>
 
-        <mat-error *ngIf="ano.invalid">
-            Ano é obrigatório
-        </mat-error>
-    </mat-form-field>
-</form>
-
-<!-- SKELETON -->
-<div class="grafico-calendario" *ngIf="loadingGastosMensais">
-
-    <div class="calendario-linha" *ngFor="let linha of [0,1,2]">
-
-        <ng-container *ngFor="let col of [0,1,2,3]">
-
-            <div class="quadrante">
-                <ngx-skeleton-loader
-                    count="4"
-                    appearance="line"
-                    [theme]="{
-                      height: '14px',
-                      'margin-bottom': '6px',
-                      'border-radius': '4px'
-                    }">
-                </ngx-skeleton-loader>
+    <!-- detalhe do mês -->
+    <div class="mes-detalhe">
+      @if (mesAtual(); as mes) {
+        <section class="resumo-mes" aria-labelledby="mes-titulo">
+          <h2 id="mes-titulo" class="titulo-pagina">{{ mes.mes }} de {{ mes.ano }}</h2>
+          <dl class="trio">
+            <div>
+              <dt>Recebido</dt>
+              <dd class="money is-entrada">R$ {{ mes.recebido | formatValor }}</dd>
             </div>
+            <div>
+              <dt>Gasto</dt>
+              <dd class="money is-saida">R$ {{ mes.gasto | formatValor }}</dd>
+            </div>
+            <div>
+              <dt>Sobra</dt>
+              <dd class="money" [class.is-entrada]="mes.sobra >= 0" [class.is-saida]="mes.sobra < 0">
+                {{ mes.sobra < 0 ? '−' : '' }}R$ {{ (mes.sobra < 0 ? -mes.sobra : mes.sobra) | formatValor }}
+              </dd>
+            </div>
+          </dl>
+        </section>
+      }
 
-        </ng-container>
-    </div>
+      <section class="centros" aria-labelledby="centros-titulo">
+        <h2 id="centros-titulo" class="titulo-secao">Centros de custo</h2>
 
-</div>
-
-<!--CONTEÚDO -->
-<ng-container *ngIf="!loadingGastosMensais">
-
-  <div class="grafico-calendario" *ngIf="gGMMesAno.length > 0; else registrosNaoEncontrados">
-
-      <div class="calendario-linha" *ngFor="let linha of [0,1,2]; let l = index">
-
-          <ng-container *ngFor="let col of [0,1,2,3]; let c = index">
-
-              <ng-container *ngIf="temRegistro(l * 4 + c); else semRegistro">
-
-                  <div class="quadrante"
-                       [class.quadrante-selecionado]="gGMMesAno[l * 4 + c] === mesAnoSelecionado"
-                       [style.backgroundColor]="gGMCordoQuadrante[l * 4 + c]"
-                       (click)="selecionarMes(gGMMesAno[l * 4 + c])">
-
-                      <strong class="nome-mes">
-                          {{ gGMLabelMes[l * 4 + c] }}
-                      </strong>
-
-                      <p class="valores">
-                          + R$ {{ gGMDataValorRecebidoMes[l * 4 + c] }}
-                      </p>
-
-                      <p class="valores">
-                          - R$ {{ gGMDataValor[l * 4 + c] }}
-                      </p>
-
-                      <p class="valores">
-                          = R$ {{ gGMDataSobraMes[l * 4 + c] }}
-                      </p>
-
-                  </div>
-              </ng-container>
-
-          </ng-container>
-      </div>
-
-      <ng-template #semRegistro>
-          <div class="quadrante quadrante-vazio">
-              <span class="sem-dados">✕</span>
+        @if (carregandoCentros()) {
+          <div aria-hidden="true">
+            @for (item of [1, 2, 3, 4]; track item) {
+              <div class="centro">
+                <span class="sk" style="height: 1rem; width: 55%"></span>
+                <span class="sk" style="height: 0.5rem; width: 100%; margin-top: 0.75rem"></span>
+              </div>
+            }
           </div>
-      </ng-template>
+        } @else if (centros().length === 0) {
+          <div class="vazio">
+            <strong>Nenhum gasto neste mês</strong>
+            Escolha outro mês ou registre lançamentos pagos.
+          </div>
+        } @else {
+          <ul class="linhas">
+            @for (centro of centros(); track centro.descricao) {
+              <li>
+                <button type="button" class="centro" [attr.data-classe]="centro.classe"
+                        [attr.aria-label]="'Ver lançamentos de ' + centro.descricao"
+                        (click)="abrirDetalhe(centro)">
+                  <span class="centro-topo">
+                    <span class="centro-nome">{{ centro.descricao }}</span>
+                    <span class="centro-valores money">
+                      <strong>R$ {{ centro.gasto | formatValor }}</strong>
+                      @if (centro.limite) { <span class="texto-3">de {{ centro.limite | formatValor }}</span> }
+                    </span>
+                  </span>
 
-  </div>
+                  <span class="barra" role="img"
+                        [attr.aria-label]="centro.limite ? centro.pct + '% do limite' : 'Sem limite definido'">
+                    <span class="barra-cheia" [style.width.%]="centro.percentual > 100 ? 100 : centro.percentual"></span>
+                  </span>
 
-  <!--SEM REGISTROS -->
-  <ng-template #registrosNaoEncontrados>
-      <div class="quadrante quadrante-vazio">
-          <span>Registros não encontrados!</span>
-      </div>
-  </ng-template>
-
-</ng-container>
-
-
-
-<br />
-
-<!-- SKELETON CENTROS DE CUSTO -->
-<ng-container *ngIf="loadingCentrosCusto">
-  <div class="cc-card" *ngFor="let i of [0,1,2,3,4]">
-
-    <div class="cc-header">
-      <ngx-skeleton-loader
-        appearance="line"
-        [theme]="{
-          width: '60%',
-          height: '16px',
-          'border-radius': '4px'
-        }">
-      </ngx-skeleton-loader>
-
-      <ngx-skeleton-loader
-        appearance="line"
-        [theme]="{
-          width: '30%',
-          height: '16px',
-          'border-radius': '4px'
-        }">
-      </ngx-skeleton-loader>
+                  <span class="centro-base">
+                    @if (!centro.limite) {
+                      <span class="texto-3">Sem limite definido</span>
+                    } @else if (centro.classe === 'estourado') {
+                      <span class="tag tag-perigo">Acima do limite em R$ {{ centro.gasto - centro.limite | formatValor }}</span>
+                    } @else if (centro.classe === 'alerta') {
+                      <span class="tag tag-pendente">{{ centro.pct }}% do limite</span>
+                    } @else {
+                      <span class="texto-3">{{ centro.pct }}% do limite</span>
+                    }
+                    @if (centro.valorMesAnterior > 0) {
+                      <span class="texto-3">Mês anterior R$ {{ centro.valorMesAnterior | formatValor }}</span>
+                    }
+                  </span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </section>
     </div>
-
-    <div class="cc-bar-container">
-      <ngx-skeleton-loader
-        appearance="line"
-        [theme]="{
-          width: '100%',
-          height: '8px',
-          'border-radius': '4px'
-        }">
-      </ngx-skeleton-loader>
-    </div>
-
-    <div class="cc-percentual">
-      <ngx-skeleton-loader
-        appearance="line"
-        [theme]="{
-          width: '40%',
-          height: '14px',
-          'border-radius': '4px'
-        }">
-      </ngx-skeleton-loader>
-    </div>
-
-  </div>
-</ng-container>
-
-
-
-<div class="cc-card" *ngFor="let item of centrosCustoVisual">
-  <div class="cc-header" (click)="buscarDetalhamentoGastosCentroCusto(item.mesEAno, item.descricaoCentroCusto)">
-    <span class="cc-nome">{{ item.descricaoCentroCusto }}</span>
-    <span class="cc-valor">
-      R$ {{ item.gasto | number:'1.2-2' }}
-      /
-      {{ item.limite | number:'1.2-2' }}
-    </span>
-  </div>
-
-  <div class="cc-bar-container">
-    <div
-      class="cc-bar"
-      [ngClass]="getClasse(item)"
-      [style.width.%]="getPercentual(item)">
-    </div>
-
-    <div
-      class="cc-limite"
-      [style.left.%]="100">
-    </div>
-  </div>
-
-  <div class="cc-percentual">
-    {{ getPercentual(item) | number:'1.0-0' }}%
   </div>
 </div>
 
-<app-pop-up-centro-custo
-  [aberto]="popupAberto"
-  [detalhamentoGastosCC]="detalhamentoGastosCC"
-  (fechar)="popupAberto = false">
-</app-pop-up-centro-custo>
-
+@if (detalhe(); as aberto) {
+  <app-pop-up-centro-custo
+    [titulo]="aberto.titulo"
+    [mesAno]="aberto.mesAno"
+    [itens]="aberto.itens"
+    (excluir)="excluirDoDetalhe($event)"
+    (fechar)="detalhe.set(null)" />
+}

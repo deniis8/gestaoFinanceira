@@ -12,10 +12,11 @@ Sistema web para controle de receitas e despesas, categorizadas por centro de cu
 
 ## 🧱 Tecnologias Utilizadas
 
-- [Angular](https://angular.io/) 17+
+- [Angular](https://angular.io/) 19 (componentes standalone, signals e rotas com carregamento sob demanda)
 - [TypeScript](https://www.typescriptlang.org/)
 - [RxJS](https://rxjs.dev/)
-- [Bootstrap](https://getbootstrap.com/) (ou outro framework de UI, se usado)
+- CSS próprio (sem framework de UI): tema claro/escuro automático, layout pensado primeiro para celular
+- Fontes Bodoni Moda e IBM Plex Sans, servidas localmente via `@fontsource-variable`
 
 ## 📦 Instalação
 

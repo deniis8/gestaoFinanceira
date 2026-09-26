@@ -1,65 +1,30 @@
-/* fundo escuro */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 1000;
+.conteudo-ia { line-height: 1.6; overflow-wrap: anywhere; }
+.conteudo-ia > * + * { margin-top: var(--s-3); }
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.conteudo-ia :is(h1, h2, h3, h4) {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 18;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: var(--s-5);
 }
+.conteudo-ia h1 { font-size: var(--t-xl); }
+.conteudo-ia h2 { font-size: var(--t-lg); }
+.conteudo-ia :is(h3, h4) { font-size: var(--t-md); font-family: var(--font-text); font-weight: 600; }
+.conteudo-ia > :first-child { margin-top: 0; }
 
-/* caixa do popup */
-.popup {
-  background: #ffffff;
-  width: 90%;
-  max-width: 720px;
-  max-height: 80vh;
+.conteudo-ia :is(ul, ol) { padding-left: 1.25rem; }
+.conteudo-ia ul { list-style: disc; }
+.conteudo-ia ol { list-style: decimal; }
+.conteudo-ia li + li { margin-top: var(--s-1); }
+.conteudo-ia strong { font-weight: 600; }
 
-  border-radius: 16px;
-  overflow: hidden;
-
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-  animation: popupFadeIn 0.25s ease-out;
+.conteudo-ia table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: var(--t-sm);
 }
-
-/* cabeçalho */
-.popup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 14px 18px;
-  background: linear-gradient(135deg, #5f27cd, #54a0ff);
-  color: #fff;
-  font-weight: 600;
-}
-
-/* botão fechar */
-.close-btn {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-/* conteúdo */
-.popup-content {
-  padding: 18px;
-  overflow-y: auto;
-  max-height: calc(80vh - 56px);
-}
-
-/* animação */
-@keyframes popupFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
+.conteudo-ia :is(th, td) { padding: var(--s-2) var(--s-3); border-bottom: 1px solid var(--rule); text-align: left; white-space: nowrap; }
+.conteudo-ia th { font-weight: 600; color: var(--ink-2); }

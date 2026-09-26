@@ -1,27 +1,30 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Observable, catchError, throwError } from 'rxjs';
-import { LoginService } from '../login/login.service';
+import { avisarFalha } from 'src/app/core/http';
 import { DetalhamentoGastosCentroCusto } from 'src/types';
+import { LoginService } from '../login/login.service';
 import { MensagensService } from '../mensagens/mensagens.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DetalhamentoGastosCentroCustoService {
+  private http = inject(HttpClient);
+  private login = inject(LoginService);
+  private mensagens = inject(MensagensService);
 
-  private baseApiUrl = environment.baseApiUrl;
-  
-  constructor(private http: HttpClient, private loginService: LoginService, private mensagensService: MensagensService) { }
+  getAllDetalhamentoGastosCentroMesAno(mesAno: string, descCC: string): Observable<DetalhamentoGastosCentroCusto[]> {
+    const params = new HttpParams()
+      .set('idUsuario', String(this.login.getIdUsuario()))
+      .set('mesAno', mesAno)
+      .set('descCC', descCC);
 
-  getAllDetalhamentoGastosCentroMesAno(mesAno?: string, descCC?: string): Observable<DetalhamentoGastosCentroCusto[]>{
-    const idUsuario = this.loginService.getIdUsuario();
-    return this.http.get<DetalhamentoGastosCentroCusto[]>(`${this.baseApiUrl}api/detalhamentogastoscentrocustos/descricaoCC?idUsuario=${idUsuario}&mesAno=${mesAno}&descCC=${descCC}`).pipe(
-      catchError(error => {
-        this.mensagensService.mensagem('error', 'Erro', `Erro ao buscar detalhamento de gastos: ${error.status}`, undefined);
-        return throwError(error);
-      })
+    return this.http.get<DetalhamentoGastosCentroCusto[]>(
+      `${environment.baseApiUrl}api/detalhamentogastoscentrocustos/descricaoCC`, { params }
+    ).pipe(
+      avisarFalha(this.mensagens, 'carregar o detalhamento dos gastos')
     );
   }
 }
