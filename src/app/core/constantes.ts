@@ -35,3 +35,15 @@ export const MESES_ABREV: Record<string, string> = {
   'Janeiro': 'Jan', 'Fevereiro': 'Fev', 'Março': 'Mar', 'Abril': 'Abr', 'Maio': 'Mai', 'Junho': 'Jun',
   'Julho': 'Jul', 'Agosto': 'Ago', 'Setembro': 'Set', 'Outubro': 'Out', 'Novembro': 'Nov', 'Dezembro': 'Dez',
 };
+
+/** Nome por extenso de cada dia da semana (1=Domingo, como a API devolve em DIA_SEMANA_NUM).
+ *  Só dias úteis levam "-feira" — sábado e domingo não. */
+export const DIA_SEMANA_COMPLETO: Record<number, string> = {
+  1: 'Domingo',
+  2: 'Segunda-feira',
+  3: 'Terça-feira',
+  4: 'Quarta-feira',
+  5: 'Quinta-feira',
+  6: 'Sexta-feira',
+  7: 'Sábado',
+};
