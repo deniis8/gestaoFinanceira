@@ -6,7 +6,7 @@ import { Subject, catchError, map, of, switchMap, tap } from 'rxjs';
 
 import { PatrimonioChartComponent } from 'src/app/components/patrimonio-chart/patrimonio-chart.component';
 import { PopUpCentroCustoComponent } from 'src/app/components/pop-up-centro-custo/pop-up-centro-custo.component';
-import { MESES_ABREV } from 'src/app/core/constantes';
+import { DIA_SEMANA_COMPLETO, MESES_ABREV } from 'src/app/core/constantes';
 import { FormatValorPipe } from 'src/app/pipes/format-valor.pipe';
 import { DetalhamentoGastosCentroCustoService } from 'src/app/services/detalhamento-gastos-custo/detalhamento-gastos-centro-custo.service';
 import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/gastos-centro-custo.service';
@@ -109,8 +109,9 @@ export class GraficosComponent implements OnInit {
     }
     const maiorDia = dias.reduce((maior, d) => (d.valorTotal > maior.valorTotal ? d : maior), dias[0]);
     const media = total / dias.length;
+    const nomeDia = DIA_SEMANA_COMPLETO[maiorDia.diaSemanaNum] ?? maiorDia.diaSemana;
     return maiorDia.valorTotal >= media * 1.5
-      ? `${maiorDia.diaSemana}-feira concentra boa parte dos seus gastos neste mês.`
+      ? `${nomeDia} concentra boa parte dos seus gastos neste mês.`
       : null;
   });
 
