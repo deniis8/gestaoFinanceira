@@ -1,5 +1,12 @@
 :host { display: block; }
 
+.hero {
+  display: block;
+  margin-bottom: var(--s-6);
+  padding-bottom: var(--s-5);
+  border-bottom: 1px solid var(--rule-strong);
+}
+
 .graficos { display: grid; gap: var(--s-6); }
 
 .meses > .chips, .meses > .titulo-secao { margin-bottom: var(--s-3); }
@@ -63,6 +70,135 @@
 }
 .trio dt { font-size: var(--t-sm); color: var(--ink-2); }
 .trio dd { margin: 0; font-size: var(--t-md); font-weight: 600; }
+
+.painel-mes { padding-top: var(--s-4); border-top: 1px solid var(--rule); }
+
+/* ---------- saúde financeira ---------- */
+
+.saude { padding: var(--s-4) 0; border-top: 1px solid var(--rule); }
+
+.saude-cabeca { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); }
+
+.saude-nota {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 18;
+  font-size: var(--t-2xl);
+  font-weight: 500;
+}
+
+.saude-barra {
+  height: 0.5rem;
+  margin: var(--s-2) 0;
+  border-radius: 999px;
+  background: var(--sunken);
+  overflow: hidden;
+}
+.saude-preenchida {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s var(--ease);
+}
+
+.saude-mensagem { margin-top: var(--s-1); }
+
+/* ---------- fixo x variável ---------- */
+
+.composicao { padding: var(--s-4) 0; border-top: 1px solid var(--rule); }
+
+.composicao-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-5);
+  margin-top: var(--s-3);
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+.composicao-legenda strong { display: block; margin-top: 2px; font-size: var(--t-md); color: var(--ink); }
+
+.ponto {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.35em;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.ponto-fixo { background: var(--expense); }
+.ponto-variavel { background: var(--pending); }
+
+.composicao-barra {
+  display: flex;
+  height: 0.5rem;
+  margin: var(--s-3) 0 var(--s-2);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--sunken);
+}
+.composicao-fixo { display: block; height: 100%; background: var(--expense); transition: width 0.5s var(--ease); }
+.composicao-variavel { flex: 1; background: var(--pending); }
+
+/* ---------- maiores gastos ---------- */
+
+.ranking { padding: var(--s-4) 0; border-top: 1px solid var(--rule); }
+.ranking > .titulo-secao { margin-bottom: var(--s-1); }
+
+.ranking-linha { color: inherit; text-decoration: none; }
+.ranking-linha:hover .linha-titulo { text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
+
+.ranking-pos {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+  border-radius: 50%;
+  background: var(--sunken);
+  color: var(--ink-2);
+  font-size: var(--t-xs);
+  font-weight: 700;
+}
+
+/* ---------- gastos por dia da semana ---------- */
+
+.semana { padding: var(--s-4) 0; border-top: 1px solid var(--rule); }
+.semana-insight { margin: var(--s-2) 0 0; }
+
+.semana-barras {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--s-2);
+  height: 6rem;
+  margin-top: var(--s-4);
+}
+
+.semana-coluna { display: flex; flex-direction: column; align-items: center; height: 100%; }
+
+.semana-pilha {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.2rem;
+}
+
+.semana-valor { font-size: 0.625rem; line-height: 1; color: var(--ink-3); white-space: nowrap; }
+
+.semana-barra {
+  display: block;
+  width: 100%;
+  max-width: 1.75rem;
+  min-height: 3px;
+  border-radius: 4px 4px 2px 2px;
+  background: var(--expense);
+  transition: height 0.4s var(--ease), opacity 0.4s var(--ease);
+}
+
+.semana-rotulo { flex: none; margin-top: 0.35rem; font-size: var(--t-xs); color: var(--ink-3); }
 
 /* ---------- centros de custo ---------- */
 

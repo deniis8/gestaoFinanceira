@@ -6,6 +6,8 @@
     </div>
   </header>
 
+  <app-patrimonio-chart class="hero" />
+
   <div class="graficos">
     <!-- meses -->
     <section class="meses" aria-labelledby="meses-titulo">
@@ -72,6 +74,105 @@
             </div>
           </dl>
         </section>
+      }
+
+      @if (carregandoPainel()) {
+        <section class="painel-mes" aria-hidden="true">
+          <span class="sk" style="height: 3.5rem; border-radius: 12px"></span>
+          <span class="sk" style="height: 2.5rem; border-radius: 12px; margin-top: var(--s-4)"></span>
+        </section>
+      }
+
+      @if (!carregandoPainel() && painelFalhou()) {
+        <div class="vazio">
+          <strong>Não foi possível carregar o painel deste mês</strong>
+          <button type="button" class="btn btn-outline" (click)="tentarPainelDeNovo()">Tentar de novo</button>
+        </div>
+      }
+
+      <!--
+        Um @if simples (não @else if) com "as": encadear em @else if faz o alias sumir dentro
+        de blocos @if/@for filhos — visto na prática ao ligar isso à API simulada.
+      -->
+      @if (!carregandoPainel() && !painelFalhou() && painelMes(); as painel) {
+        <!-- saúde financeira -->
+        <section class="saude" aria-labelledby="saude-titulo">
+          <div class="saude-cabeca">
+            <h2 id="saude-titulo" class="titulo-secao">Saúde financeira do mês</h2>
+            <strong class="saude-nota" [style.color]="corNivelSaude()">{{ painel.saude.pontuacao }}</strong>
+          </div>
+          <div class="saude-barra">
+            <span class="saude-preenchida" [style.width.%]="painel.saude.pontuacao" [style.background]="corNivelSaude()"></span>
+          </div>
+          <p class="texto-2 texto-sm saude-mensagem">{{ painel.saude.mensagem }}</p>
+        </section>
+
+        <!-- fixo x variável -->
+        <section class="composicao" aria-labelledby="composicao-titulo">
+          <h2 id="composicao-titulo" class="titulo-secao">Fixo x variável</h2>
+          <div class="composicao-legenda">
+            <span><i class="ponto ponto-fixo"></i> Fixo <strong class="money">R$ {{ painel.valorFixo | formatValor }}</strong></span>
+            <span><i class="ponto ponto-variavel"></i> Variável <strong class="money">R$ {{ painel.valorVariavel | formatValor }}</strong></span>
+          </div>
+          @if (painel.valorFixo + painel.valorVariavel > 0) {
+            <div class="composicao-barra">
+              <span class="composicao-fixo" [style.width.%]="parteFixo()"></span>
+              <span class="composicao-variavel"></span>
+            </div>
+          }
+          <p class="texto-3 texto-sm">
+            {{ painel.quantidadeFixa + painel.quantidadeVariavel }} lançamentos pagos · ticket médio R$ {{ painel.ticketMedio | formatValor }}
+          </p>
+        </section>
+
+        <!-- maiores gastos -->
+        @if (topGastos().length > 0) {
+          <section class="ranking" aria-labelledby="ranking-titulo">
+            <h2 id="ranking-titulo" class="titulo-secao">Maiores gastos do mês</h2>
+            <ol class="linhas">
+              @for (item of topGastos(); track item.id; let i = $index) {
+                <li>
+                  <a class="linha ranking-linha" [routerLink]="['/lancamento/edit', item.id]">
+                    <span class="ranking-pos">{{ i + 1 }}</span>
+                    <span class="linha-texto">
+                      <span class="linha-titulo">{{ item.descricao }}</span>
+                      <span class="linha-meta">
+                        <span>{{ item.descricaoCentroCusto }}</span>
+                        <time>{{ item.dataHora | date: 'dd/MM' }}</time>
+                      </span>
+                    </span>
+                    <span class="linha-valor money">R$ {{ item.valor | formatValor }}</span>
+                  </a>
+                </li>
+              }
+            </ol>
+          </section>
+        }
+
+        <!-- padrão por dia da semana -->
+        @if (gastosPorDiaSemana().length > 0) {
+          <section class="semana" aria-labelledby="semana-titulo">
+            <h2 id="semana-titulo" class="titulo-secao">Gastos por dia da semana</h2>
+            @if (insightDiaSemana(); as frase) {
+              <p class="texto-2 texto-sm semana-insight">{{ frase }}</p>
+            }
+            <div class="semana-barras" role="img" aria-label="Total pago em cada dia da semana deste mês">
+              @for (dia of gastosPorDiaSemana(); track dia.diaSemanaNum) {
+                <div class="semana-coluna">
+                  <div class="semana-pilha">
+                    @if (dia.valorTotal > 0) {
+                      <span class="semana-valor">{{ dia.valorTotal | formatValor }}</span>
+                    }
+                    <span class="semana-barra"
+                          [style.height.%]="(dia.valorTotal / maiorGastoDiaSemana()) * 100"
+                          [style.opacity]="dia.valorTotal > 0 ? (0.35 + 0.65 * (dia.valorTotal / maiorGastoDiaSemana())) : 0.12"></span>
+                  </div>
+                  <span class="semana-rotulo">{{ dia.diaSemana.slice(0, 3) }}</span>
+                </div>
+              }
+            </div>
+          </section>
+        }
       }
 
       <section class="centros" aria-labelledby="centros-titulo">

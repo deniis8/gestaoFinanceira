@@ -1,7 +1,10 @@
+import { DatePipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { Subject, catchError, map, of, switchMap, tap } from 'rxjs';
 
+import { PatrimonioChartComponent } from 'src/app/components/patrimonio-chart/patrimonio-chart.component';
 import { PopUpCentroCustoComponent } from 'src/app/components/pop-up-centro-custo/pop-up-centro-custo.component';
 import { MESES_ABREV } from 'src/app/core/constantes';
 import { FormatValorPipe } from 'src/app/pipes/format-valor.pipe';
@@ -10,9 +13,10 @@ import { GastosCentroCustoService } from 'src/app/services/gastos-centro-custo/g
 import { GastosMensaisService } from 'src/app/services/gastos-mensais/gastos-mensais.service';
 import { LancamentoService } from 'src/app/services/lancamento/lancamento.service';
 import { MensagensService } from 'src/app/services/mensagens/mensagens.service';
+import { PainelFinanceiroService } from 'src/app/services/painel-financeiro/painel-financeiro.service';
 import { getColorForSobra } from 'src/app/utils/colors';
 import { formatarValor } from 'src/app/utils/moeda';
-import { DetalhamentoGastosCentroCusto, GastosCentroCusto, GastosMensais } from 'src/types';
+import { DetalhamentoGastosCentroCusto, GastosCentroCusto, GastosMensais, NivelSaudeFinanceira, PainelMes } from 'src/types';
 
 interface MesResumo {
   mes: string;
@@ -46,9 +50,17 @@ interface DetalheAberto {
   itens: DetalhamentoGastosCentroCusto[];
 }
 
+/** Cor semântica de cada nível de saúde financeira, reaproveitando a paleta já existente. */
+const COR_NIVEL_SAUDE: Record<NivelSaudeFinanceira, string> = {
+  excelente: 'var(--income)',
+  saudavel: 'var(--income)',
+  atencao: 'var(--pending)',
+  alerta: 'var(--expense)',
+};
+
 @Component({
   selector: 'app-graficos',
-  imports: [FormatValorPipe, PopUpCentroCustoComponent],
+  imports: [DatePipe, RouterLink, FormatValorPipe, PatrimonioChartComponent, PopUpCentroCustoComponent],
   templateUrl: './graficos.component.html',
   styleUrl: './graficos.component.css'
 })
@@ -57,6 +69,7 @@ export class GraficosComponent implements OnInit {
   private gastosCentroCusto = inject(GastosCentroCustoService);
   private detalhamento = inject(DetalhamentoGastosCentroCustoService);
   private lancamentoService = inject(LancamentoService);
+  private painelFinanceiro = inject(PainelFinanceiroService);
   private mensagens = inject(MensagensService);
   private destroyRef = inject(DestroyRef);
 
@@ -71,10 +84,47 @@ export class GraficosComponent implements OnInit {
   carregandoCentros = signal(true);
   detalhe = signal<DetalheAberto | null>(null);
 
+  painelMes = signal<PainelMes | null>(null);
+  carregandoPainel = signal(true);
+  painelFalhou = signal(false);
+
   mesAtual = computed(() => this.meses().find(m => m.mesAno === this.mesSelecionado()) ?? null);
+  corNivelSaude = computed(() => COR_NIVEL_SAUDE[this.painelMes()?.saude.nivel ?? 'atencao']);
+
+  /** Listas derivadas como signals próprios: dentro do template, usar `topGastos()` em vez de
+   *  `(painelMes(); as painel)!.topGastos` evita um limite do compilador ao aninhar @if/@for
+   *  dentro de um bloco que já usa `as` (o alias some quando ele vira a condição do bloco filho). */
+  topGastos = computed(() => this.painelMes()?.topGastos ?? []);
+  gastosPorDiaSemana = computed(() => this.painelMes()?.gastosPorDiaSemana ?? []);
+
+  /** Maior valor entre os dias da semana, para escalar a altura das barras (nunca 0, evita divisão por zero). */
+  maiorGastoDiaSemana = computed(() => Math.max(1, ...this.gastosPorDiaSemana().map(d => d.valorTotal)));
+
+  /** Uma frase só quando um dia realmente se destaca dos outros — não force uma leitura em ruído. */
+  insightDiaSemana = computed(() => {
+    const dias = this.gastosPorDiaSemana();
+    const total = dias.reduce((soma, d) => soma + d.valorTotal, 0);
+    if (total === 0) {
+      return null;
+    }
+    const maiorDia = dias.reduce((maior, d) => (d.valorTotal > maior.valorTotal ? d : maior), dias[0]);
+    const media = total / dias.length;
+    return maiorDia.valorTotal >= media * 1.5
+      ? `${maiorDia.diaSemana}-feira concentra boa parte dos seus gastos neste mês.`
+      : null;
+  });
+
+  /** Parte da barra fixo x variável ocupada pelo fixo, em % (50 quando não há nenhum dos dois). */
+  parteFixo = computed(() => {
+    const painel = this.painelMes();
+    if (!painel) { return 0; }
+    const total = painel.valorFixo + painel.valorVariavel;
+    return total > 0 ? (painel.valorFixo / total) * 100 : 0;
+  });
 
   private pedidoMeses$ = new Subject<string | null>();
   private pedidoCentros$ = new Subject<string>();
+  private pedidoPainel$ = new Subject<string>();
 
   constructor() {
     this.pedidoMeses$.pipe(
@@ -114,6 +164,23 @@ export class GraficosComponent implements OnInit {
       this.centros.set((itens ?? []).map(item => this.paraCentro(item)));
       this.carregandoCentros.set(false);
     });
+
+    this.pedidoPainel$.pipe(
+      tap(() => { this.carregandoPainel.set(true); this.painelFalhou.set(false); }),
+      switchMap(mesAno => this.painelFinanceiro.getPainelMes(mesAno).pipe(catchError(() => of(null)))),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(painel => {
+      this.painelMes.set(painel);
+      this.painelFalhou.set(painel === null);
+      this.carregandoPainel.set(false);
+    });
+  }
+
+  tentarPainelDeNovo(): void {
+    const mesAno = this.mesSelecionado();
+    if (mesAno) {
+      this.pedidoPainel$.next(mesAno);
+    }
   }
 
   ngOnInit(): void {
@@ -134,6 +201,7 @@ export class GraficosComponent implements OnInit {
   selecionarMes(mesAno: string): void {
     this.mesSelecionado.set(mesAno);
     this.pedidoCentros$.next(mesAno);
+    this.pedidoPainel$.next(mesAno);
   }
 
   abrirDetalhe(centro: CentroVisual): void {

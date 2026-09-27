@@ -1,0 +1,87 @@
+<section class="patrimonio" aria-labelledby="patrimonio-titulo">
+  <header class="patrimonio-cabeca">
+    <div class="patrimonio-info">
+      <h2 id="patrimonio-titulo" class="titulo-secao">Patrimônio</h2>
+
+      @if (carregando()) {
+        <span class="sk" style="width: 60%; height: 2.25rem; margin-top: 0.35rem"></span>
+        <span class="sk" style="width: 40%; height: 1rem; margin-top: 0.5rem"></span>
+      }
+
+      <!-- @if simples (não @else if): encadear com @else if faz o alias "as" sumir do bloco. -->
+      @if (!carregando() && pontoExibido(); as ponto) {
+        <p class="patrimonio-saldo money" [class.negativo]="patrimonioTotal(ponto) < 0">
+          <span class="rs">R$</span>{{ patrimonioTotal(ponto) < 0 ? '−' : '' }}{{ (patrimonioTotal(ponto) < 0 ? -patrimonioTotal(ponto) : patrimonioTotal(ponto)) | formatValor }}
+        </p>
+        <p class="patrimonio-legenda">
+          <span>{{ ponto.mes }} de {{ ponto.ano }}</span>
+          @if (variacao(); as v) {
+            <span class="tag" [class.tag-entrada]="v >= 0" [class.tag-perigo]="v < 0">
+              {{ v >= 0 ? '+' : '−' }}R$ {{ (v < 0 ? -v : v) | formatValor }} no mês
+            </span>
+          }
+        </p>
+        @if (ponto.investimentoAcumulado > 0) {
+          <p class="patrimonio-detalhe texto-3 texto-sm">
+            Líquido R$ {{ ponto.saldoFinal | formatValor }} · Investido R$ {{ ponto.investimentoAcumulado | formatValor }}
+          </p>
+        }
+      }
+    </div>
+
+    <div class="chips" role="group" aria-label="Período do gráfico de patrimônio">
+      @for (opcao of opcoes; track opcao.rotulo) {
+        <button type="button" class="chip chip-ano" [attr.aria-pressed]="rangeMeses() === opcao.meses"
+                (click)="selecionarRange(opcao.meses)">{{ opcao.rotulo }}</button>
+      }
+    </div>
+  </header>
+
+  @if (carregando()) {
+    <span class="sk patrimonio-sk" aria-hidden="true"></span>
+  } @else if (falhou()) {
+    <div class="vazio">
+      <strong>Não foi possível carregar a evolução do patrimônio</strong>
+      <button type="button" class="btn btn-outline" (click)="atualizar()">Tentar de novo</button>
+    </div>
+  } @else if (pontos().length < 2) {
+    <div class="vazio">
+      <strong>Ainda não há histórico suficiente</strong>
+      Assim que houver saldo registrado em pelo menos dois meses, o gráfico aparece aqui.
+    </div>
+  } @else {
+    <div class="patrimonio-grafico">
+      <svg [attr.viewBox]="'0 0 ' + largura + ' ' + altura" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="gradientePatrimonio" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--invest)" stop-opacity="0.35" />
+            <stop offset="100%" stop-color="var(--invest)" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+
+        <path [attr.d]="geometria().caminhoArea" fill="url(#gradientePatrimonio)" stroke="none" />
+        <path class="patrimonio-linha" [attr.d]="geometria().caminhoLinha" pathLength="1"
+              fill="none" stroke="var(--invest)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+        @for (item of pontosInterativos(); track item.indice) {
+          <circle [attr.cx]="item.x" [attr.cy]="item.y" [attr.r]="item.indice === indiceExibido() ? 4 : 2.5"
+                  [attr.fill]="item.indice === indiceExibido() ? 'var(--invest)' : 'var(--surface)'"
+                  stroke="var(--invest)" stroke-width="1.5" />
+        }
+      </svg>
+
+      <div class="patrimonio-alvos">
+        @for (item of pontosInterativos(); track item.indice) {
+          <button type="button" class="patrimonio-alvo" [style.left.%]="item.pctX"
+                  [attr.aria-pressed]="indiceExibido() === item.indice"
+                  [attr.aria-label]="item.ponto.mes + ' de ' + item.ponto.ano + ', patrimônio de R$ ' + (patrimonioTotal(item.ponto) | formatValor)"
+                  (click)="selecionarPonto(item.indice)">
+            @if (indicesComRotulo().has(item.indice)) {
+              <span class="patrimonio-rotulo">{{ item.ponto.mes.slice(0, 3) }}</span>
+            }
+          </button>
+        }
+      </div>
+    </div>
+  }
+</section>

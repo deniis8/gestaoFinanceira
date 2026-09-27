@@ -131,3 +131,62 @@ export interface AnaliseFinanceiraIaRequest {
 export interface AnaliseFinanceiraIaResponse {
     analiseIA: string;
 }
+
+export interface EvolucaoPatrimonio {
+    ano: number;
+    mesNum: number;
+    mes: string;
+    /** Caixa líquido (todo "Pago" já descontado, inclusive aportes em investimento). */
+    saldoFinal: number;
+    /** Acumulado em Investimento Fixo + Variável até o fim deste mês. */
+    investimentoAcumulado: number;
+    dataReferencia: Date | string;
+}
+
+export interface MaiorGasto {
+    valor: number;
+    descricao: string;
+    dataHora: Date | string;
+    centroCusto: string;
+}
+
+export type NivelSaudeFinanceira = 'excelente' | 'saudavel' | 'atencao' | 'alerta';
+
+export interface SaudeFinanceira {
+    pontuacao: number;
+    nivel: NivelSaudeFinanceira;
+    mensagem: string;
+}
+
+export interface TopGasto {
+    id: number;
+    dataHora: Date | string;
+    valor: number;
+    descricao: string;
+    descricaoCentroCusto: string;
+}
+
+export interface GastoPorDiaSemana {
+    diaSemanaNum: number;
+    diaSemana: string;
+    valorTotal: number;
+    quantidade: number;
+}
+
+/** Payload único do painel de indicadores da tela Gráficos, para o mês selecionado. */
+export interface PainelMes {
+    mesAno: string;
+    valorFixo: number;
+    valorVariavel: number;
+    quantidadeFixa: number;
+    quantidadeVariavel: number;
+    ticketMedio: number;
+    valorRecebidoMes: number;
+    sobraMes: number;
+    maiorGasto: MaiorGasto | null;
+    totalCategoriasComLimite: number;
+    categoriasEstouradas: number;
+    saude: SaudeFinanceira;
+    topGastos: TopGasto[];
+    gastosPorDiaSemana: GastoPorDiaSemana[];
+}
