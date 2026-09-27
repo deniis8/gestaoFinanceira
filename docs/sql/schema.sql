@@ -218,18 +218,18 @@ BEGIN
 
     -- Converte o MES_ANO para valores de mês e ano
     SET v_mes = CASE
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Janeiro' THEN 1
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Fevereiro' THEN 2
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Março' THEN 3
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Abril' THEN 4
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Maio' THEN 5
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Junho' THEN 6
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Julho' THEN 7
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Agosto' THEN 8
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Setembro' THEN 9
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Outubro' THEN 10
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Novembro' THEN 11
-        WHEN LEFT(MES_ANO, LENGTH(MES_ANO) - 7) = 'Dezembro' THEN 12
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Janeiro' THEN 1
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Fevereiro' THEN 2
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Março' THEN 3
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Abril' THEN 4
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Maio' THEN 5
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Junho' THEN 6
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Julho' THEN 7
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Agosto' THEN 8
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Setembro' THEN 9
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Outubro' THEN 10
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Novembro' THEN 11
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Dezembro' THEN 12
     END;
 
     SET v_ano = CAST(RIGHT(MES_ANO, 4) AS UNSIGNED);
@@ -654,6 +654,257 @@ CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vw_lancamentos` AS select 
 -- Removendo tabela temporária e criando a estrutura VIEW final
 DROP TABLE IF EXISTS `vw_saldos_investimentos`;
 CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vw_saldos_investimentos` AS select `lancamentos`.`ID_LANC` AS `ID_SALDO`,if((select `saldos`.`SALDO` from `saldos` order by `saldos`.`DATA_HORA` desc,`saldos`.`ID_LANC` desc limit 1) is null,0,(select `saldos`.`SALDO` from `saldos` order by `saldos`.`DATA_HORA` desc,`saldos`.`ID_LANC` desc limit 1)) AS `SALDO`,if((select sum(`saldos`.`VALORLAN`) from `saldos` where `saldos`.`CCUSTO` = 'Investimento Fixo') is null,0,(select sum(`saldos`.`VALORLAN`) from `saldos` where `saldos`.`CCUSTO` = 'Investimento Fixo')) AS `INVESTIMENTO_FIXO`,if((select sum(`saldos`.`VALORLAN`) from `saldos` where `saldos`.`CCUSTO` = 'Investimento Variável') is null,0,(select sum(`saldos`.`VALORLAN`) from `saldos` where `saldos`.`CCUSTO` = 'Investimento Variável')) AS `INVESTIMENTO_VARIAVEL`,`lancamentos`.`ID_USUARIO` AS `ID_USUARIO` from `lancamentos` limit 1;
+
+-- Copiando estrutura para procedure gestaofinanceira.SP_EVOLUCAO_PATRIMONIO
+-- Adicionada em docs/sql/migrations/002_painel_financeiro.sql, e alterada em
+-- 004_patrimonio_com_investimentos.sql para somar o acumulado em investimento
+-- ao saldo líquido — sem isso, um aporte parecia "sumir" do patrimônio.
+DELIMITER //
+CREATE PROCEDURE `SP_EVOLUCAO_PATRIMONIO`(
+    IN `ID_USER` INT,
+    IN `MESES` INT
+)
+BEGIN
+    DECLARE v_data_corte DATETIME;
+
+    -- Sem MESES informado, usa uma janela bem larga (equivale a "todo o histórico").
+    SET v_data_corte = DATE_SUB(CURDATE(), INTERVAL IFNULL(MESES, 1200) MONTH);
+
+    SELECT
+        (YEAR(S.DATA_HORA) * 100 + MONTH(S.DATA_HORA)) AS ID,
+        YEAR(S.DATA_HORA) AS ANO,
+        MONTH(S.DATA_HORA) AS MES_NUM,
+        CASE MONTH(S.DATA_HORA)
+            WHEN 1  THEN 'Janeiro'
+            WHEN 2  THEN 'Fevereiro'
+            WHEN 3  THEN 'Março'
+            WHEN 4  THEN 'Abril'
+            WHEN 5  THEN 'Maio'
+            WHEN 6  THEN 'Junho'
+            WHEN 7  THEN 'Julho'
+            WHEN 8  THEN 'Agosto'
+            WHEN 9  THEN 'Setembro'
+            WHEN 10 THEN 'Outubro'
+            WHEN 11 THEN 'Novembro'
+            WHEN 12 THEN 'Dezembro'
+        END AS MES,
+        (
+            -- Última linha de SALDOS dentro do mesmo mês = saldo líquido de fechamento.
+            SELECT S2.SALDO
+            FROM saldos S2
+            WHERE S2.ID_USUARIO = ID_USER
+              AND YEAR(S2.DATA_HORA) = YEAR(S.DATA_HORA)
+              AND MONTH(S2.DATA_HORA) = MONTH(S.DATA_HORA)
+            ORDER BY S2.DATA_HORA DESC, S2.ID_LANC DESC, S2.ID_SALDO DESC
+            LIMIT 1
+        ) AS SALDO_FINAL,
+        (
+            -- Tudo que já foi para Investimento Fixo/Variável até o fim deste mês
+            -- (mesmo critério de SP_SALDOS_INVESTIMENTOS, só que numa data de corte).
+            SELECT COALESCE(SUM(S3.VALORLAN), 0)
+            FROM saldos S3
+            WHERE S3.ID_USUARIO = ID_USER
+              AND S3.CCUSTO IN ('Investimento Fixo', 'Investimento Variável')
+              AND S3.DATA_HORA < DATE_ADD(
+                    DATE(CONCAT(YEAR(S.DATA_HORA), '-', LPAD(MONTH(S.DATA_HORA), 2, '0'), '-01')),
+                    INTERVAL 1 MONTH
+                  )
+        ) AS INVESTIMENTO_ACUMULADO,
+        MAX(S.DATA_HORA) AS DATA_REFERENCIA
+    FROM saldos S
+    WHERE
+        S.ID_USUARIO = ID_USER
+        AND S.DATA_HORA >= v_data_corte
+    GROUP BY YEAR(S.DATA_HORA), MONTH(S.DATA_HORA)
+    ORDER BY ANO, MES_NUM;
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure gestaofinanceira.SP_RESUMO_MES
+-- Adicionada em docs/sql/migrations/002_painel_financeiro.sql
+DELIMITER //
+CREATE PROCEDURE `SP_RESUMO_MES`(
+    IN `ID_USER` INT,
+    IN `MES_ANO` VARCHAR(20)
+)
+BEGIN
+    DECLARE v_mes INT;
+    DECLARE v_ano INT;
+
+    SET v_mes = CASE
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Janeiro' THEN 1
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Fevereiro' THEN 2
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Março' THEN 3
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Abril' THEN 4
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Maio' THEN 5
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Junho' THEN 6
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Julho' THEN 7
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Agosto' THEN 8
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Setembro' THEN 9
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Outubro' THEN 10
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Novembro' THEN 11
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Dezembro' THEN 12
+    END;
+    SET v_ano = CAST(RIGHT(MES_ANO, 4) AS UNSIGNED);
+
+    SELECT
+        1 AS ID,
+        IFNULL(SUM(CASE WHEN LAN.ID_LANC_FIXO IS NOT NULL THEN LAN.VALOR ELSE 0 END), 0) AS VALOR_FIXO,
+        IFNULL(SUM(CASE WHEN LAN.ID_LANC_FIXO IS NULL THEN LAN.VALOR ELSE 0 END), 0) AS VALOR_VARIAVEL,
+        SUM(CASE WHEN LAN.ID_LANC_FIXO IS NOT NULL THEN 1 ELSE 0 END) AS QUANTIDADE_FIXA,
+        SUM(CASE WHEN LAN.ID_LANC_FIXO IS NULL THEN 1 ELSE 0 END) AS QUANTIDADE_VARIAVEL,
+        IFNULL(SUM(LAN.VALOR) / NULLIF(COUNT(*), 0), 0) AS TICKET_MEDIO,
+        (
+            SELECT COALESCE(SUM(r.VALOR), 0)
+            FROM lancamentos r
+            WHERE r.STATUS_LANC = 'Recebido'
+              AND r.ID_CCUSTO NOT IN (19,51)
+              AND r.D_E_L_E_T_ <> '*'
+              AND MONTH(r.DATA_HORA) = v_mes
+              AND YEAR(r.DATA_HORA) = v_ano
+              AND r.ID_USUARIO = ID_USER
+        ) AS VALOR_RECEBIDO_MES,
+        (
+            SELECT COUNT(*)
+            FROM ccusto CC3
+            WHERE CC3.ID_USUARIO = ID_USER AND CC3.D_E_L_E_T_ <> '*' AND CC3.VALOR_LIMITE > 0
+        ) AS TOTAL_CATEGORIAS_COM_LIMITE,
+        (
+            SELECT COUNT(*)
+            FROM (
+                SELECT CC4.ID_CCUSTO
+                FROM ccusto CC4
+                INNER JOIN lancamentos LAN4 ON LAN4.ID_CCUSTO = CC4.ID_CCUSTO
+                WHERE CC4.ID_USUARIO = ID_USER AND CC4.D_E_L_E_T_ <> '*' AND CC4.VALOR_LIMITE > 0
+                  AND LAN4.STATUS_LANC = 'Pago' AND LAN4.D_E_L_E_T_ <> '*'
+                  AND MONTH(LAN4.DATA_HORA) = v_mes AND YEAR(LAN4.DATA_HORA) = v_ano
+                GROUP BY CC4.ID_CCUSTO, CC4.VALOR_LIMITE
+                HAVING SUM(LAN4.VALOR) > CC4.VALOR_LIMITE
+            ) ESTOURADAS
+        ) AS CATEGORIAS_ESTOURADAS
+    FROM lancamentos LAN
+    WHERE
+        LAN.STATUS_LANC = 'Pago'
+        AND LAN.ID_CCUSTO NOT IN (19,51)
+        AND LAN.D_E_L_E_T_ <> '*'
+        AND LAN.ID_USUARIO = ID_USER
+        AND MONTH(LAN.DATA_HORA) = v_mes
+        AND YEAR(LAN.DATA_HORA) = v_ano;
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure gestaofinanceira.SP_TOP_GASTOS_MES
+-- Adicionada em docs/sql/migrations/002_painel_financeiro.sql
+DELIMITER //
+CREATE PROCEDURE `SP_TOP_GASTOS_MES`(
+    IN `ID_USER` INT,
+    IN `MES_ANO` VARCHAR(20)
+)
+BEGIN
+    DECLARE v_mes INT;
+    DECLARE v_ano INT;
+
+    SET v_mes = CASE
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Janeiro' THEN 1
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Fevereiro' THEN 2
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Março' THEN 3
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Abril' THEN 4
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Maio' THEN 5
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Junho' THEN 6
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Julho' THEN 7
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Agosto' THEN 8
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Setembro' THEN 9
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Outubro' THEN 10
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Novembro' THEN 11
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Dezembro' THEN 12
+    END;
+    SET v_ano = CAST(RIGHT(MES_ANO, 4) AS UNSIGNED);
+
+    SELECT
+        LAN.ID_LANC AS ID,
+        LAN.DATA_HORA,
+        LAN.VALOR,
+        LAN.DESCRICAO,
+        CC.DESCRI AS DESCRICAO_CENTRO_CUSTO
+    FROM lancamentos LAN
+    INNER JOIN ccusto CC ON CC.ID_CCUSTO = LAN.ID_CCUSTO
+    WHERE
+        LAN.STATUS_LANC = 'Pago'
+        AND LAN.ID_CCUSTO NOT IN (19,51)
+        AND LAN.D_E_L_E_T_ <> '*'
+        AND CC.D_E_L_E_T_ <> '*'
+        AND LAN.ID_USUARIO = ID_USER
+        AND CC.ID_USUARIO = ID_USER
+        AND MONTH(LAN.DATA_HORA) = v_mes
+        AND YEAR(LAN.DATA_HORA) = v_ano
+    ORDER BY LAN.VALOR DESC, LAN.DATA_HORA DESC
+    LIMIT 5;
+END//
+DELIMITER ;
+
+-- Copiando estrutura para procedure gestaofinanceira.SP_GASTOS_POR_DIA_SEMANA
+-- Adicionada em docs/sql/migrations/002_painel_financeiro.sql
+DELIMITER //
+CREATE PROCEDURE `SP_GASTOS_POR_DIA_SEMANA`(
+    IN `ID_USER` INT,
+    IN `MES_ANO` VARCHAR(20)
+)
+BEGIN
+    DECLARE v_mes INT;
+    DECLARE v_ano INT;
+
+    SET v_mes = CASE
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Janeiro' THEN 1
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Fevereiro' THEN 2
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Março' THEN 3
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Abril' THEN 4
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Maio' THEN 5
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Junho' THEN 6
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Julho' THEN 7
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Agosto' THEN 8
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Setembro' THEN 9
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Outubro' THEN 10
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Novembro' THEN 11
+        WHEN LEFT(MES_ANO, CHAR_LENGTH(MES_ANO) - 7) = 'Dezembro' THEN 12
+    END;
+    SET v_ano = CAST(RIGHT(MES_ANO, 4) AS UNSIGNED);
+
+    SELECT
+        DIAS.NUMERO AS ID,
+        DIAS.NUMERO AS DIA_SEMANA_NUM,
+        CASE DIAS.NUMERO
+            WHEN 1 THEN 'Domingo'
+            WHEN 2 THEN 'Segunda'
+            WHEN 3 THEN 'Terça'
+            WHEN 4 THEN 'Quarta'
+            WHEN 5 THEN 'Quinta'
+            WHEN 6 THEN 'Sexta'
+            WHEN 7 THEN 'Sábado'
+        END AS DIA_SEMANA,
+        IFNULL(RESUMO.VALOR_TOTAL, 0) AS VALOR_TOTAL,
+        IFNULL(RESUMO.QUANTIDADE, 0) AS QUANTIDADE
+    FROM (
+        SELECT 1 AS NUMERO UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL
+        SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7
+    ) DIAS
+    LEFT JOIN (
+        SELECT
+            DAYOFWEEK(LAN.DATA_HORA) AS NUMERO,
+            SUM(LAN.VALOR) AS VALOR_TOTAL,
+            COUNT(*) AS QUANTIDADE
+        FROM lancamentos LAN
+        WHERE
+            LAN.STATUS_LANC = 'Pago'
+            AND LAN.ID_CCUSTO NOT IN (19,51)
+            AND LAN.D_E_L_E_T_ <> '*'
+            AND LAN.ID_USUARIO = ID_USER
+            AND MONTH(LAN.DATA_HORA) = v_mes
+            AND YEAR(LAN.DATA_HORA) = v_ano
+        GROUP BY DAYOFWEEK(LAN.DATA_HORA)
+    ) RESUMO ON RESUMO.NUMERO = DIAS.NUMERO
+    ORDER BY DIAS.NUMERO;
+END//
+DELIMITER ;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
