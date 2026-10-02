@@ -32,6 +32,7 @@ export class AppComponent {
     { rota: '/lancamento-fixo', rotulo: 'Lançamentos fixos', icone: 'repetir' },
     { rota: '/centro-custo', rotulo: 'Centros de custo', icone: 'etiqueta' },
     { rota: '/configuracoes-ia', rotulo: 'Configurações da IA', icone: 'brilho' },
+    { rota: '/promocoes', rotulo: 'Promoções', icone: 'cupom' },
   ];
   readonly menuMais = this.menu.slice(3);
 
@@ -46,6 +47,8 @@ export class AppComponent {
   );
 
   naLogin = computed(() => this.url().startsWith('/login'));
+  /** Login e páginas públicas abertas por visitante não mostram o menu do app. */
+  semMenu = computed(() => this.naLogin() || (this.url().startsWith('/promocoes') && !this.login.estaLogado()));
   foco = computed(() => (this.url(), this.dadosDaRota()['foco'] === true));
   maisAtivo = computed(() => this.menuMais.some(item => this.url().startsWith(item.rota)));
 

@@ -1,6 +1,6 @@
-<div class="shell" [class.sem-menu]="naLogin()" [class.foco]="foco()">
+<div class="shell" [class.sem-menu]="semMenu()" [class.foco]="foco()">
 
-  @if (!naLogin()) {
+  @if (!semMenu()) {
     <aside class="lateral">
       <a class="marca" routerLink="/home">Gestão Financeira</a>
 
@@ -30,7 +30,7 @@
     <router-outlet />
   </main>
 
-  @if (!naLogin()) {
+  @if (!semMenu()) {
     <nav class="abas" aria-label="Principal">
       <a routerLink="/home" routerLinkActive="ativo" ariaCurrentWhenActive="page">
         <app-icon nome="extrato" /> <span>Lançamentos</span>

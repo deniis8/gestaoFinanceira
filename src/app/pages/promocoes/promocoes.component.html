@@ -1,0 +1,213 @@
+@if (!logado) {
+  <header class="topo">
+    <span class="marca">Gestão Financeira</span>
+    <a class="btn btn-outline btn-sm" routerLink="/login">Entrar</a>
+  </header>
+}
+
+<div class="page page-wide">
+  <!-- cédula: título e números da vitrine -->
+  <section class="cedula" aria-labelledby="promocoes-titulo">
+    <app-guilhoche class="roseta" />
+
+    <div class="cedula-texto">
+      <p class="sobretitulo"><app-icon nome="cupom" /> Vitrine de ofertas</p>
+      <h1 id="promocoes-titulo" class="titulo-pagina">Promoções</h1>
+      <p class="lead">As melhores ofertas do dia, com os cupons que realmente valem para cada produto.</p>
+    </div>
+
+    <dl class="numeros" aria-live="polite">
+      <div>
+        <dt>ofertas</dt>
+        <dd>
+          @if (estado() === 'carregando') { <span class="sk sk-numero"></span> } @else { {{ resumo().total }} }
+        </dd>
+      </div>
+      <div>
+        <dt>com cupom</dt>
+        <dd>
+          @if (estado() === 'carregando') { <span class="sk sk-numero"></span> } @else { {{ resumo().comCupom }} }
+        </dd>
+      </div>
+      <div>
+        <dt>lojas chinesas</dt>
+        <dd>
+          @if (estado() === 'carregando') { <span class="sk sk-numero"></span> } @else { {{ resumo().chinesas }} }
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- tipos -->
+  <nav class="tipos" aria-label="Tipo de produto">
+    @for (opcao of tipos; track opcao.tipo) {
+      <a class="tipo" [routerLink]="['/promocoes', opcao.tipo]"
+         [class.ativo]="tipoAtual()?.tipo === opcao.tipo"
+         [attr.aria-current]="tipoAtual()?.tipo === opcao.tipo ? 'page' : null">
+        <app-icon [nome]="opcao.icone" /> {{ opcao.rotulo }}
+      </a>
+    }
+  </nav>
+
+  <!-- filtros -->
+  <div class="filtros">
+    <label class="busca">
+      <app-icon nome="busca" />
+      <span class="sr-only">Buscar produto ou loja</span>
+      <input type="search" placeholder="Buscar produto" [value]="busca()" (input)="aoDigitar($event)" />
+    </label>
+
+    <div class="chips" role="group" aria-label="Filtros">
+      <button type="button" class="chip chip-cupom" [attr.aria-pressed]="soComCupom()" (click)="soComCupom.set(!soComCupom())">
+        Com cupom
+      </button>
+      <button type="button" class="chip chip-china" [attr.aria-pressed]="soChinesas()" (click)="soChinesas.set(!soChinesas())">
+        Lojas chinesas
+      </button>
+    </div>
+
+    <label class="ordem">
+      <span class="sr-only">Ordenar por</span>
+      <select [value]="ordem()" (change)="aoOrdenar($event)">
+        <option value="recentes">Mais recentes</option>
+        <option value="maior-desconto">Maior desconto</option>
+        <option value="menor-preco">Menor preço</option>
+      </select>
+    </label>
+  </div>
+
+  @if (estado() === 'pronto' && atualizadoEm()) {
+    <p class="legenda">
+      {{ cartoes().length }} de {{ resumo().total }} ofertas · atualizado às {{ atualizadoEm() | date: 'HH:mm' }}
+      <button type="button" class="btn btn-quiet btn-sm" (click)="recarregar()">
+        <app-icon nome="repetir" /> Atualizar
+      </button>
+    </p>
+  }
+
+  <!-- vitrine -->
+  @switch (estado()) {
+    @case ('carregando') {
+      <ul class="vitrine" aria-busy="true" aria-label="Carregando ofertas">
+        @for (item of [1, 2, 3, 4, 5, 6, 7, 8]; track item) {
+          <li class="cartao" aria-hidden="true">
+            <span class="sk sk-foto"></span>
+            <div class="corpo">
+              <span class="sk sk-linha curta"></span>
+              <span class="sk sk-linha"></span>
+              <span class="sk sk-linha"></span>
+              <span class="sk sk-preco"></span>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+
+    @case ('erro') {
+      <div class="vazio">
+        <app-icon nome="alerta" class="vazio-icone" />
+        <strong>Não foi possível buscar as ofertas</strong>
+        O site de promoções não respondeu agora. Tente de novo em instantes.
+        <div><button type="button" class="btn btn-primary" (click)="recarregar()">Tentar de novo</button></div>
+      </div>
+    }
+
+    @default {
+      @if (cartoes().length === 0) {
+        <div class="vazio">
+          <app-icon nome="cupom" class="vazio-icone" />
+          @if (filtrando()) {
+            <strong>Nenhuma oferta com esses filtros</strong>
+            Tente outra busca ou tire algum filtro.
+            <div><button type="button" class="btn btn-outline" (click)="limparFiltros()">Limpar filtros</button></div>
+          } @else {
+            <strong>Sem ofertas por aqui agora</strong>
+            Volte mais tarde: a vitrine é atualizada ao longo do dia.
+          }
+        </div>
+      } @else {
+        <ul class="vitrine">
+          @for (p of cartoes(); track p.link) {
+            <li class="cartao">
+              <a class="foto" [href]="p.link" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+                @if (semImagem(p)) {
+                  <app-icon nome="caixa" class="foto-vazia" />
+                } @else {
+                  <img [src]="p.imagem" alt="" loading="lazy" decoding="async" (error)="imagemFalhou(p)" />
+                }
+                @if (p.descontoPct && p.descontoPct > 0) {
+                  <span class="selo-desconto">−{{ p.descontoPct }}%</span>
+                }
+              </a>
+
+              <div class="corpo">
+                <p class="loja">
+                  {{ p.loja }}
+                  @if (p.lojaChinesa) { <span class="tag tag-invest">Loja chinesa</span> }
+                </p>
+
+                <h2 class="produto">
+                  <a [href]="p.link" target="_blank" rel="noopener noreferrer">{{ p.produto }}</a>
+                </h2>
+
+                <div class="preco">
+                  @if (p.preco) {
+                    @if (p.precoAntigo) {
+                      <s class="money preco-antigo" aria-label="Preço antigo">R$ {{ p.precoAntigo | formatValor }}</s>
+                    }
+                    <strong class="money preco-atual"><span class="rs">R$</span>{{ p.preco | formatValor }}</strong>
+                  } @else {
+                    <span class="preco-site">Preço no site</span>
+                  }
+                </div>
+
+                @if (p.cupons.length) {
+                  <ul class="cupons" aria-label="Cupons">
+                    @for (cupom of p.cuponsOferta; track cupom.codigo) {
+                      <li class="cupom">
+                        <button type="button" class="ticket" (click)="copiar(p, cupom)"
+                                [attr.aria-label]="'Copiar cupom ' + cupom.codigo">
+                          <span class="codigo">{{ cupom.codigo }}</span>
+                          <app-icon [nome]="foiCopiado(p, cupom) ? 'ok' : 'copiar'" />
+                        </button>
+                        <span class="cupom-info">
+                          @if (foiCopiado(p, cupom)) { <span class="is-entrada">Copiado!</span> }
+                          @else { {{ detalheCupom(cupom) || 'Cupom da oferta' }} }
+                        </span>
+                      </li>
+                    }
+
+                    @if (p.cuponsLoja.length) {
+                      <li class="cupons-loja-titulo">{{ p.cuponsOferta.length ? 'Ou use um cupom da loja' : 'Cupons da loja que valem aqui' }}</li>
+                      @for (cupom of p.cuponsLoja; track cupom.codigo) {
+                        <li class="cupom da-loja">
+                          <button type="button" class="ticket" (click)="copiar(p, cupom)"
+                                  [attr.aria-label]="'Copiar cupom ' + cupom.codigo">
+                            <span class="codigo">{{ cupom.codigo }}</span>
+                            <app-icon [nome]="foiCopiado(p, cupom) ? 'ok' : 'copiar'" />
+                          </button>
+                          <span class="cupom-info">
+                            @if (foiCopiado(p, cupom)) { <span class="is-entrada">Copiado!</span> }
+                            @else { {{ detalheCupom(cupom) }} }
+                          </span>
+                        </li>
+                      }
+                    }
+                  </ul>
+                }
+
+                <a class="btn btn-primary btn-block ver-oferta" [href]="p.link" target="_blank" rel="noopener noreferrer">
+                  Ver oferta <app-icon nome="externo" />
+                </a>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    }
+  }
+
+  <p class="rodape texto-3 texto-sm">
+    Ofertas e cupons coletados do Promobit. Preços e disponibilidade podem mudar na loja.
+  </p>
+</div>

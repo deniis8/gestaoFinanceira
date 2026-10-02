@@ -9,6 +9,13 @@ export const routes: Routes = [
     title: 'Entrar',
     loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent),
   },
+  // Pública: não exige login (a rota da API também é anônima).
+  { path: 'promocoes', pathMatch: 'full', redirectTo: 'promocoes/tecnologia' },
+  {
+    path: 'promocoes/:tipo',
+    title: 'Promoções',
+    loadComponent: () => import('./pages/promocoes/promocoes.component').then(m => m.PromocoesComponent),
+  },
   {
     path: '',
     canActivate: [authGuard],

@@ -190,3 +190,28 @@ export interface PainelMes {
     topGastos: TopGasto[];
     gastosPorDiaSemana: GastoPorDiaSemana[];
 }
+
+/** Valores aceitos pela rota api/promocoes?tipo=... */
+export type TipoPromocao = 'tecnologia' | 'moveis' | 'tenis-e-roupas' | 'viagens' | 'outros';
+
+export interface CupomPromocao {
+    codigo: string;
+    /** "oferta": indicado para o produto. "loja": cupom geral da loja que cabe no preço. */
+    origem: 'oferta' | 'loja';
+    desconto: string | null;
+    descricao: string | null;
+    compraMinima: number | null;
+    validoAte: string | null;
+}
+
+export interface Promocao {
+    produto: string;
+    loja: string;
+    lojaChinesa: boolean;
+    link: string;
+    imagem: string | null;
+    tipo: string;
+    preco: number | null;
+    precoAntigo: number | null;
+    cupons: CupomPromocao[];
+}
